@@ -15,6 +15,9 @@ const Sidebar: React.FC = () => {
     return (
         <aside className="w-64 bg-gray-800 text-white border-r border-gray-700 p-6 sticky top-16 h-[calc(100vh-4rem)] flex flex-col justify-between">
             <nav className="space-y-6">
+                <Link to="/" className="flex items-center space-x-2 hover:text-gray-300">
+                    <span>홈</span>
+                </Link>
                 <Link to="/search" className="flex items-center space-x-2 hover:text-gray-300">
                     <span>검색</span>
                 </Link>

@@ -36,7 +36,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         try {
             await apiHandler.post('/user_log/register', registerDTO);
             setAuthState(prev => ({ ...prev, isAuthenticated: true, username: registerDTO.username }));
-            navigate('/');
+            navigate('/login');
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -50,7 +50,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
             const token = response.data.replace("Bearer", "");
             localStorage.setItem('token', token);
             setAuthState({ isAuthenticated: true, username: loginDTO.username });
-            navigate('/home');
+            navigate('/');
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
