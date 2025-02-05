@@ -42,7 +42,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, redirectTo = 
         return <Navigate to={redirectTo} replace />;
     }
 
-
     return <>{children}</>;
 };
 

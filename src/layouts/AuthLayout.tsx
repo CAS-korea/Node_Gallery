@@ -4,9 +4,9 @@ import { Outlet } from 'react-router-dom';
 
 const AuthLayout: React.FC = () => {
     return (
-        <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8 lg:p-10">
+        <div className="backdrop-blur-md shadow-none flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8 lg:p-10">
             <div
-                className="w-full min-w-[900px] max-w-[1200px] h-[80vh] max-h-[700px] rounded-[40px] overflow-hidden flex bg-gradient-to-r from-[#4AA8FF] to-[#4AECFF] shadow-2xl relative">
+                className="w-full min-w-[900px] max-w-[1200px] h-[80vh] max-h-[700px] rounded-[40px] overflow-hidden flex bg-gradient-to-r from-[#000000] to-[#ffffff] shadow-2xl relative">
                 {/* 배경 원형 노드들 */}
                 <div className="absolute inset-0">
                     {/* 왼쪽 그룹 */}

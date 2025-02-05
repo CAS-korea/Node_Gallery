@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LoginDTO } from "../../types/LoginDTO";
-import { useServices } from "../../contextAPI/ServicesProvider";
+import {useState} from "react";
+import {Link} from "react-router-dom";
+import {motion} from "framer-motion"; // ✅ motion 추가
+import {useServices} from "../../contextAPI/ServicesProvider"; // 서비스 훅 불러오기
+
 
 const Login: React.FC = () => {
     // ✅ 로컬 상태
@@ -11,14 +12,15 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     // ✅ 전역 상태 (로그인 함수만 사용)
-    const { login } = useServices();
+    const {login} = useServices();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setError(null); // 기존 에러 초기화
+        setError(null); // 기존 에러
+        // 초기화
 
-        const loginDTO: LoginDTO = {
+        const loginDTO = {
             username: userName,
             password: password
         };
@@ -30,7 +32,7 @@ const Login: React.FC = () => {
             // 에러 메시지 설정
             if (error instanceof Error) {
                 setError(error.message); // 에러 메시지를 로컬 상태에 설정
-                console.log("로컬 상태로 설정 완료")
+                console.log("로컬 상태로 설정 완료");
             } else {
                 setError('알 수 없는 오류가 발생했습니다.');
             }
@@ -54,7 +56,14 @@ const Login: React.FC = () => {
                 </Link>
             </div>
 
-            <div className="w-1/2 bg-white rounded-[40px] flex flex-col justify-center items-center px-20">
+            {/* ✅ motion 적용 */}
+            <motion.div
+                initial={{opacity: 0.7, scale: 0.98}} // 처음에 작게 시작
+                animate={{opacity: 1, scale: 1}}    // 나타날 때 커짐
+                exit={{opacity: 0.7, scale: 0.98}}    // 사라질 때 다시 작아짐
+                transition={{duration: 0.1}}
+                className="w-1/2 bg-white rounded-[40px] flex flex-col justify-center items-center px-20"
+            >
                 <h2 className="text-3xl font-bold mb-12">로그인하기</h2>
                 <form className="w-full space-y-6" onSubmit={handleSubmit}>
                     <input
@@ -89,7 +98,7 @@ const Login: React.FC = () => {
                         {loading ? '로그인 중...' : '로그인'}
                     </button>
                 </form>
-            </div>
+            </motion.div>
         </>
     );
 };
