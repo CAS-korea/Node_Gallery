@@ -1,17 +1,16 @@
-import { createContext, useState, ReactNode, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {createContext, ReactNode, useContext} from 'react';
+import {useNavigate} from 'react-router-dom';
 import apiHandler from "./ApiHandler.tsx";
-import { AuthState } from "../types/AuthState";
-import { LoginDTO } from "../types/LoginDTO";
-import { RegisterDTO } from "../types/RegisterDTO";
-import { PostDTO } from "../types/PostDTO";
-import { PostEntity } from "../types/PostEntity"; // 추가
+import {LoginDTO} from "../types/LoginDTO";
+import {RegisterDTO} from "../types/RegisterDTO";
+import {PostDTO} from "../types/PostDTO";
+import {PostEntity} from "../types/PostEntity"; // 추가
+import Cookies from 'js-cookie';
+import {ROUTES} from "../constants/routes.tsx";
 
 interface ServicesContextType {
-    authState: AuthState;
-    setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
-    register: (registerDTO: RegisterDTO) => Promise<void>;
     login: (loginDTO: LoginDTO) => Promise<void>;
+    register: (registerDTO: RegisterDTO) => Promise<void>;
     logout: () => void;
     createPost: (postDTO: PostDTO) => Promise<void>;
     getAllPosts: () => Promise<PostEntity[]>; // 추가
@@ -21,22 +20,23 @@ interface ServicesContextType {
     getUserPosts: (username: string) => Promise<PostEntity[]>; // 추가
 }
 
-const initialAuthState: AuthState = {
-    isAuthenticated: false,
-    username: null,
+export const useServices = () => {
+    const context = useContext(ServicesContext);
+    if (!context) {
+        throw new Error('useServices must be used within a ServicesProvider');
+    }
+    return context;
 };
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
 
-export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const navigate = useNavigate();
-    const [authState, setAuthState] = useState<AuthState>(initialAuthState);
 
     const register = async (registerDTO: RegisterDTO) => {
         try {
             await apiHandler.post('/user_log/register', registerDTO);
-            setAuthState(prev => ({ ...prev, isAuthenticated: true, username: registerDTO.username }));
-            navigate('/login');
+            navigate(ROUTES.LOGIN);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -47,10 +47,15 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
     const login = async (loginDTO: LoginDTO) => {
         try {
             const response = await apiHandler.post('/user_log/login', loginDTO);
-            const token = response.data.replace("Bearer", "");
-            localStorage.setItem('token', token);
-            setAuthState({ isAuthenticated: true, username: loginDTO.username });
-            navigate('/');
+
+            // 쿠키에 토큰 저장 (유효 기간 1일)
+            Cookies.set('token', JSON.stringify(response.data.userInfo), {
+                expires: 1,
+                secure: true,
+                sameSite: 'strict'
+            });
+
+            navigate(ROUTES.HOME);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -59,16 +64,17 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
-        setAuthState({ isAuthenticated: false, username: null });
-        navigate('/');
+        // 쿠키 토큰 삭제
+        Cookies.remove('token');
+
+        navigate(ROUTES.HOME)
     };
 
     const createPost = async (postDTO: PostDTO) => {
         try {
             const token = localStorage.getItem('token');
             await apiHandler.post('/post_relation/create', postDTO, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -108,7 +114,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         try {
             const token = localStorage.getItem('token');
             await apiHandler.post(`/post_relation/likes/${postID}`, {}, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -122,7 +128,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         try {
             const token = localStorage.getItem('token');
             await apiHandler.post(`/post_relation/report/${postID}`, {}, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -145,8 +151,6 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
 
     const value = {
-        authState,
-        setAuthState,
         login,
         register,
         logout,
@@ -159,12 +163,4 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
 
     return <ServicesContext.Provider value={value}>{children}</ServicesContext.Provider>;
-};
-
-export const useServices = () => {
-    const context = useContext(ServicesContext);
-    if (!context) {
-        throw new Error('useServices must be used within a ServicesProvider');
-    }
-    return context;
 };

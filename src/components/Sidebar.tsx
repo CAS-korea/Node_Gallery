@@ -1,39 +1,34 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useServices } from '../contextAPI/ServicesProvider';
+import { Link } from 'react-router-dom';
+import {useServices} from "../contextAPI/ServicesProvider.tsx";
+import {ROUTES} from "../constants/routes.tsx";
 
 const Sidebar: React.FC = () => {
-    const { setAuthState } = useServices();
-    const navigate = useNavigate();
-
-    const logout = () => {
-        localStorage.removeItem('token');
-        setAuthState({ isAuthenticated: false, username: null });
-        navigate('/');
-    };
+    // ✅ 전역 상태 (로그인 함수만 사용)
+    const {logout} = useServices();
 
     return (
         <aside className="w-64 bg-gray-800 text-white border-r border-gray-700 p-6 sticky top-16 h-[calc(100vh-4rem)] flex flex-col justify-between">
             <nav className="space-y-6">
-                <Link to="/" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.HOME} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>홈</span>
                 </Link>
-                <Link to="/search" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.SEARCH} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>검색</span>
                 </Link>
-                <Link to="/new-post" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.NEWPOST} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>새 게시물</span>
                 </Link>
-                <Link to="/dm-list" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.MESSAGE} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>채팅 목록</span>
                 </Link>
-                <Link to="/profile" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.PROFILE} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>프로필</span>
                 </Link>
-                <Link to="/alarm" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.NOTIFICATION} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>알림</span>
                 </Link>
-                <Link to="/settings" className="flex items-center space-x-2 hover:text-gray-300">
+                <Link to={ROUTES.SETTINGS} className="flex items-center space-x-2 hover:text-gray-300">
                     <span>설정</span>
                 </Link>
             </nav>

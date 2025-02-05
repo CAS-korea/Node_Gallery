@@ -1,45 +1,33 @@
-import { useEffect } from 'react';
 import {Navigate, useLocation} from 'react-router-dom';
-import { useServices } from '../contextAPI/ServicesProvider';
 import Home from "../pages/basic/Home.tsx";
-import Index from "../pages";
+import Index from "../pages/Index.tsx";
 import BasicLayout from "../layouts/BasicLayout.tsx";
+import Cookies from "js-cookie";
+import {ROUTES} from "../constants/routes.tsx";
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;
-    redirectTo?: string;
     isRoot?: boolean;  // 루트 경로인지 여부를 판단하는 속성
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, redirectTo = "/login", isRoot = false }) => {
-    const { authState, setAuthState } = useServices();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, isRoot = false }) => {
+    const token = Cookies.get('token');
     const location = useLocation();  // useLocation을 사용하여 URL 변화를 감지
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            setAuthState((prev) => ({ ...prev, isAuthenticated: true }));
-            console.log("Authenticated true 변경 완료");
-        } else {
-            setAuthState((prev) => ({ ...prev, isAuthenticated: false }));
-            console.log("Authenticated false 변경 완료");
-        }
-    }, [location, setAuthState]);  // location이 변경될 때마다 useEffect 실행
 
     // 루트 경로에서 조건부 렌더링
     if (isRoot) {
-        return authState.isAuthenticated ? (
+        return token ? (
             <BasicLayout>
                 <Home />
             </BasicLayout>
         ) : (
             <Index />
         );
-
     }
 
-    if (!authState.isAuthenticated) {
-        return <Navigate to={redirectTo} replace />;
+    // 비루트 경로에서 토큰이 없을 시 리다이렉트
+    if (!token) {
+        return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
     }
 
     return <>{children}</>;

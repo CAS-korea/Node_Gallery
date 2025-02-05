@@ -1,7 +1,8 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {motion} from "framer-motion"; // ✅ motion 추가
-import {useServices} from "../../contextAPI/ServicesProvider"; // 서비스 훅 불러오기
+import {useServices} from "../../contextAPI/ServicesProvider";
+import {ROUTES} from "../../constants/routes.tsx"; // 서비스 훅 불러오기
 
 
 const Login: React.FC = () => {
@@ -21,7 +22,7 @@ const Login: React.FC = () => {
         // 초기화
 
         const loginDTO = {
-            username: userName,
+            id: userName,
             password: password
         };
 
@@ -49,7 +50,7 @@ const Login: React.FC = () => {
                 <h2 className="text-3xl mb-2">계정이 없으신가요?</h2>
                 <p className="text-center mb-8">가입하고 다른 노더와 소통의 기회를 가져보세요!</p>
                 <Link
-                    to="/register"
+                    to={ROUTES.REGISTER}
                     className="border-2 border-white px-12 py-3 rounded-full hover:bg-white hover:text-[#4AA8FF] transition-colors"
                 >
                     회원가입하기

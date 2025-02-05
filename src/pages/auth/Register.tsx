@@ -1,19 +1,24 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { useServices } from "../../contextAPI/ServicesProvider";
-import { RegisterDTO, UserRole } from "../../types/RegisterDTO";
-import { ErrorMessages } from "../../constants/ErrorMessages";
+import React, {useState} from "react";
+import {Link} from "react-router-dom";
+import {motion} from "framer-motion";
+import {useServices} from "../../contextAPI/ServicesProvider";
+import {RegisterDTO, UserRole} from "../../types/RegisterDTO";
+import {ErrorMessages} from "../../constants/ErrorMessages";
+import {ROUTES} from "../../constants/routes.tsx";
 
 const Register: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const [id, setId] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [studentNumber, setStudentNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [role, setRole] = useState<UserRole>('student');
+
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState<UserRole>('STUDENT');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { register } = useServices();
+    const {register} = useServices();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,7 +31,17 @@ const Register: React.FC = () => {
             return;
         }
 
-        const registerDTO: RegisterDTO = { username, email, password, role };
+        const registerDTO: RegisterDTO = {
+            id: id,
+            password,
+            name,
+            phoneNumber,
+            studentNumber,
+            email,
+            role,
+            isAuthorized: false,
+            introduce: ''
+        };
 
         try {
             await register(registerDTO);
@@ -44,10 +59,10 @@ const Register: React.FC = () => {
             className="w-full h-full flex justify-center items-center"
         >
             <motion.div
-                initial={{ opacity: 0.7, scale: 0.95 }} // 처음에 작게 시작
-                animate={{ opacity: 1, scale: 1 }}    // 나타날 때 커짐
-                exit={{ opacity: 0.7, scale: 0.95 }}    // 사라질 때 다시 작아짐
-                transition={{ duration: 0.1 }}
+                initial={{opacity: 0.7, scale: 0.95}} // 처음에 작게 시작
+                animate={{opacity: 1, scale: 1}}    // 나타날 때 커짐
+                exit={{opacity: 0.7, scale: 0.95}}    // 사라질 때 다시 작아짐
+                transition={{duration: 0.1}}
                 className="w-[500px] bg-white rounded-[40px] p-12 flex flex-col items-center shadow-lg"
             >
                 <h1 className="text-4xl font-bold mb-4">NODES</h1>
@@ -56,14 +71,35 @@ const Register: React.FC = () => {
                 <form className="w-full space-y-4" onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="id"
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
+                        className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
+                    />
+                    <input
+                        type="text"
+                        placeholder="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
+                    />
+                    <input
+                        type="text"
+                        placeholder="phoneNumber"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
+                    />
+                    <input
+                        type="text"
+                        placeholder="studentNumber"
+                        value={studentNumber}
+                        onChange={(e) => setStudentNumber(e.target.value)}
                         className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
                     />
                     <input
                         type="email"
-                        placeholder="Email"
+                        placeholder="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
@@ -87,35 +123,46 @@ const Register: React.FC = () => {
                     <div className="flex justify-center space-x-4">
                         <motion.button
                             type="button"
-                            onClick={() => setRole('STUDENT')}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setRole('student')}
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
                             className={`px-6 py-2 rounded-full ${
-                                role === 'STUDENT' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
+                                role === 'student' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
                             재학생
                         </motion.button>
                         <motion.button
                             type="button"
-                            onClick={() => setRole('GRADUATE')}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setRole('graduate')}
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
                             className={`px-6 py-2 rounded-full ${
-                                role === 'GRADUATE' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
+                                role === 'graduate' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
                             졸업생
+                        </motion.button>
+                        <motion.button
+                            type="button"
+                            onClick={() => setRole('professor')}
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            className={`px-6 py-2 rounded-full ${
+                                role === 'professor' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
+                            }`}
+                        >
+                            교수
                         </motion.button>
                     </div>
 
                     {/* ✅ 에러 메시지 애니메이션 추가 */}
                     {error && (
                         <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.1 }}
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            transition={{duration: 0.1}}
                             className="text-red-500 text-sm text-center"
                         >
                             {error}
@@ -125,8 +172,8 @@ const Register: React.FC = () => {
                     {/* ✅ 버튼 애니메이션 (클릭 시 반응) */}
                     <motion.button
                         type="submit"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
                         className="w-full py-3 bg-[#00E5FF] text-white rounded-full hover:bg-[#00D4FF] transition-colors"
                         disabled={loading}
                     >
@@ -134,8 +181,8 @@ const Register: React.FC = () => {
                     </motion.button>
                 </form>
 
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="mt-6">
-                    <Link to="/login" className="text-gray-600 hover:text-black transition-colors">
+                <motion.div whileHover={{scale: 1.05}} whileTap={{scale: 0.95}} className="mt-6">
+                    <Link to={ROUTES.LOGIN} className="text-gray-600 hover:text-black transition-colors">
                         이미 계정이 있으신가요? 로그인하기
                     </Link>
                 </motion.div>
