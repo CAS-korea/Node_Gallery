@@ -6,7 +6,7 @@ import {RegisterDTO} from "../types/RegisterDTO";
 import {PostDTO} from "../types/PostDTO";
 import {PostEntity} from "../types/PostEntity"; // 추가
 import Cookies from 'js-cookie';
-import {ROUTES} from "../constants/routes.tsx";
+import {ROUTES} from "../constants/ROUTES.tsx";
 
 interface ServicesContextType {
     login: (loginDTO: LoginDTO) => Promise<void>;
