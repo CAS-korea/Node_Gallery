@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useServices } from '../contextAPI/ServicesProvider';
-import { PostEntity } from '../types/PostEntity';
-import PostCard from "../components/PostCard.tsx";
+import { useServices } from '../../contextAPI/ServicesProvider.tsx';
+import { PostEntity } from '../../types/PostEntity.tsx';
+import PostCard from "../../components/PostCard.tsx";
 
 
 const Home: React.FC = () => {

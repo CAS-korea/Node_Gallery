@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useServices } from '../contextAPI/ServicesProvider.tsx';
-import { PostEntity } from '../types/PostEntity';
+import { useServices } from '../../contextAPI/ServicesProvider.tsx';
+import { PostEntity } from '../../types/PostEntity.tsx';
 import { marked } from 'marked';
 
 const PostView: React.FC = () => {

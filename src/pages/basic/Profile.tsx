@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useServices } from '../contextAPI/ServicesProvider.tsx';
-import { PostEntity } from '../types/PostEntity';
-import PostCard from '../components/PostCard';
+import { useServices } from '../../contextAPI/ServicesProvider.tsx';
+import { PostEntity } from '../../types/PostEntity.tsx';
+import PostCard from '../../components/PostCard.tsx';
 
 const Profile: React.FC = () => {
     const { getUserPosts, authState } = useServices();

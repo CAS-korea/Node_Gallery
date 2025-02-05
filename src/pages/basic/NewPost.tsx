@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { marked } from 'marked';
-import { PostDTO } from '../types/PostDTO';
-import { useServices } from "../contextAPI/ServicesProvider.tsx";
+import { PostDTO } from '../../types/PostDTO.tsx';
+import { useServices } from "../../contextAPI/ServicesProvider.tsx";
 
 const NewPost: React.FC = () => {
     const { createPost } = useServices();  // API 호출 함수 가져오기

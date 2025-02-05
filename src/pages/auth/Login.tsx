@@ -45,9 +45,9 @@ const Login: React.FC = () => {
     return (
         <>
             <div className="w-1/2 flex flex-col justify-center items-center text-white px-12">
-                <h1 className="text-6xl font-bold mb-8">NODES</h1>
+                <h1 className="text-6xl font-bold mb-8">NODE</h1>
                 <h2 className="text-3xl mb-2">계정이 없으신가요?</h2>
-                <p className="text-center mb-8">가입하고 다른 노드들과 소통의 기회를 가져보세요!</p>
+                <p className="text-center mb-8">가입하고 다른 노더와 소통의 기회를 가져보세요!</p>
                 <Link
                     to="/register"
                     className="border-2 border-white px-12 py-3 rounded-full hover:bg-white hover:text-[#4AA8FF] transition-colors"
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
 
                     <button
                         type="submit"
-                        className="w-full py-3 bg-[#00E5FF] text-white rounded-full hover:bg-[#00D4FF] transition-colors"
+                        className="w-full py-3 bg-[#000000] text-white rounded-full hover:bg-[#440000] transition-colors"
                         disabled={loading} // ✅ 로컬 상태의 loading 사용
                     >
                         {loading ? '로그인 중...' : '로그인'}

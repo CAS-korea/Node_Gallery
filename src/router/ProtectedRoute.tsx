@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import {Navigate, useLocation} from 'react-router-dom';
 import { useServices } from '../contextAPI/ServicesProvider';
-import Home from "../pages/Home.tsx";
-import Index from "../pages/auth/Index.tsx";
+import Home from "../pages/basic/Home.tsx";
+import Index from "../pages";
 import BasicLayout from "../layouts/BasicLayout.tsx";
 
 interface ProtectedRouteProps {

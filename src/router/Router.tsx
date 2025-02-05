@@ -1,19 +1,18 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-import AuthLayout from '../layouts/AuthLayout';
-import BasicLayout from '../layouts/BasicLayout';
+import AuthLayout from '../layouts/AuthLayout.tsx';
+import BasicLayout from '../layouts/BasicLayout.tsx';
 import ProtectedRoute from './ProtectedRoute'; // ✅ 추가
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
-import Search from '../pages/Search';
-import NewPost from '../pages/NewPost';
-import DmList from '../pages/DmList';
-import Profile from '../pages/Profile';
-import Alarm from '../pages/Alarm';
-import Settings from '../pages/Settings';
-import DetailDm from '../pages/DetailDm';
-import PostView from '../pages/PostView.tsx';
-
+import Search from '../pages/basic/Search.tsx';
+import NewPost from '../pages/basic/NewPost.tsx';
+import DmList from '../pages/basic/DmList.tsx';
+import Profile from '../pages/basic/Profile.tsx';
+import Alarm from '../pages/basic/Alarm.tsx';
+import Settings from '../pages/basic/Settings.tsx';
+import DetailDm from '../pages/basic/DetailDm.tsx';
+import PostView from '../pages/basic/PostView.tsx';
 
 const Router: React.FC = () => {
     return (
