@@ -4,7 +4,7 @@ import {motion} from "framer-motion";
 import {useServices} from "../../contextAPI/ServicesProvider";
 import {RegisterDTO, UserRole} from "../../types/RegisterDTO";
 import {ErrorMessages} from "../../constants/ErrorMessages";
-import {ROUTES} from "../../constants/routes.tsx";
+import {ROUTES} from "../../constants/ROUTES.tsx";
 
 const Register: React.FC = () => {
     const [id, setId] = useState('');

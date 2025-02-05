@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {useServices} from "../contextAPI/ServicesProvider.tsx";
-import {ROUTES} from "../constants/routes.tsx";
+import {ROUTES} from "../constants/ROUTES.tsx";
 
 const Sidebar: React.FC = () => {
     // ✅ 전역 상태 (로그인 함수만 사용)

@@ -3,7 +3,7 @@ import Home from "../pages/basic/Home.tsx";
 import Index from "../pages/Index.tsx";
 import BasicLayout from "../layouts/BasicLayout.tsx";
 import Cookies from "js-cookie";
-import {ROUTES} from "../constants/routes.tsx";
+import {ROUTES} from "../constants/ROUTES.tsx";
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;

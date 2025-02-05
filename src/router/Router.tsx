@@ -13,7 +13,7 @@ import Alarm from '../pages/basic/Alarm.tsx';
 import Settings from '../pages/basic/Settings.tsx';
 import DetailDm from '../pages/basic/DetailDm.tsx';
 import PostView from '../pages/basic/PostView.tsx';
-import {ROUTES} from "../constants/routes.tsx";
+import {ROUTES} from "../constants/ROUTES.tsx";
 
 const Router: React.FC = () => {
     return (

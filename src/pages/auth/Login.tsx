@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {motion} from "framer-motion"; // ✅ motion 추가
 import {useServices} from "../../contextAPI/ServicesProvider";
-import {ROUTES} from "../../constants/routes.tsx"; // 서비스 훅 불러오기
+import {ROUTES} from "../../constants/ROUTES.tsx"; // 서비스 훅 불러오기
 
 
 const Login: React.FC = () => {
