@@ -65,7 +65,7 @@ const Register: React.FC = () => {
                 transition={{duration: 0.1}}
                 className="w-[500px] bg-white rounded-[40px] p-12 flex flex-col items-center shadow-lg"
             >
-                <h1 className="text-4xl font-bold mb-4">NODES</h1>
+                <h1 className="text-4xl font-bold mb-4">NODE</h1>
                 <h2 className="text-2xl font-medium mb-8">회원가입</h2>
 
                 <form className="w-full space-y-4" onSubmit={handleSubmit}>

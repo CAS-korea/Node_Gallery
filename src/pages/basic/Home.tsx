@@ -25,7 +25,7 @@ const Home: React.FC = () => {
             <h1 className="text-3xl font-semibold">홈</h1>
             <div className="space-y-4">
                 {posts.map(post => (
-                    <PostCard key={post.postID} post={post} />
+                    <PostCard key={post.postID} post={post}/>
                 ))}
             </div>
         </div>

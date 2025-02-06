@@ -6,7 +6,7 @@ const Search: React.FC = () => {
             <h1 className="text-3xl font-semibold">검색</h1>
             <p className="text-lg">원하는 내용을 검색하세요!</p>
             <input
-                type="text"
+                type="search"
                 placeholder="검색어를 입력하세요"
                 className="w-full px-4 py-2 bg-gray-800 rounded-md text-white border border-gray-600 focus:outline-none"
             />

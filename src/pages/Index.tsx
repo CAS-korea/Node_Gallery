@@ -18,7 +18,7 @@ const Index: React.FC = () => {
             </div>
 
             {/* 텍스트 컨테이너 */}
-            <div className="relative z-10 flex flex-col items-center space-y-[30vh] px-8">
+            <div className="relative z-10 flex flex-col items-center px-8">
                 <section className="h-screen flex flex-col justify-center text-center">
                     <h1 className="text-black text-3xl font-serif text-shadow tracking-wide leading-relaxed">
                         Show Your Best.

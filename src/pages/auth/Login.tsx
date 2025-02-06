@@ -7,7 +7,7 @@ import {ROUTES} from "../../constants/ROUTES.tsx"; // 서비스 훅 불러오기
 
 const Login: React.FC = () => {
     // ✅ 로컬 상태
-    const [userName, setUserName] = useState('');
+    const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ const Login: React.FC = () => {
         // 초기화
 
         const loginDTO = {
-            id: userName,
+            id: id,
             password: password
         };
 
@@ -69,9 +69,9 @@ const Login: React.FC = () => {
                 <form className="w-full space-y-6" onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Username"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder="ID"
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
                         className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
                     />
                     <input
