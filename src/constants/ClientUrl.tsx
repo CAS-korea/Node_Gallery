@@ -1,4 +1,4 @@
-export enum ROUTES {
+export enum ClientUrl {
     HOME = '/',
     LOGIN = '/login',
     REGISTER = '/register',

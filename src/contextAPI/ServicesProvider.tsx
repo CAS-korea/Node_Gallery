@@ -6,7 +6,7 @@ import {RegisterDTO} from "../types/RegisterDTO";
 import {PostDTO} from "../types/PostDTO";
 import {PostEntity} from "../types/PostEntity"; // 추가
 import Cookies from 'js-cookie';
-import {ROUTES} from "../constants/ROUTES.tsx";
+import {ClientUrl} from "../constants/ClientUrl.tsx";
 
 interface ServicesContextType {
     login: (loginDTO: LoginDTO) => Promise<void>;
@@ -36,7 +36,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
     const register = async (registerDTO: RegisterDTO) => {
         try {
             await apiHandler.post('/user_log/register', registerDTO);
-            navigate(ROUTES.LOGIN);
+            navigate(ClientUrl.LOGIN);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -52,10 +52,10 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
             Cookies.set('token', JSON.stringify(response.data.userInfo), {
                 expires: 1,
                 secure: true,
-                sameSite: 'strict'
+                sameSite: 'None'
             });
 
-            navigate(ROUTES.HOME);
+            navigate(ClientUrl.HOME);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -67,7 +67,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
         // 쿠키 토큰 삭제
         Cookies.remove('token');
 
-        navigate(ROUTES.HOME)
+        navigate(ClientUrl.HOME)
     };
 
     const createPost = async (postDTO: PostDTO) => {

@@ -4,7 +4,7 @@ import {motion} from "framer-motion";
 import {useServices} from "../../contextAPI/ServicesProvider";
 import {RegisterDTO, UserRole} from "../../types/RegisterDTO";
 import {ErrorMessages} from "../../constants/ErrorMessages";
-import {ROUTES} from "../../constants/ROUTES.tsx";
+import {ClientUrl} from "../../constants/ClientUrl.tsx";
 
 const Register: React.FC = () => {
     const [id, setId] = useState('');
@@ -182,7 +182,7 @@ const Register: React.FC = () => {
                 </form>
 
                 <motion.div whileHover={{scale: 1.05}} whileTap={{scale: 0.95}} className="mt-6">
-                    <Link to={ROUTES.LOGIN} className="text-gray-600 hover:text-black transition-colors">
+                    <Link to={ClientUrl.LOGIN} className="text-gray-600 hover:text-black transition-colors">
                         이미 계정이 있으신가요? 로그인하기
                     </Link>
                 </motion.div>

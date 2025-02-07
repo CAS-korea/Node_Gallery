@@ -3,7 +3,7 @@ import Home from "../pages/basic/Home.tsx";
 import Index from "../pages/Index.tsx";
 import BasicLayout from "../layouts/BasicLayout.tsx";
 import Cookies from "js-cookie";
-import {ROUTES} from "../constants/ROUTES.tsx";
+import {ClientUrl} from "../constants/ClientUrl.tsx";
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;
@@ -27,7 +27,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, isRoot = fals
 
     // 비루트 경로에서 토큰이 없을 시 리다이렉트
     if (!token) {
-        return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
+        return <Navigate to={ClientUrl.LOGIN} state={{ from: location }} replace />;
     }
 
     return <>{children}</>;
