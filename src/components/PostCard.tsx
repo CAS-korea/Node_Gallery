@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PostEntity } from '../types/PostEntity';
-import { useServices } from '../contextAPI/ServicesProvider';
+import { motion } from 'framer-motion';
 
 interface PostCardProps {
     post: PostEntity;
@@ -9,76 +9,82 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
-    const { likePost, reportPost } = useServices();
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [likeCount, setLikeCount] = useState<number>(post.likesCount);
     const [isReported, setIsReported] = useState<boolean>(false);
     const [reportCount, setReportCount] = useState<number>(post.reportCount);
 
-    const handleLike = async () => {
+    const handleLike = () => {
         if (!interactive) return;
         if (!isLiked) {
-            try {
-                await likePost(post.postID);
-                setLikeCount(prev => prev + 1);
-                setIsLiked(true);
-            } catch (error) {
-                console.error('좋아요 실패:', error);
-            }
+            setLikeCount(likeCount + 1);
+            setIsLiked(true);
         } else {
-            // UI 상에서만 취소 (백엔드에는 취소 기능 없음)
-            setLikeCount(prev => (prev > 0 ? prev - 1 : 0));
+            setLikeCount(likeCount > 0 ? likeCount - 1 : 0);
             setIsLiked(false);
         }
     };
 
-    const handleReport = async () => {
+    const handleReport = () => {
         if (!interactive) return;
         if (!isReported) {
-            try {
-                await reportPost(post.postID);
-                setReportCount(prev => prev + 1);
-                setIsReported(true);
-            } catch (error) {
-                console.error('신고 실패:', error);
-            }
+            setReportCount(reportCount + 1);
+            setIsReported(true);
         } else {
-            // UI 상에서만 취소
-            setReportCount(prev => (prev > 0 ? prev - 1 : 0));
+            setReportCount(reportCount > 0 ? reportCount - 1 : 0);
             setIsReported(false);
         }
     };
 
     return (
-        <div className="bg-gray-800 p-4 rounded-md">
-            <Link to={`/post/${post.postID}`} className="text-xl font-semibold hover:underline">
-                {post.title}
+        <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-lg transition-transform duration-300"
+        >
+            <Link to={`/post/${post.postID}`}>
+                <h2 className="text-2xl font-semibold text-black hover:underline">
+                    {post.title}
+                </h2>
             </Link>
-            <p className="text-gray-400 text-sm">작성자: {post.username}</p>
-            <div className="flex space-x-4 mt-2">
+            <p className="mt-2 text-sm text-black">작성자: {post.username}</p>
+            <div className="mt-4 flex justify-end space-x-4">
                 {interactive ? (
                     <>
-                        <button
+                        <motion.button
                             onClick={handleLike}
-                            className={`px-4 py-2 rounded-md transition-colors ${isLiked ? 'bg-green-600' : 'bg-blue-600'}`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            disabled={isLiked}
+                            className={`px-5 py-2 border-radius: 200.5rem font-medium transition-colors ${
+                                isLiked
+                                    ? 'bg-blue-700 text-black'
+                                    : 'bg-gray-100 text-black hover:bg-blue-500'
+                            }`}
                         >
                             👍 {likeCount}
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
                             onClick={handleReport}
-                            className={`px-4 py-2 rounded-md transition-colors ${isReported ? 'bg-yellow-600' : 'bg-red-600'}`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            disabled={isReported}
+                            className={`px-5 py-2 rounded-full font-medium transition-colors ${
+                                isReported
+                                    ? 'bg-gradient-to-r from-red-700 to-red-900 text-white'
+                                    : 'bg-gray-700 text-gray-300 hover:bg-red-500'
+                            }`}
                         >
                             🚨 {reportCount}
-                        </button>
+                        </motion.button>
                     </>
                 ) : (
                     <>
-                        <span className="px-4 py-2 rounded-md bg-gray-600">👍 {likeCount}</span>
-                        <span className="px-4 py-2 rounded-md bg-gray-600">🚨 {reportCount}</span>
+                        <span className="px-5 py-2 rounded-full bg-gray-700 text-gray-300">👍 {likeCount}</span>
+                        <span className="px-5 py-2 rounded-full bg-gray-700 text-gray-300">🚨 {reportCount}</span>
                     </>
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 };
 

@@ -52,7 +52,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
             Cookies.set('token', JSON.stringify(response.data.userInfo), {
                 expires: 1,
                 secure: true,
-                sameSite: 'None'
+                sameSite: 'Strict'
             });
 
             navigate(ClientUrl.HOME);

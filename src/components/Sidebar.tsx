@@ -2,45 +2,62 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {useServices} from "../contextAPI/ServicesProvider.tsx";
 import {ClientUrl} from "../constants/ClientUrl.tsx";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { motion } from "framer-motion";
+import { useServices } from '../contextAPI/ServicesProvider';
+import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
     // ✅ 전역 상태 (로그인 함수만 사용)
     const {logout} = useServices();
 
+    const navItems = [
+        { path: "/", label: "홈", icon: <Home size={22} /> },
+        { path: "/search", label: "검색", icon: <Search size={22} /> },
+        { path: "/new-post", label: "새 게시물", icon: <PlusCircle size={22} /> },
+        { path: "/dm-list", label: "채팅", icon: <MessageCircle size={22} /> },
+        { path: "/profile", label: "프로필", icon: <User size={22} /> },
+        { path: "/alarm", label: "알림", icon: <Bell size={22} /> },
+        { path: "/settings", label: "설정", icon: <Settings size={22} /> }
+    ];
+
     return (
-        <aside className="w-64 bg-gray-800 text-white border-r border-gray-700 p-6 sticky top-16 h-[calc(100vh-4rem)] flex flex-col justify-between">
-            <nav className="space-y-6">
-                <Link to={ClientUrl.HOME} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>홈</span>
-                </Link>
-                <Link to={ClientUrl.SEARCH} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>검색</span>
-                </Link>
-                <Link to={ClientUrl.NEWPOST} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>새 게시물</span>
-                </Link>
-                <Link to={ClientUrl.MESSAGE} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>채팅 목록</span>
-                </Link>
-                <Link to={ClientUrl.PROFILE} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>프로필</span>
-                </Link>
-                <Link to={ClientUrl.NOTIFICATION} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>알림</span>
-                </Link>
-                <Link to={ClientUrl.SETTINGS} className="flex items-center space-x-2 hover:text-gray-300">
-                    <span>설정</span>
-                </Link>
+        <motion.aside
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-64 h-screen bg-white/70 backdrop-blur-md border-r border-gray-200 shadow-lg p-6 flex flex-col justify-between"
+        >
+            <nav className="flex flex-col gap-y-5 py-14">
+                {navItems.map(({ path, label, icon }) => (
+                    <Link key={path} to={path}>
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}  //
+                            whileTap={{ scale: 1.05, zIndex: 10 }}  // 🚀 클릭 시 Z축 이동
+                            className={`relative flex items-center gap-3 px-4 py-4 rounded-lg text-black transition-all duration-2 ease-in-out
+                            ${
+                                location.pathname === path
+                                    ? "bg-gray-100 text-black shadow-lg scale-120 drop-shadow-lg"  // ✅ 현재 선택된 메뉴 강조
+                                    : "bg-white"  // ✅ 호버 시 Drop Shadow 추가
+                            }`}
+                        >
+                            {icon}
+                            <span className="text-[16px] font-medium">{label}</span>
+                        </motion.div>
+                    </Link>
+                ))}
             </nav>
 
-            {/* 로그아웃 버튼 */}
-            <button
+            <motion.button
                 onClick={logout}
-                className="mt-6 px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-md w-full"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.3)" }}
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-500 text-white w-full transition-all duration-200"
             >
-                로그아웃
-            </button>
-        </aside>
+                <LogOut size={22} />
+                <span className="text-[16px] font-medium">로그아웃</span>
+            </motion.button>
+        </motion.aside>
     );
 };
 
