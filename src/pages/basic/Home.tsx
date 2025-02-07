@@ -8,11 +8,11 @@ const Home: React.FC = () => {
     const dummyPosts: PostEntity[] = [
         {
             postID: "1",
-            title: "첫 번째 게시글",
-            username: "user1",
+            title: "제가 궁금하신가요?",
+            username: "김아프간타",
             likesCount: 10,
             reportCount: 2,
-            content: "이것은 첫 번째 게시글의 내용입니다."
+            content: "뭐. 어쩌겠어요."
         },
         {
             postID: "2",
@@ -29,10 +29,26 @@ const Home: React.FC = () => {
             likesCount: 15,
             reportCount: 3,
             content: "이것은 세 번째 게시글의 내용입니다."
+        },
+        {
+            postID: "4",
+            title: "네 번째 게시글",
+            username: "user3",
+            likesCount: 15,
+            reportCount: 112434824332,
+            content: "이것은 넷."
+        },
+        {
+            postID: "5",
+            title: "다섯 번째 게시글",
+            username: "user3",
+            likesCount: 15,
+            reportCount: 3,
+            content: "이것은 다섯 번째."
         }
     ];
 
-    // ✅ 상태 관리 (초기값 빈 배열)
+    //  상태 관리 (초기값 빈 배열)
     const [posts, setPosts] = useState<PostEntity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -46,7 +62,7 @@ const Home: React.FC = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-white">
-                {/* Tailwind CSS 스피너 */}
+                {/* Tailwind CSS 스피너 / Loading Bar */}
                 <div className="w-16 h-16 border-4 border-black opacity-5 border-t-transparent rounded-full animate-spin"></div>
                 <div className="w-30 h-16 px-3 py-5 text-gray-400"> 잠시만 기다려주세요! </div>
             </div>

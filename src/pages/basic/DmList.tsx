@@ -1,8 +1,9 @@
 import React from 'react';
+import PostContainer from "../../components/Container";
 
 const DmList: React.FC = () => {
     return (
-        <div className="w-full bg-gray-900 text-white p-6 space-y-6">
+        <PostContainer>
             <h1 className="text-3xl font-semibold">채팅 목록</h1>
             <ul className="space-y-4">
                 <li className="bg-gray-800 p-4 rounded-md">
@@ -15,7 +16,7 @@ const DmList: React.FC = () => {
                     <span className="font-semibold">박영희</span> - 마지막 메시지
                 </li>
             </ul>
-        </div>
+        </PostContainer>
     );
 };
 

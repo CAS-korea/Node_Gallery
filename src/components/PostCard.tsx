@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PostEntity } from '../types/PostEntity';
 import { motion } from 'framer-motion';
+import { FaHeart } from "react-icons/fa";
 
 interface PostCardProps {
     post: PostEntity;
@@ -11,79 +12,45 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [likeCount, setLikeCount] = useState<number>(post.likesCount);
-    const [isReported, setIsReported] = useState<boolean>(false);
-    const [reportCount, setReportCount] = useState<number>(post.reportCount);
 
     const handleLike = () => {
         if (!interactive) return;
-        if (!isLiked) {
-            setLikeCount(likeCount + 1);
-            setIsLiked(true);
-        } else {
-            setLikeCount(likeCount > 0 ? likeCount - 1 : 0);
-            setIsLiked(false);
-        }
-    };
-
-    const handleReport = () => {
-        if (!interactive) return;
-        if (!isReported) {
-            setReportCount(reportCount + 1);
-            setIsReported(true);
-        } else {
-            setReportCount(reportCount > 0 ? reportCount - 1 : 0);
-            setIsReported(false);
-        }
+        setIsLiked(!isLiked);
+        setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
     };
 
     return (
         <motion.div
             whileHover={{ scale: 1.02 }}
-            className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-lg transition-transform duration-300"
+            className="relative bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-lg transition-transform duration-300"
         >
+            {/* 게시글 제목 */}
             <Link to={`/post/${post.postID}`}>
                 <h2 className="text-2xl font-semibold text-black hover:underline">
                     {post.title}
                 </h2>
             </Link>
             <p className="mt-2 text-sm text-black">작성자: {post.username}</p>
-            <div className="mt-4 flex justify-end space-x-4">
-                {interactive ? (
-                    <>
-                        <motion.button
-                            onClick={handleLike}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            disabled={isLiked}
-                            className={`px-5 py-2 border-radius: 200.5rem font-medium transition-colors ${
-                                isLiked
-                                    ? 'bg-blue-700 text-black'
-                                    : 'bg-gray-100 text-black hover:bg-blue-500'
-                            }`}
-                        >
-                            👍 {likeCount}
-                        </motion.button>
-                        <motion.button
-                            onClick={handleReport}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            disabled={isReported}
-                            className={`px-5 py-2 rounded-full font-medium transition-colors ${
-                                isReported
-                                    ? 'bg-gradient-to-r from-red-700 to-red-900 text-white'
-                                    : 'bg-gray-700 text-gray-300 hover:bg-red-500'
-                            }`}
-                        >
-                            🚨 {reportCount}
-                        </motion.button>
-                    </>
-                ) : (
-                    <>
-                        <span className="px-5 py-2 rounded-full bg-gray-700 text-gray-300">👍 {likeCount}</span>
-                        <span className="px-5 py-2 rounded-full bg-gray-700 text-gray-300">🚨 {reportCount}</span>
-                    </>
-                )}
-            </div>
+
+            {/* 게시글 내용 */}
+            <p className="mt-4 text-gray-700 text-sm line-clamp-3 pb-16">
+                {post.content}
+            </p>
+
+            {/* ❤️ 좋아요 버튼 (왼쪽 아래 고정, 간격 조정) */}
+            <motion.button
+                onClick={handleLike}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                className="absolute bottom-6 left-6 flex items-center space-x-2"
+            >
+                <FaHeart
+                    size={15}
+                    color={isLiked ? "#FF4757" : "#D3D3D3"}
+                    className="transition-colors duration-300"
+                />
+                <span className="text-black font-medium text-base">{likeCount}</span>
+            </motion.button>
         </motion.div>
     );
 };

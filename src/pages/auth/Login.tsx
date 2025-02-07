@@ -1,44 +1,47 @@
-import {useState} from "react";
-import {Link} from "react-router-dom";
-import {motion} from "framer-motion"; // ✅ motion 추가
-import {useServices} from "../../contextAPI/ServicesProvider";
-import {ROUTES} from "../../constants/ROUTES.tsx"; // 서비스 훅 불러오기
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useServices } from "../../contextAPI/ServicesProvider";
+import { ROUTES } from "../../constants/ROUTES.tsx";
+import AnimatedCharacter from "../../components/AnimatedCharacter";
+import { getCaretCoordinates } from "../../utils/getCaretCoordinates";
 
 
 const Login: React.FC = () => {
-    // ✅ 로컬 상태
+    // 로컬 상태
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // ✅ 전역 상태 (로그인 함수만 사용)
-    const {login} = useServices();
+    // AnimatedCharacter 관련 상태
+    const [targetPos, setTargetPos] = useState<{ x: number; y: number } | null>(null);
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
+    const { login } = useServices();
+
+    // helper: 커서 위치 업데이트
+    const updateCaretPosition = (input: HTMLInputElement) => {
+        const caretIndex = input.selectionStart ?? 0;
+        const coords = getCaretCoordinates(input, caretIndex);
+        setTargetPos(coords);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setError(null); // 기존 에러
-        // 초기화
-
-        const loginDTO = {
-            id: id,
-            password: password
-        };
+        setError(null);
+        const loginDTO = { id, password };
 
         try {
-            // 로그인 처리
             await login(loginDTO);
         } catch (error: unknown) {
-            // 에러 메시지 설정
             if (error instanceof Error) {
-                setError(error.message); // 에러 메시지를 로컬 상태에 설정
-                console.log("로컬 상태로 설정 완료");
+                setError(error.message);
             } else {
                 setError('알 수 없는 오류가 발생했습니다.');
             }
         } finally {
-            // 로딩 상태 해제
             setLoading(false);
         }
     };
@@ -57,49 +60,79 @@ const Login: React.FC = () => {
                 </Link>
             </div>
 
-            {/* ✅ motion 적용 */}
-            <motion.div
-                initial={{opacity: 0.7, scale: 0.98}} // 처음에 작게 시작
-                animate={{opacity: 1, scale: 1}}    // 나타날 때 커짐
-                exit={{opacity: 0.7, scale: 0.98}}    // 사라질 때 다시 작아짐
-                transition={{duration: 0.1}}
-                className="w-1/2 bg-white rounded-[40px] flex flex-col justify-center items-center px-20"
-            >
-                <h2 className="text-3xl font-bold mb-12">로그인하기</h2>
-                <form className="w-full space-y-6" onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="ID"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                        className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
-                    />
-
-                    {/* ✅ 로컬 상태 기반 에러 메시지 표시 */}
-                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
-                    <div className="text-right">
-                        <button type="button" className="text-gray-500 hover:text-gray-700">
-                            비밀번호를 잊으셨나요?
-                        </button>
+            <div className="w-1/2 bg-white rounded-[40px] flex flex-col justify-center items-center px-20">
+                <motion.div
+                    initial={{ opacity: 0.7, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0.7, scale: 0.98 }}
+                    transition={{ duration: 0.1 }}
+                    className="w-full"
+                >
+                    <h2 className="text-3xl font-bold mb-12">로그인하기</h2>
+                    {/* AnimatedCharacter를 로그인 폼 상단에 배치 */}
+                    <div className="mb-8">
+                        <AnimatedCharacter targetPos={targetPos} isPasswordFocused={isPasswordFocused} />
                     </div>
+                    <form className="w-full space-y-6" onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            placeholder="ID"
+                            value={id}
+                            onChange={(e) => {
+                                setId(e.target.value);
+                                updateCaretPosition(e.target);
+                            }}
+                            onFocus={(e) => {
+                                updateCaretPosition(e.target);
+                                setIsPasswordFocused(false);
+                            }}
+                            onKeyUp={(e) => {
+                                updateCaretPosition(e.target);
+                            }}
+                            onBlur={() => setTargetPos(null)}
+                            className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onFocus={(e) => {
+                                // 비밀번호 입력 시에는 눈은 감은 상태로 → targetPos은 중앙으로 설정(또는 null)
+                                const rect = e.target.getBoundingClientRect();
+                                setTargetPos({
+                                    x: rect.left + rect.width / 2,
+                                    y: rect.top + rect.height / 2,
+                                });
+                                setIsPasswordFocused(true);
+                            }}
+                            onBlur={() => {
+                                setTargetPos(null);
+                                setIsPasswordFocused(false);
+                            }}
+                            className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
+                        />
 
-                    <button
-                        type="submit"
-                        className="w-full py-3 bg-[#000000] text-white rounded-full hover:bg-[#440000] transition-colors"
-                        disabled={loading} // ✅ 로컬 상태의 loading 사용
-                    >
-                        {loading ? '로그인 중...' : '로그인'}
-                    </button>
-                </form>
-            </motion.div>
+                        {error && (
+                            <p className="text-red-500 text-sm text-center">{error}</p>
+                        )}
+
+                        <div className="text-right">
+                            <button type="button" className="text-gray-500 hover:text-gray-700">
+                                비밀번호를 잊으셨나요?
+                            </button>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full py-3 bg-[#000000] text-white rounded-full hover:bg-[#440000] transition-colors"
+                            disabled={loading}
+                        >
+                            {loading ? '로그인 중...' : '로그인'}
+                        </button>
+                    </form>
+                </motion.div>
+            </div>
         </>
     );
 };

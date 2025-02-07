@@ -51,8 +51,9 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
             // 쿠키에 토큰 저장 (유효 기간 1일)
             Cookies.set('token', JSON.stringify(response.data.userInfo), {
                 expires: 1,
-                secure: true,
-                sameSite: 'Strict'
+                secure: false,
+                sameSite: 'Lax',
+                //secure true에 'strict'여야함. 지금 임시로 뚫은거.
             });
 
             navigate(ROUTES.HOME);
