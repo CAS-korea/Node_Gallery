@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {useServices} from "../contextAPI/ServicesProvider.tsx";
 import {ClientUrl} from "../constants/ClientUrl.tsx";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Link, useLocation } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { useServices } from '../contextAPI/ServicesProvider';
 import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from 'lucide-react';

@@ -7,13 +7,13 @@ import {ErrorMessages} from "../../constants/ErrorMessages";
 import {ClientUrl} from "../../constants/ClientUrl.tsx";
 
 const Register: React.FC = () => {
-    const [id, setId] = useState('');
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [studentNumber, setStudentNumber] = useState('');
     const [email, setEmail] = useState('');
-    const [role, setRole] = useState<UserRole>('student');
+    const [role, setRole] = useState<UserRole>('STUDENT');
 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ const Register: React.FC = () => {
         }
 
         const registerDTO: RegisterDTO = {
-            id: id,
+            userId,
             password,
             name,
             phoneNumber,
@@ -40,7 +40,8 @@ const Register: React.FC = () => {
             email,
             role,
             isAuthorized: false,
-            introduce: ''
+            introduce: '',
+            profileImageUrl: ''
         };
 
         try {
@@ -72,8 +73,8 @@ const Register: React.FC = () => {
                     <input
                         type="text"
                         placeholder="id"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
+                        value={userId}
+                        onChange={(e) => setUserId(e.target.value)}
                         className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
                     />
                     <input
@@ -123,33 +124,33 @@ const Register: React.FC = () => {
                     <div className="flex justify-center space-x-4">
                         <motion.button
                             type="button"
-                            onClick={() => setRole('student')}
+                            onClick={() => setRole('STUDENT')}
                             whileHover={{scale: 1.05}}
                             whileTap={{scale: 0.95}}
                             className={`px-6 py-2 rounded-full ${
-                                role === 'student' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
+                                role === 'STUDENT' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
                             재학생
                         </motion.button>
                         <motion.button
                             type="button"
-                            onClick={() => setRole('graduate')}
+                            onClick={() => setRole('GRADUATE')}
                             whileHover={{scale: 1.05}}
                             whileTap={{scale: 0.95}}
                             className={`px-6 py-2 rounded-full ${
-                                role === 'graduate' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
+                                role === 'GRADUATE' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
                             졸업생
                         </motion.button>
                         <motion.button
                             type="button"
-                            onClick={() => setRole('professor')}
+                            onClick={() => setRole('PROFESSOR')}
                             whileHover={{scale: 1.05}}
                             whileTap={{scale: 0.95}}
                             className={`px-6 py-2 rounded-full ${
-                                role === 'professor' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
+                                role === 'PROFESSOR' ? 'bg-[#00E5FF] text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
                             교수

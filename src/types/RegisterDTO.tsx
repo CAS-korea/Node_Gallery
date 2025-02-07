@@ -1,8 +1,8 @@
 // types/RegisterDTO.ts
-export type UserRole = 'student' | 'graduate' | 'professor';
+export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR';
 
 export interface RegisterDTO {
-    id: string;
+    userId: string;
     password: string;
     name: string;
     phoneNumber: string;
@@ -11,4 +11,5 @@ export interface RegisterDTO {
     role: UserRole;
     isAuthorized: boolean;
     introduce: string;
+    profileImageUrl: string;
 }

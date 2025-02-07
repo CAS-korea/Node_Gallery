@@ -1,20 +1,14 @@
-import {useState} from "react";
 import {Link} from "react-router-dom";
-import {motion} from "framer-motion"; // ✅ motion 추가
-import {useServices} from "../../contextAPI/ServicesProvider";
 import {ClientUrl} from "../../constants/ClientUrl.tsx"; // 서비스 훅 불러오기
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useServices } from "../../contextAPI/ServicesProvider";
-import { ROUTES } from "../../constants/ROUTES.tsx";
 import AnimatedCharacter from "../../components/AnimatedCharacter";
 import { getCaretCoordinates } from "../../utils/getCaretCoordinates";
 
-
 const Login: React.FC = () => {
     // ✅ 로컬 상태
-    const [id, setId] = useState('');
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -36,7 +30,7 @@ const Login: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        const loginDTO = { id, password };
+        const loginDTO = { userId, password };
 
         try {
             await login(loginDTO);
@@ -82,9 +76,9 @@ const Login: React.FC = () => {
                         <input
                             type="text"
                             placeholder="ID"
-                            value={id}
+                            value={userId}
                             onChange={(e) => {
-                                setId(e.target.value);
+                                setUserId(e.target.value);
                                 updateCaretPosition(e.target);
                             }}
                             onFocus={(e) => {
