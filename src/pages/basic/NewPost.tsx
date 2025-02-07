@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { marked } from 'marked';
 import { PostDTO } from '../../types/PostDTO.tsx';
 import { useServices } from "../../contextAPI/ServicesProvider.tsx";
+import PostContainer from "../../components/Container";
 
 const NewPost: React.FC = () => {
     const { createPost } = useServices();  // API 호출 함수 가져오기
@@ -27,7 +28,7 @@ const NewPost: React.FC = () => {
     };
 
     return (
-        <div className="w-full bg-gray-900 text-white p-6 space-y-6 flex">
+        <PostContainer>
             {/* 입력 창 */}
             <div className="w-1/2 pr-4">
                 <h1 className="text-3xl font-semibold mb-4">새 게시물 작성</h1>
@@ -38,19 +39,19 @@ const NewPost: React.FC = () => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="제목을 입력하세요"
-                        className="w-full px-4 py-2 bg-gray-800 rounded-md text-white border border-gray-600 focus:outline-none"
+                        className="w-full px-4 py-2 bg-white rounded-md text-black border border-gray-300 focus:outline-none"
                     />
                     {/* 내용 입력 */}
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="내용을 작성하세요"
-                        className="w-full px-4 py-2 bg-gray-800 rounded-md text-white border border-gray-600 focus:outline-none"
+                        className="w-full px-4 py-2 bg-white rounded-md text-black border border-gray-300 focus:outline-none"
                         rows={10}
                     />
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
+                        className="px-6 py-3 bg-gray-200 text-black rounded-full hover:bg-gray-100 transition-colors"
                     >
                         게시물 올리기
                     </button>
@@ -58,14 +59,14 @@ const NewPost: React.FC = () => {
             </div>
 
             {/* 미리보기 창 */}
-            <div className="w-1/2 pl-4">
+            <div className="w-1/2 pl-1">
                 <h2 className="text-xl font-semibold mb-4">미리보기</h2>
                 <div
-                    className="prose prose-invert bg-gray-800 p-4 rounded-md"
+                    className="prose prose-invert bg-gray-100 text-black p-4 rounded-md"
                     dangerouslySetInnerHTML={{ __html: previewContent }}
                 />
             </div>
-        </div>
+        </PostContainer>
     );
 };
 

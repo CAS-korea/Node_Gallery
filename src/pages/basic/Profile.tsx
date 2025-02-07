@@ -3,6 +3,7 @@ import { useServices } from '../../contextAPI/ServicesProvider.tsx';
 import { PostEntity } from '../../types/PostEntity.tsx';
 import PostCard from '../../components/PostCard.tsx';
 import Cookies from "js-cookie";
+import PostContainer from "../../components/Container";
 
 const Profile: React.FC = () => {
     const { getUserPosts } = useServices();
@@ -35,12 +36,12 @@ const Profile: React.FC = () => {
     }, [userInfo, getUserPosts]);
 
     return (
-        <div className="w-full bg-gray-900 text-white p-6 space-y-6">
+        <PostContainer>
             <h1 className="text-3xl font-semibold">내 프로필</h1>
             <div className="space-y-4">
                 <p className="text-lg">이름: {userInfo?.name || "알 수 없음"}</p>
                 <p className="text-lg">이메일: {userInfo?.email}</p>
-                <button className="px-6 py-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors">
+                <button className="px-6 py-3 bg-gray-200 text-black rounded-full hover:bg-gray-100 transition-colors">
                     프로필 수정
                 </button>
             </div>
@@ -58,7 +59,7 @@ const Profile: React.FC = () => {
                     )}
                 </div>
             </div>
-        </div>
+        </PostContainer>
     );
 };
 

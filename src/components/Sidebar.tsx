@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {useServices} from "../contextAPI/ServicesProvider.tsx";
 import {ClientUrl} from "../constants/ClientUrl.tsx";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { useServices } from '../contextAPI/ServicesProvider';
 import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from 'lucide-react';
@@ -12,13 +13,13 @@ const Sidebar: React.FC = () => {
     const {logout} = useServices();
 
     const navItems = [
-        { path: "/", label: "홈", icon: <Home size={22} /> },
-        { path: "/search", label: "검색", icon: <Search size={22} /> },
-        { path: "/new-post", label: "새 게시물", icon: <PlusCircle size={22} /> },
-        { path: "/dm-list", label: "채팅", icon: <MessageCircle size={22} /> },
-        { path: "/profile", label: "프로필", icon: <User size={22} /> },
-        { path: "/alarm", label: "알림", icon: <Bell size={22} /> },
-        { path: "/settings", label: "설정", icon: <Settings size={22} /> }
+        { path: ClientUrl.HOME, label: "홈", icon: <Home size={22} /> },
+        { path: ClientUrl.SEARCH, label: "검색", icon: <Search size={22} /> },
+        { path: ClientUrl.NEWPOST, label: "새 게시물", icon: <PlusCircle size={22} /> },
+        { path: ClientUrl.MESSAGELOG, label: "채팅", icon: <MessageCircle size={22} /> },
+        { path: ClientUrl.PROFILE, label: "프로필", icon: <User size={22} /> },
+        { path: ClientUrl.NOTIFICATION, label: "알림", icon: <Bell size={22} /> },
+        { path: ClientUrl.SETTINGS, label: "설정", icon: <Settings size={22} /> }
     ];
 
     return (
