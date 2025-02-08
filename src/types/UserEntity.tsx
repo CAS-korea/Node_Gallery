@@ -1,9 +1,9 @@
-// types/RegisterDTO.ts
+// types/UserEntity.ts
 export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR';
 
-export interface RegisterDTO {
+export interface UserEntity {
     userId: string;
-    password: string;
+    password: string | null;
     name: string;
     phoneNumber: string;
     studentNumber: string;

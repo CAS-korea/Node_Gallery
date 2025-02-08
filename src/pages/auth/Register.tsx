@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {motion} from "framer-motion";
 import {useServices} from "../../contextAPI/ServicesProvider";
-import {RegisterDTO, UserRole} from "../../types/RegisterDTO";
+import {UserEntity, UserRole} from "../../types/UserEntity.tsx";
 import {ErrorMessages} from "../../constants/ErrorMessages";
 import {ClientUrl} from "../../constants/ClientUrl.tsx";
 
@@ -31,7 +31,7 @@ const Register: React.FC = () => {
             return;
         }
 
-        const registerDTO: RegisterDTO = {
+        const registerDTO: UserEntity = {
             userId,
             password,
             name,
