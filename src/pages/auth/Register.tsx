@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {motion} from "framer-motion";
-import {useServices} from "../../contextAPI/ServicesProvider";
-import {UserEntity, UserRole} from "../../types/UserEntity.tsx";
-import {ErrorMessages} from "../../constants/ErrorMessages";
-import {ClientUrl} from "../../constants/ClientUrl.tsx";
+import {useServices} from "../../context/ServicesProvider";
+import {UserEntity, UserRole} from "../../types/UserEntity.ts";
+import {ErrorMessages} from "../../constants/ErrorMessages.ts";
+import {ClientUrl} from "../../constants/ClientUrl.ts";
 
 const Register: React.FC = () => {
     const [userId, setUserId] = useState('');

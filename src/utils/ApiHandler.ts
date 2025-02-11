@@ -1,14 +1,13 @@
-import axios, { AxiosError } from "axios";
-import { ErrorMessages } from "../constants/ErrorMessages";
-import {ServerUrl} from "../constants/ServerUrl.tsx";
+import axios, {AxiosError} from "axios";
+import {ErrorMessages} from "../constants/ErrorMessages.ts";
+import {ServerUrl} from "../constants/ServerUrl.ts";
 
 const apiHandler = axios.create({
-    baseURL: ServerUrl.Local, // 백엔드 URL로 수정
+    baseURL: ServerUrl.SERVER, // 백엔드 URL로 수정
     timeout: 5000,
 });
 
 
-// 에러 핸들러 함수
 const handleApiError = (error: AxiosError) => {
     const status = error.response?.status;
 
@@ -33,10 +32,8 @@ const handleApiError = (error: AxiosError) => {
 apiHandler.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-        console.log("에러 분류 시작");
-        const errorMessage = handleApiError(error); // 프론트에서 커스터마이즈된 메시지 반환
-        console.log("커스터마이즈 에러 반환 완료");
-        return Promise.reject(new Error(errorMessage)); // 커스터마이즈된 메시지를 반환
+        const errorMessage = handleApiError(error);
+        return Promise.reject(new Error(errorMessage));
     }
 );
 

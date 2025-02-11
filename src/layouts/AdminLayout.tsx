@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 import {Outlet} from 'react-router-dom';
 import Header from '../components/HeaderMain';
-import {useServices} from "../contextAPI/ServicesProvider.tsx";
+import {useServices} from "../context/ServicesProvider.tsx";
 
 interface AdminLayoutProps {
     children?: ReactNode;  // children의 타입을 ReactNode로 지정

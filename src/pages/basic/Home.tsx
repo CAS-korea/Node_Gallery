@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PostEntity } from '../../types/PostEntity';
+import { PostEntity } from '../../types/PostEntity.ts';
 import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container"; // container 컴포넌트 import
 

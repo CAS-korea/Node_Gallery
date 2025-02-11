@@ -1,6 +1,6 @@
 import {Navigate, useLocation} from 'react-router-dom';
 import Cookies from "js-cookie";
-import {ClientUrl} from "../constants/ClientUrl.tsx";
+import {ClientUrl} from "../constants/ClientUrl.ts";
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;

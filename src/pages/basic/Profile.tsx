@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useServices } from '../../contextAPI/ServicesProvider.tsx';
-import { PostEntity } from '../../types/PostEntity.tsx';
+import { useServices } from '../../context/ServicesProvider.tsx';
+import { PostEntity } from '../../types/PostEntity.ts';
 import PostCard from '../../components/PostCard.tsx';
 import Cookies from "js-cookie";
 import PostContainer from "../../components/Container";

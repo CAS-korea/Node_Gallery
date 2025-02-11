@@ -13,7 +13,7 @@ import Alarm from '../pages/basic/Alarm.tsx';
 import Settings from '../pages/basic/Settings.tsx';
 import DetailDm from '../pages/basic/DetailDm.tsx';
 import PostView from '../pages/basic/PostView.tsx';
-import {ClientUrl} from "../constants/ClientUrl.tsx";
+import {ClientUrl} from "../constants/ClientUrl.ts";
 import Home from "../pages/basic/Home.tsx";
 import AdminLayout from "../layouts/AdminLayout.tsx";
 import Admin from "../pages/admin/Admin.tsx";

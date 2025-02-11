@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PostContainer from "../../components/Container";
-import {useServices} from "../../contextAPI/ServicesProvider.tsx";
-import {UserEntity} from "../../types/UserEntity.tsx";
+import {useServices} from "../../context/ServicesProvider.tsx";
+import {UserEntity} from "../../types/UserEntity.ts";
 
 const Admin: React.FC = () => {
     const {authorizeUser, getNonuserList, getUserList, updateUserInfo} = useServices();

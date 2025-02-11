@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
-import {ClientUrl} from "../../constants/ClientUrl.tsx"; // 서비스 훅 불러오기
+import {ClientUrl} from "../../constants/ClientUrl.ts"; // 서비스 훅 불러오기
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useServices } from "../../contextAPI/ServicesProvider";
+import { useServices } from "../../context/ServicesProvider";
 import AnimatedCharacter from "../../components/AnimatedCharacter";
 import { getCaretCoordinates } from "../../utils/getCaretCoordinates";
 

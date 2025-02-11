@@ -1,5 +1,6 @@
 export enum ClientUrl {
     INDEX = '/',
+
     HOME = '/home',
     LOGIN = '/login',
     REGISTER = '/register',

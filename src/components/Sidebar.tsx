@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {ClientUrl} from "../constants/ClientUrl.tsx";
+import {ClientUrl} from "../constants/ClientUrl.ts";
 import { motion } from "framer-motion";
-import { useServices } from '../contextAPI/ServicesProvider';
+import { useServices } from '../context/ServicesProvider';
 import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from 'lucide-react';
 
 const Sidebar: React.FC = () => {

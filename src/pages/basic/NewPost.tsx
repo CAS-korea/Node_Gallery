@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { marked } from 'marked';
-import { PostDTO } from '../../types/PostDTO.tsx';
-import { useServices } from "../../contextAPI/ServicesProvider.tsx";
+import { PostDTO } from '../../types/PostDTO.ts';
+import { useServices } from "../../context/ServicesProvider.tsx";
 import PostContainer from "../../components/Container";
 
 const NewPost: React.FC = () => {

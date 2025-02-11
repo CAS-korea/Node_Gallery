@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PostEntity } from '../../types/PostEntity';
+import { PostEntity } from '../../types/PostEntity.ts';
 import { marked } from 'marked';
 import PostContainer from "../../components/Container";
 import { motion } from 'framer-motion';
