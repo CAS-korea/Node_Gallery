@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useServices } from "../../contextAPI/ServicesProvider";
 import { ROUTES } from "../../constants/ROUTES.tsx";
-import AnimatedCharacter from "../../components/AnimatedCharacter";
 import FloatingInput from "../../components/FloatingInput";
 
 const Login: React.FC = () => {
@@ -12,11 +11,6 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [isAngry, setIsAngry] = useState(false);
-
-    // 패스워드 애니메이션 관련 상태
-    const [targetPos, setTargetPos] = useState<{ x: number; y: number } | null>(null);
-    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
     const { login } = useServices();
 
@@ -33,8 +27,6 @@ const Login: React.FC = () => {
             } else {
                 setError("알 수 없는 오류가 발생했습니다.");
             }
-            setIsAngry(true);
-            setTimeout(() => setIsAngry(false), 1500);
         } finally {
             setLoading(false);
         }
@@ -47,11 +39,6 @@ const Login: React.FC = () => {
                 <div className="w-full max-w-md p-6 border border-bac-300 rounded-2xl shadow-md bg-white">
                     {/* AnimatedCharacter: 게시글 내부에 위치 */}
                     <div className="mb-4 flex justify-start">
-                        <AnimatedCharacter
-                            targetPos={targetPos}
-                            isPasswordFocused={isPasswordFocused}
-                            isAngry={isAngry}
-                        />
                     </div>
 
                     <div className="mb-4">
@@ -96,18 +83,6 @@ const Login: React.FC = () => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            onFocus={(e) => {
-                                const rect = e.target.getBoundingClientRect();
-                                setTargetPos({
-                                    x: rect.left + rect.width / 2,
-                                    y: rect.top + rect.height / 2,
-                                });
-                                setIsPasswordFocused(true);
-                            }}
-                            onBlur={() => {
-                                setTargetPos(null);
-                                setIsPasswordFocused(false);
-                            }}
                         />
 
                         {error && (

@@ -50,9 +50,9 @@ const CustomCursor: React.FC = () => {
             style={{
                 width: baseSize,
                 height: baseSize,
-                border: '2px solid #000',
+                border: '2px solid #000', // 검은색 테두리
                 borderRadius: '50%',
-                backgroundColor: 'transparent',
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
             }}
             animate={{
                 // x, y, scale을 하나의 transform으로 통합
