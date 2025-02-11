@@ -1,35 +1,42 @@
 import {Navigate, useLocation} from 'react-router-dom';
-import Home from "../pages/basic/Home.tsx";
-import Index from "../pages/Index.tsx";
-import BasicLayout from "../layouts/BasicLayout.tsx";
 import Cookies from "js-cookie";
-import {ROUTES} from "../constants/ROUTES.tsx";
+import {ClientUrl} from "../constants/ClientUrl.tsx";
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;
-    isRoot?: boolean;  // 루트 경로인지 여부를 판단하는 속성
+    isAdminRoute?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, isRoot = false }) => {
-    const token = Cookies.get('token');
-    const location = useLocation();  // useLocation을 사용하여 URL 변화를 감지
+interface UserInfo {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    role: string;
+}
 
-    // 루트 경로에서 조건부 렌더링
-    if (isRoot) {
-        return token ? (
-            <BasicLayout>
-                <Home />
-            </BasicLayout>
-        ) : (
-            <Index />
-        );
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children, isAdminRoute}) => {
+    const location = useLocation();
+    const token = Cookies.get('info');
+    const userInfo: UserInfo | null = token ? JSON.parse(token) : null;
+
+
+    // 1. 미인증 사용자 페이지 제한
+    if (!userInfo) {
+        return <Navigate to={ClientUrl.LOGIN} state={{from: location}} replace/>;
     }
 
-    // 비루트 경로에서 토큰이 없을 시 리다이렉트
-    if (!token) {
-        return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
+    // 2. 관리자 페이지 접근 시 역할 검사
+    if (isAdminRoute) { // 일반 사용자 권한
+        if (userInfo.role !== 'CAS_CREATOR') {
+            return <Navigate to={ClientUrl.HOME} replace />;
+        }
+    } else { // 어드민 사용자 권한
+        if (userInfo.role === 'CAS_CREATOR') {
+            return <Navigate to={ClientUrl.ADMIN} replace />;
+        }
     }
 
+    // 3. 인증 사용자 페이지 접근
     return <>{children}</>;
 };
 

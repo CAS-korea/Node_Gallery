@@ -1,13 +1,13 @@
+import {Link} from "react-router-dom";
+import {ClientUrl} from "../../constants/ClientUrl.tsx"; // 서비스 훅 불러오기
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useServices } from "../../contextAPI/ServicesProvider";
-import { ROUTES } from "../../constants/ROUTES.tsx";
 import FloatingInput from "../../components/FloatingInput";
 
 const Login: React.FC = () => {
-    // 로그인 관련 상태
-    const [id, setId] = useState('');
+    // ✅ 로컬 상태
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -18,12 +18,13 @@ const Login: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        const loginDTO = { userId, password };
 
         try {
-            await login({ id, password });
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
+            await login(loginDTO);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message);
             } else {
                 setError("알 수 없는 오류가 발생했습니다.");
             }
@@ -49,7 +50,7 @@ const Login: React.FC = () => {
                     </div>
                     <div className="text-right">
                         <Link
-                            to={ROUTES.REGISTER}
+                            to={ClientUrl.REGISTER}
                             className="text-blue-400 hover:underline"
                         >
                             회원가입 하기
@@ -73,8 +74,8 @@ const Login: React.FC = () => {
                             label="UserID"
                             name="id"
                             type="text"
-                            value={id}
-                            onChange={(e) => setId(e.target.value)}
+                            value={userId}
+                            onChange={(e) => setUserId(e.target.value)}
                         />
 
                         <FloatingInput

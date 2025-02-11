@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { useServices } from "../../contextAPI/ServicesProvider";
-import { RegisterDTO, UserRole } from "../../types/RegisterDTO";
-import { ROUTES } from "../../constants/ROUTES.tsx";
-import FloatingInput from "../../components/FloatingInput"; // 경로에 맞게 수정
+import React, {useState} from "react";
+import {Link} from "react-router-dom";
+import {motion} from "framer-motion";
+import {useServices} from "../../contextAPI/ServicesProvider";
+import {UserEntity, UserRole} from "../../types/UserEntity.tsx";
+import {ClientUrl} from "../../constants/ClientUrl.tsx";
 
 // 백엔드 유효성 검사와 동일한 조건을 적용하는 프론트엔드 검증 함수들
 const isIdValid = (id: string) => /^[A-Za-z0-9]{5,}$/.test(id);
@@ -15,18 +14,19 @@ const isPhoneNumberValid = (phoneNumber: string) => /^[0-9]{11}$/.test(phoneNumb
 const isStudentNumberValid = (studentNumber: string) => /^[0-9]{8}$/.test(studentNumber);
 const isEmailValid = (email: string) => /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/.test(email);
 
+
 const Register: React.FC = () => {
     // 다단계 진행 상태 및 입력 관련 상태
     const [currentStep, setCurrentStep] = useState(1);
-    const [id, setId] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [name, setName] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [studentNumber, setStudentNumber] = useState("");
-    const [email, setEmail] = useState("");
-    const [role, setRole] = useState<UserRole>("student");
-    const [verificationPhoto, setVerificationPhoto] = useState<File | null>(null);
+
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [studentNumber, setStudentNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [role, setRole] = useState<UserRole>('STUDENT');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
     const { register } = useServices();
@@ -41,31 +41,28 @@ const Register: React.FC = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        verificationPhoto: "",
     });
 
-    // 스텝1,2에서 "다음" 버튼 클릭 시 검증 후 다음 스텝으로 진행
-    const handleNext = (e: React.FormEvent) => {
+    const handleNext = async (e: React.FormEvent) => {
         e.preventDefault();
         if (currentStep === 1) {
             let newErrors = {
-                id: "",
+                userId: "",
                 name: "",
                 phoneNumber: "",
                 studentNumber: "",
                 email: "",
                 password: "",
                 confirmPassword: "",
-                verificationPhoto: "",
             };
             let hasError = false;
 
             // ID 검증
-            if (!id.trim()) {
-                newErrors.id = "ID가 채워지지 않았습니다.";
+            if (!userId.trim()) {
+                newErrors.userId = "ID가 채워지지 않았습니다.";
                 hasError = true;
-            } else if (!isIdValid(id)) {
-                newErrors.id = "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요.";
+            } else if (!isIdValid(userId)) {
+                newErrors.userId = "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요.";
                 hasError = true;
             }
             // 이름 검증
@@ -133,12 +130,7 @@ const Register: React.FC = () => {
     // 스텝3에서 최종 제출 시 검증 및 제출 처리
     const handleFinalSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let newErrors = { ...errors, verificationPhoto: "" };
-        if (!verificationPhoto) {
-            newErrors.verificationPhoto = "학교 인증 사진을 첨부해주세요.";
-            setErrors(newErrors);
-            return;
-        }
+
         if (password !== confirmPassword) {
             newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
             setErrors(newErrors);
@@ -147,8 +139,8 @@ const Register: React.FC = () => {
         setErrors(newErrors);
         setLoading(true);
 
-        const registerDTO: RegisterDTO = {
-            id,
+        const registerDTO: UserEntity = {
+            userId,
             password,
             name,
             phoneNumber,
@@ -156,7 +148,8 @@ const Register: React.FC = () => {
             email,
             role,
             isAuthorized: false,
-            introduce: "",
+            introduce: '',
+            profileImageUrl: ''
         };
 
         try {
@@ -178,8 +171,8 @@ const Register: React.FC = () => {
                             <FloatingInput
                                 label="ID"
                                 name="id"
-                                value={id}
-                                onChange={(e) => setId(e.target.value)}
+                                value={userId}
+                                onChange={(e) => setUserId(e.target.value)}
                                 error={errors.id}
                             />
                         </div>
@@ -249,11 +242,11 @@ const Register: React.FC = () => {
                         <div className="flex justify-center space-x-6">
                             <motion.button
                                 type="button"
-                                onClick={() => setRole("student")}
+                                onClick={() => setRole("STUDENT")}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`px-5 py-2 rounded-full border ${
-                                    role === "student"
+                                    role === "STUDENT"
                                         ? "bg-blue-500 text-white border-blue-500"
                                         : "bg-transparent text-gray-600 border-gray-300"
                                 }`}
@@ -262,11 +255,11 @@ const Register: React.FC = () => {
                             </motion.button>
                             <motion.button
                                 type="button"
-                                onClick={() => setRole("graduate")}
+                                onClick={() => setRole("GRADUATE")}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`px-5 py-2 rounded-full border ${
-                                    role === "graduate"
+                                    role === "GRADUATE"
                                         ? "bg-blue-500 text-white border-blue-500"
                                         : "bg-transparent text-gray-600 border-gray-300"
                                 }`}
@@ -275,11 +268,11 @@ const Register: React.FC = () => {
                             </motion.button>
                             <motion.button
                                 type="button"
-                                onClick={() => setRole("professor")}
+                                onClick={() => setRole("PROFESSOR")}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`px-5 py-2 rounded-full border ${
-                                    role === "professor"
+                                    role === "PROFESSOR"
                                         ? "bg-blue-500 text-white border-blue-500"
                                         : "bg-transparent text-gray-600 border-gray-300"
                                 }`}
@@ -293,28 +286,6 @@ const Register: React.FC = () => {
                 return (
                     <div className="flex flex-col items-center space-y-6">
                         <p className="text-lg font-medium text-gray-700">학교 인증 (사진 첨부)</p>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
-                                    setVerificationPhoto(e.target.files[0]);
-                                }
-                            }}
-                            className="mt-2"
-                        />
-                        {errors.verificationPhoto && (
-                            <p className="text-red-500 text-sm mt-1">{errors.verificationPhoto}</p>
-                        )}
-                        {verificationPhoto && (
-                            <div className="mt-2">
-                                <img
-                                    src={URL.createObjectURL(verificationPhoto)}
-                                    alt="Preview"
-                                    className="w-32 h-32 object-cover rounded-lg"
-                                />
-                            </div>
-                        )}
                     </div>
                 );
             default:
@@ -411,7 +382,7 @@ const Register: React.FC = () => {
                     {renderNavigation()}
                 </form>
                 <motion.div whileTap={{ scale: 0.95 }} className="mt-6 text-center">
-                    <Link to={ROUTES.LOGIN} className="text-gray-600 hover:text-gray-800">
+                    <Link to={ClientUrl.LOGIN} className="text-gray-600 hover:text-gray-800">
                         이미 계정이 있으신가요? 로그인하기
                     </Link>
                 </motion.div>

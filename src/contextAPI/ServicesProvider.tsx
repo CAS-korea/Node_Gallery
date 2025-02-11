@@ -2,22 +2,26 @@ import {createContext, ReactNode, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import apiHandler from "./ApiHandler.tsx";
 import {LoginDTO} from "../types/LoginDTO";
-import {RegisterDTO} from "../types/RegisterDTO";
+import {UserEntity} from "../types/UserEntity.tsx";
 import {PostDTO} from "../types/PostDTO";
 import {PostEntity} from "../types/PostEntity"; // 추가
 import Cookies from 'js-cookie';
-import {ROUTES} from "../constants/ROUTES.tsx";
+import {ClientUrl} from "../constants/ClientUrl.tsx";
 
 interface ServicesContextType {
     login: (loginDTO: LoginDTO) => Promise<void>;
-    register: (registerDTO: RegisterDTO) => Promise<void>;
+    register: (userEntity: UserEntity) => Promise<void>;
     logout: () => void;
     createPost: (postDTO: PostDTO) => Promise<void>;
-    getAllPosts: () => Promise<PostEntity[]>; // 추가
-    getPostById: (postID: string) => Promise<PostEntity>; // 추가
-    likePost: (postID: string) => Promise<void>; // 추가
-    reportPost: (postID: string) => Promise<void>; // 추가
-    getUserPosts: (username: string) => Promise<PostEntity[]>; // 추가
+    getAllPosts: () => Promise<PostEntity[]>;
+    getPostById: (postID: string) => Promise<PostEntity>;
+    likePost: (postID: string) => Promise<void>;
+    reportPost: (postID: string) => Promise<void>;
+    getUserPosts: (userId: string) => Promise<PostEntity[]>;
+    authorizeUser: (userId: string, status: 'accept' | 'reject') => Promise<void>;
+    getNonuserList: () => Promise<UserEntity[]>;
+    getUserList: () => Promise<UserEntity[]>;
+    updateUserInfo: (userId: string, userEntity: UserEntity) => Promise<void>;
 }
 
 export const useServices = () => {
@@ -33,10 +37,10 @@ const ServicesContext = createContext<ServicesContextType | undefined>(undefined
 export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const navigate = useNavigate();
 
-    const register = async (registerDTO: RegisterDTO) => {
+    const register = async (registerDTO: UserEntity) => {
         try {
             await apiHandler.post('/user_log/register', registerDTO);
-            navigate(ROUTES.LOGIN);
+            navigate(ClientUrl.LOGIN);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -46,17 +50,19 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
 
     const login = async (loginDTO: LoginDTO) => {
         try {
-            const response = await apiHandler.post('/user_log/login', loginDTO);
+            const response = await apiHandler.post('/user_log/login', loginDTO, {
+                    withCredentials: true,  // 쿠키 전송을 허용
+            });
 
             // 쿠키에 토큰 저장 (유효 기간 1일)
-            Cookies.set('token', JSON.stringify(response.data.userInfo), {
+            Cookies.set('info', JSON.stringify(response.data.userInfo), {
                 expires: 1,
                 secure: false,
                 sameSite: 'Lax',
                 //secure true에 'strict'여야함. 지금 임시로 뚫은거.
             });
 
-            navigate(ROUTES.HOME);
+            navigate(ClientUrl.HOME);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw new Error(error.message);
@@ -66,16 +72,15 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
 
     const logout = () => {
         // 쿠키 토큰 삭제
+        Cookies.remove('info');
         Cookies.remove('token');
-
-        navigate(ROUTES.HOME)
+        navigate(ClientUrl.INDEX)
     };
 
     const createPost = async (postDTO: PostDTO) => {
         try {
-            const token = localStorage.getItem('token');
             await apiHandler.post('/post_relation/create', postDTO, {
-                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true,  // 쿠키 전송을 허용
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -113,9 +118,8 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
     // 게시물 좋아요 기능
     const likePost = async (postID: string) => {
         try {
-            const token = localStorage.getItem('token');
             await apiHandler.post(`/post_relation/likes/${postID}`, {}, {
-                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true,  // 쿠키 전송을 허용
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -127,9 +131,8 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
     // 게시물 신고 기능
     const reportPost = async (postID: string) => {
         try {
-            const token = localStorage.getItem('token');
             await apiHandler.post(`/post_relation/report/${postID}`, {}, {
-                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true,  // 쿠키 전송을 허용
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -151,16 +154,75 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
         }
     };
 
+    const authorizeUser = async (userId: string, status: 'accept' | 'reject') => {
+        try {
+            await apiHandler.post(`/admin/authorize/${userId}/${status}`, '', {
+                withCredentials: true,  // 쿠키 전송을 허용
+            });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            }
+        }
+    }
+
+    const getNonuserList = async () => {
+        try {
+            const response = await apiHandler.get(`/admin/nonuserlist`, {
+                withCredentials: true,  // 쿠키 전송을 명시적으로 허용
+            });
+            return response.data;
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            }
+        }
+    }
+
+
+    const getUserList = async () => {
+        try {
+            const response = await apiHandler.get(`/admin/userlist`, {
+                withCredentials: true,  // 쿠키 전송을 명시적으로 허용
+            });
+
+            console.log("User list response:", response);  // 디버깅용 로그 추가
+            return response.data;
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+
+                console.error("Error fetching user list:", error);  // 에러 로그 추가
+                throw new Error(error.message);
+            }
+        }
+    }
+
+    const updateUserInfo = async (userId: string, userEntity: UserEntity) => {
+        try {
+            await apiHandler.put(`/admin/update/${userId}`, userEntity, {
+                withCredentials: true,  // 쿠키 전송을 허용
+            });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            }
+        }
+    }
+
     const value = {
         login,
         register,
         logout,
         createPost,
-        getAllPosts,   // 추가
-        getPostById,   // 추가
-        likePost,      // 추가
-        reportPost,    // 추가
-        getUserPosts,  // 추가
+        getAllPosts,
+        getPostById,
+        likePost,
+        reportPost,
+        getUserPosts,
+        authorizeUser,
+        getNonuserList,
+        getUserList,
+        updateUserInfo
     };
 
     return <ServicesContext.Provider value={value}>{children}</ServicesContext.Provider>;

@@ -1,10 +1,12 @@
 import axios, { AxiosError } from "axios";
 import { ErrorMessages } from "../constants/ErrorMessages";
+import {ServerUrl} from "../constants/ServerUrl.tsx";
 
 const apiHandler = axios.create({
-    baseURL: "http://localhost:8080", // 백엔드 URL로 수정
+    baseURL: ServerUrl.Local, // 백엔드 URL로 수정
     timeout: 5000,
 });
+
 
 // 에러 핸들러 함수
 const handleApiError = (error: AxiosError) => {

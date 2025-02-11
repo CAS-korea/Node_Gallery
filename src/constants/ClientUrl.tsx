@@ -1,5 +1,6 @@
-export enum ROUTES {
-    HOME = '/',
+export enum ClientUrl {
+    INDEX = '/',
+    HOME = '/home',
     LOGIN = '/login',
     REGISTER = '/register',
     SEARCH = '/search',
@@ -8,6 +9,8 @@ export enum ROUTES {
     PROFILE = '/profile',
     NOTIFICATION = '/notification',
     SETTINGS = '/settings',
+
+    ADMIN = '/admin',
 
     MESSAGELOG = '/dm/:dmId',
     SPECIFICPOST = '/post/:postId',
