@@ -26,5 +26,11 @@ export const AdminService = {
         await apiHandler.put(`/admin/update/${userId}`, userEntity, {
             withCredentials: true
         });
+    },
+
+    async banUser(userId: string, days: number): Promise<void> {
+        await apiHandler.post(`/admin/ban/${userId}/${days}`, '', {
+            withCredentials: true
+        });
     }
 };

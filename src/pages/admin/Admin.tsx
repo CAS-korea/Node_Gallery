@@ -1,36 +1,48 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PostContainer from "../../components/Container";
 import {useServices} from "../../context/ServicesProvider.tsx";
 import {UserEntity} from "../../types/UserEntity.ts";
 
 const Admin: React.FC = () => {
-    const {authorizeUser, getNonuserList, getUserList, updateUserInfo} = useServices();
+    const {authorizeUser, getNonuserList, getUserList, updateUserInfo, banUser} = useServices();
+
+    // 폼 종류 구분
+    const [editMode, setEditMode] = useState<'update' | 'ban' | null>(null);
 
     //  상태 관리 (초기값 빈 배열)
     const [userList, setUserList] = useState<UserEntity[]>([]);
     const [nonuserList, setNonuserList] = useState<UserEntity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [editingUser, setEditingUser] = useState<UserEntity | null>(null);
+    const [banDays, setBanDays] = useState<number>(0);
 
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
-            const users = await getUserList();  // 유저 목록 가져오기
-            const nonUsers = await getNonuserList();  // 비유저 목록 가져오기
-
+            const users = await getUserList();
+            const nonUsers = await getNonuserList();
             setUserList(users);
             setNonuserList(nonUsers);
         } catch (error) {
             console.error("데이터 가져오기 실패:", error);
         }
-    };
+    }, [getUserList, getNonuserList]);  // getUserList와 getNonuserList가 의존성
 
     useEffect(() => {
         setTimeout(() => {
             fetchData();
             setLoading(false);
         }, 500);
-    }, [getUserList, getNonuserList]);
+    }, [fetchData]);
+
+
+    const calculateRemainingDays = (bannedUntil: string): number => {
+        const now = new Date();
+        const banEndDate = new Date(bannedUntil);
+
+        const differenceInMs = banEndDate.getTime() - now.getTime();
+        return Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+    }
 
     // 사용자 승인 처리
     const handleAccept = async (userId: string) => {
@@ -54,6 +66,7 @@ const Admin: React.FC = () => {
         }
     }
 
+    // 사용자 정보 수정 처리
     const handleUpdate = async () => {
         if (!editingUser) return;
 
@@ -64,6 +77,24 @@ const Admin: React.FC = () => {
             await fetchData();
         } catch (error) {
             console.error("수정 실패: ", error);
+        }
+    }
+
+    // 사용자 밴 처리
+    const handleBan = async (days: number) => {
+        if (!editingUser || days <= 0) {
+            alert('유효한 정지 기간을 입력해 주세요.')
+            return;
+        }
+
+        try {
+            await banUser(editingUser.userId, days);
+            alert(`사용자가 ${days}일 정지되었습니다.`);
+            setEditingUser(null);
+            setBanDays(0);
+            await fetchData();
+        } catch (error) {
+            console.error("정지 실패: ", error);
         }
     }
 
@@ -89,10 +120,22 @@ const Admin: React.FC = () => {
                             <span>{user.userId}</span>
                             <div className="space-x-2">
                                 <button
-                                    onClick={() => setEditingUser({...user, password: null})}
+                                    onClick={() => {
+                                        setEditingUser({...user, password: null});
+                                        setEditMode('update');
+                                    }}
                                     className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
                                 >
                                     수정
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setEditingUser({...user, password: null});
+                                        setEditMode('ban');
+                                    }}
+                                    className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                >
+                                    활동 정지
                                 </button>
                             </div>
                         </div>)
@@ -102,31 +145,42 @@ const Admin: React.FC = () => {
                 <div>----------------------------------------------------</div>
                 <div>회원가입 요청한 사용자</div>
                 {nonuserList.length > 0 ? (
-                    nonuserList.map(nonuser => <div key={nonuser.userId}>
-                        <span>{nonuser.userId}</span>
-                        <div className="space-x-2">
-                            <button
-                                onClick={() => handleAccept(nonuser.userId)}
-                                className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
-                            >
-                                승인
-                            </button>
-                            <button
-                                onClick={() => handleReject(nonuser.userId)}
-                                className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                            >
-                                거부
-                            </button>
-                        </div>
-                    </div>)
+                    nonuserList.map(nonuser => {
+                        const remainingDays = nonuser.bannedUntil ? calculateRemainingDays(nonuser.bannedUntil) : 0;
+
+                        return (<div key={nonuser.userId}>
+                                <span>{nonuser.userId}</span>
+                                {!nonuser.isAuthorized && remainingDays > 0 && (
+                                    <span className="ml-2 text-red-500">
+                                (정지 해제까지 {remainingDays}일 남음)
+                            </span>
+                                )}
+                                <div className="space-x-2">
+                                    <button
+                                        onClick={() => handleAccept(nonuser.userId)}
+                                        className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                                    >
+                                        승인
+                                    </button>
+                                    <button
+                                        onClick={() => handleReject(nonuser.userId)}
+                                        className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                    >
+                                        거부
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                    })
                 ) : (
                     <p className="text-gray-400 text-center">회원가입 한 사용자가 없습니다.</p>
                 )}
             </div>
 
             {/* 사용자 정보 수정 폼 */}
-            {editingUser && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+            {editingUser && editMode === 'update' && (
+                <div
+                    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white p-8 rounded-lg shadow-lg space-y-4 w-96">
                         <h2 className="text-2xl font-semibold">사용자 정보 수정</h2>
                         <input
@@ -145,6 +199,40 @@ const Admin: React.FC = () => {
                             </button>
                             <button
                                 onClick={() => setEditingUser(null)}
+                                className="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
+                            >
+                                취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 사용자 활동 정지 폼*/}
+            {editingUser && editMode === 'ban' && (
+                <div
+                    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-8 rounded-lg shadow-lg space-y-4 w-96">
+                        <h2 className="text-2xl font-semibold">사용자 활동 정지</h2>
+                        <input
+                            type="number"
+                            placeholder="정지 기간(일)"
+                            value={banDays}
+                            onChange={(e) => setBanDays(Number(e.target.value))}
+                            className="w-full px-4 py-2 border rounded"
+                        />
+                        <div className="flex space-x-4">
+                            <button
+                                onClick={() => handleBan(banDays)}
+                                className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                            >
+                                저장
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setEditingUser(null);
+                                    setBanDays(0);
+                                }}
                                 className="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
                             >
                                 취소

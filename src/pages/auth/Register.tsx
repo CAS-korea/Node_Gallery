@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import {motion} from "framer-motion";
 import {useServices} from "../../context/ServicesProvider";
 import {UserEntity, UserRole} from "../../types/UserEntity.ts";
-import {ErrorMessages} from "../../constants/ErrorMessages.ts";
 import {ClientUrl} from "../../constants/ClientUrl.ts";
 
 // 백엔드 유효성 검사와 동일한 조건을 적용하는 프론트엔드 검증 함수들

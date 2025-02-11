@@ -22,6 +22,7 @@ export interface ServicesContextType {
     getNonuserList: () => Promise<UserEntity[]>;
     getUserList: () => Promise<UserEntity[]>;
     updateUserInfo: (userId: string, userEntity: UserEntity) => Promise<void>;
+    banUser: (userId: string, days: number) => Promise<void>;
 }
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -57,7 +58,8 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
         authorizeUser: (userId, status) => AdminService.authorizeUser(userId, status),
         getNonuserList: () => AdminService.getNonuserList(),
         getUserList: () => AdminService.getUserList(),
-        updateUserInfo: (userId, userEntity) => AdminService.updateUserInfo(userId, userEntity)
+        updateUserInfo: (userId, userEntity) => AdminService.updateUserInfo(userId, userEntity),
+        banUser: (userId, days) => AdminService.banUser(userId, days)
     };
 
     return <ServicesContext.Provider value={value}>{children}</ServicesContext.Provider>;

@@ -12,4 +12,5 @@ export interface UserEntity {
     isAuthorized: boolean;
     introduce: string;
     profileImageUrl: string;
+    bannedUntil: string;
 }
