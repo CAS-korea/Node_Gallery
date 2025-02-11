@@ -37,9 +37,9 @@ const ServicesContext = createContext<ServicesContextType | undefined>(undefined
 export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const navigate = useNavigate();
 
-    const register = async (registerDTO: UserEntity) => {
+    const register = async (userEntity: UserEntity) => {
         try {
-            await apiHandler.post('/user_log/register', registerDTO);
+            await apiHandler.post('/user_log/register', userEntity);
             navigate(ClientUrl.LOGIN);
         } catch (error: unknown) {
             if (error instanceof Error) {

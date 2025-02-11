@@ -14,12 +14,12 @@ const Header: React.FC = () => {
             <nav className="flex items-center space-x-6">
                 <Link
                     to={ClientUrl.REGISTER}
-                    className="text-black px-5 py-1 text-base font-medium transition-all duration-200 ease-in-out transform hover:scale-110 hover:font-bold hover: font-color">
+                    className="text-white px-5 py-1 text-base font-medium transition-all duration-200 ease-in-out transform hover:scale-110 hover:font-bold hover: font-color">
                     회원가입
                 </Link>
                 <Link
                     to={ClientUrl.LOGIN}
-                    className="text-black px-5 py-1 text-base font-medium transition-all duration-200 ease-in-out transform hover:scale-110 hover:font-bold">
+                    className="text-white px-5 py-1 text-base font-medium transition-all duration-200 ease-in-out transform hover:scale-110 hover:font-bold">
                     로그인
                 </Link>
             </nav>

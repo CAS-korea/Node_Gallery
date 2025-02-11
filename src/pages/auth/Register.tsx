@@ -13,7 +13,7 @@ const isNameValid = (name: string) => /^[A-Za-z가-힣]+$/.test(name);
 const isPhoneNumberValid = (phoneNumber: string) => /^[0-9]{11}$/.test(phoneNumber);
 const isStudentNumberValid = (studentNumber: string) => /^[0-9]{8}$/.test(studentNumber);
 const isEmailValid = (email: string) => /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/.test(email);
-
+import FloatingInput from "../../components/FloatingInput";
 
 const Register: React.FC = () => {
     // 다단계 진행 상태 및 입력 관련 상태
@@ -34,7 +34,7 @@ const Register: React.FC = () => {
 
     // 각 필드별 에러 상태
     const [errors, setErrors] = useState({
-        id: "",
+        userId: "",
         name: "",
         phoneNumber: "",
         studentNumber: "",
@@ -130,7 +130,7 @@ const Register: React.FC = () => {
     // 스텝3에서 최종 제출 시 검증 및 제출 처리
     const handleFinalSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        let newErrors = { ...errors};
         if (password !== confirmPassword) {
             newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
             setErrors(newErrors);
@@ -139,7 +139,7 @@ const Register: React.FC = () => {
         setErrors(newErrors);
         setLoading(true);
 
-        const registerDTO: UserEntity = {
+        const userEntity: UserEntity = {
             userId,
             password,
             name,
@@ -153,7 +153,7 @@ const Register: React.FC = () => {
         };
 
         try {
-            await register(registerDTO);
+            await register(userEntity);
             // 회원가입 성공 후 추가 작업 (예: 페이지 이동, 알림 등)
         } catch (err) {
             console.error(err);
@@ -173,7 +173,7 @@ const Register: React.FC = () => {
                                 name="id"
                                 value={userId}
                                 onChange={(e) => setUserId(e.target.value)}
-                                error={errors.id}
+                                error={errors.userId}
                             />
                         </div>
                         <div>
@@ -325,9 +325,9 @@ const Register: React.FC = () => {
         <div className="min-h-screen bg-gradient-to-br rounded-2xl from-blue-100 to-purple-100 flex items-center justify-center p-4">
             {/* 외부 컨테이너에 motion.div를 적용하여 레이아웃 변화 시 부드러운 transition을 구현 */}
             <motion.div
-                initial={{ opacity: 0.5 }}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 1.0, ease: [0.42, 0, 0.58, 1] }}
                 className="w-full max-w-md bg-white rounded-2xl p-8 shadow-xl"
             >

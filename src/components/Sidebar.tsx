@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
     const {logout} = useServices();
 
     const navItems = [
-        { path: ClientUrl.INDEX, label: "홈", icon: <Home size={22} /> },
+        { path: ClientUrl.HOME, label: "홈", icon: <Home size={22} /> },
         { path: ClientUrl.SEARCH, label: "검색", icon: <Search size={22} /> },
         { path: ClientUrl.NEWPOST, label: "새 게시물", icon: <PlusCircle size={22} /> },
         { path: ClientUrl.MESSAGELOG, label: "채팅", icon: <MessageCircle size={22} /> },
