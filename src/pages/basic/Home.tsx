@@ -4,7 +4,7 @@ import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container"; // container 컴포넌트 import
 
 const Home: React.FC = () => {
-    // ✅ 더미 데이터 (content 속성 추가)
+    //  더미 데이터 (content 속성 추가)
     const dummyPosts: PostEntity[] = [
         {
             postID: "1",

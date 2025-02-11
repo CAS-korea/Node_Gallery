@@ -18,7 +18,7 @@ const PostView: React.FC = () => {
             postID: "1",
             title: "김아프간타의 은밀한 사생활",
             username: "김아프간타",
-            content: "# 더미 게시물 내용\n\n이 게시물은 UI 테스트를 위한 임시 데이터입니다.",
+            content: "# 하핫!\n\n이 게시물은 UI 테스트를 위한 임시 데이터입니다.",
             likesCount: 42,
             reportCount: 3
         };
@@ -70,7 +70,7 @@ const PostView: React.FC = () => {
 
                     {/* 본문 (아래쪽 여유 공간 확보) */}
                     <div
-                        className="prose prose-invert mt-4 pb-16" // 본문 아래쪽 공간 확보
+                        className="prose mt-4 pb-16" // 본문 아래쪽 공간 확보
                         dangerouslySetInnerHTML={{ __html: marked(post.content) }}
                     />
 

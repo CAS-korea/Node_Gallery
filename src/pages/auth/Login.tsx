@@ -3,8 +3,8 @@ import {ClientUrl} from "../../constants/ClientUrl.ts"; // 서비스 훅 불러�
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useServices } from "../../context/ServicesProvider";
-import AnimatedCharacter from "../../components/AnimatedCharacter";
-import { getCaretCoordinates } from "../../utils/getCaretCoordinates";
+import FloatingInput from "../../components/FloatingInput";
+
 
 const Login: React.FC = () => {
     // ✅ 로컬 상태
@@ -13,18 +13,7 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // AnimatedCharacter 관련 상태
-    const [targetPos, setTargetPos] = useState<{ x: number; y: number } | null>(null);
-    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-
     const { login } = useServices();
-
-    // helper: 커서 위치 업데이트
-    const updateCaretPosition = (input: HTMLInputElement) => {
-        const caretIndex = input.selectionStart ?? 0;
-        const coords = getCaretCoordinates(input, caretIndex);
-        setTargetPos(coords);
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,7 +27,7 @@ const Login: React.FC = () => {
             if (error instanceof Error) {
                 setError(error.message);
             } else {
-                setError('알 수 없는 오류가 발생했습니다.');
+                setError("알 수 없는 오류가 발생했습니다.");
             }
         } finally {
             setLoading(false);
@@ -46,70 +35,56 @@ const Login: React.FC = () => {
     };
 
     return (
-        <>
-            <div className="w-1/2 flex flex-col justify-center items-center text-white px-12">
-                <h1 className="text-6xl font-bold mb-8">NODE</h1>
-                <h2 className="text-3xl mb-2">계정이 없으신가요?</h2>
-                <p className="text-center mb-8">가입하고 다른 노더와 소통의 기회를 가져보세요!</p>
-                <Link
-                    to={ClientUrl.REGISTER}
-                    className="border-2 border-white px-12 py-3 rounded-full hover:bg-white hover:text-[#4AA8FF] transition-colors"
-                >
-                    회원가입하기
-                </Link>
+        <div className="min-h-screen flex">
+            {/* 왼쪽 영역: 게시글 컨테이너 */}
+            <div className="flex-1 flex items-center justify-center ">
+                <div className="w-full max-w-md p-6 border border-bac-300 rounded-2xl shadow-md bg-white">
+                    {/* AnimatedCharacter: 게시글 내부에 위치 */}
+                    <div className="mb-4 flex justify-start">
+                    </div>
+
+                    <div className="mb-4">
+                        <h1 className="text-2xl font-bold mb-2">연결의 미학, 노드</h1>
+                        <p className="text-gray-600">
+                            노드에서 새로운 감각의 소통과 예술적 연결을 경험해보세요. 창의적 영감이 넘치는 이야기가 기다리고 있습니다.
+                        </p>
+                    </div>
+                    <div className="text-right">
+                        <Link
+                            to={ClientUrl.REGISTER}
+                            className="text-blue-400 hover:underline"
+                        >
+                            회원가입 하기
+                        </Link>
+                    </div>
+                </div>
             </div>
 
-            <div className="w-1/2 bg-white rounded-[40px] flex flex-col justify-center items-center px-20">
+            {/* 오른쪽 영역: 로그인 폼 */}
+            <div className="flex-1 flex items-center justify-center">
                 <motion.div
                     initial={{ opacity: 0.7, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0.7, scale: 0.98 }}
                     transition={{ duration: 0.1 }}
-                    className="w-full"
+                    className="w-full max-w-md p-6"
                 >
-                    <h2 className="text-3xl font-bold mb-12">로그인하기</h2>
-                    {/* AnimatedCharacter를 로그인 폼 상단에 배치 */}
-                    <div className="mb-8">
-                        <AnimatedCharacter targetPos={targetPos} isPasswordFocused={isPasswordFocused} />
-                    </div>
-                    <form className="w-full space-y-6" onSubmit={handleSubmit}>
-                        <input
+                    <h2 className="text-3xl font-bold mb-8 text-center">로그인</h2>
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <FloatingInput
+                            label="UserID"
+                            name="id"
                             type="text"
-                            placeholder="ID"
                             value={userId}
-                            onChange={(e) => {
-                                setUserId(e.target.value);
-                                updateCaretPosition(e.target);
-                            }}
-                            onFocus={(e) => {
-                                updateCaretPosition(e.target);
-                                setIsPasswordFocused(false);
-                            }}
-                            onKeyUp={(e) => {
-                                updateCaretPosition(e.target);
-                            }}
-                            onBlur={() => setTargetPos(null)}
-                            className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
+                            onChange={(e) => setUserId(e.target.value)}
                         />
-                        <input
+
+                        <FloatingInput
+                            label="Password"
+                            name="password"
                             type="password"
-                            placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            onFocus={(e) => {
-                                // 비밀번호 입력 시에는 눈은 감은 상태로 → targetPos은 중앙으로 설정(또는 null)
-                                const rect = e.target.getBoundingClientRect();
-                                setTargetPos({
-                                    x: rect.left + rect.width / 2,
-                                    y: rect.top + rect.height / 2,
-                                });
-                                setIsPasswordFocused(true);
-                            }}
-                            onBlur={() => {
-                                setTargetPos(null);
-                                setIsPasswordFocused(false);
-                            }}
-                            className="w-full px-6 py-3 bg-gray-100 rounded-full outline-none"
                         />
 
                         {error && (
@@ -124,15 +99,15 @@ const Login: React.FC = () => {
 
                         <button
                             type="submit"
-                            className="w-full py-3 bg-[#000000] text-white rounded-full hover:bg-[#440000] transition-colors"
+                            className="w-full py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
                             disabled={loading}
                         >
-                            {loading ? '로그인 중...' : '로그인'}
+                            {loading ? "로그인 중..." : "로그인"}
                         </button>
                     </form>
                 </motion.div>
             </div>
-        </>
+        </div>
     );
 };
 
