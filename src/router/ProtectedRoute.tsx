@@ -1,15 +1,10 @@
 import {Navigate, useLocation} from 'react-router-dom';
-import Home from "../pages/basic/Home.tsx";
-import Index from "../pages/Index.tsx";
-import BasicLayout from "../layouts/BasicLayout.tsx";
 import Cookies from "js-cookie";
 import {ClientUrl} from "../constants/ClientUrl.tsx";
-import Admin from "../pages/admin/Admin.tsx";
-import AdminLayout from "../layouts/AdminLayout.tsx";
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;
-    isRoot?: boolean;  // 루트 경로인지 여부를 판단하는 속성
+    isAdminRoute?: boolean;
 }
 
 interface UserInfo {
@@ -19,33 +14,29 @@ interface UserInfo {
     role: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children, isRoot = false}) => {
-    const location = useLocation();  // useLocation을 사용하여 URL 변화를 감지
-
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children, isAdminRoute}) => {
+    const location = useLocation();
     const token = Cookies.get('info');
     const userInfo: UserInfo | null = token ? JSON.parse(token) : null;
 
-    if (isRoot) {
-        return userInfo ? (
-            userInfo.role === 'CAS_CREATOR' ? (
-                <AdminLayout>
-                    <Admin />
-                </AdminLayout>
-            ) : (
-                <BasicLayout>
-                    <Home />
-                </BasicLayout>
-            )
-        ) : (
-            <Index />
-        );
-    }
 
-    // 비루트 경로에서 토큰이 없을 시 리다이렉트
+    // 1. 미인증 사용자 페이지 제한
     if (!userInfo) {
         return <Navigate to={ClientUrl.LOGIN} state={{from: location}} replace/>;
     }
 
+    // 2. 관리자 페이지 접근 시 역할 검사
+    if (isAdminRoute) { // 일반 사용자 권한
+        if (userInfo.role !== 'CAS_CREATOR') {
+            return <Navigate to={ClientUrl.HOME} replace />;
+        }
+    } else { // 어드민 사용자 권한
+        if (userInfo.role === 'CAS_CREATOR') {
+            return <Navigate to={ClientUrl.ADMIN} replace />;
+        }
+    }
+
+    // 3. 인증 사용자 페이지 접근
     return <>{children}</>;
 };
 

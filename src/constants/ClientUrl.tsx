@@ -1,5 +1,6 @@
 export enum ClientUrl {
-    HOME = '/',
+    INDEX = '/',
+    HOME = '/home',
     LOGIN = '/login',
     REGISTER = '/register',
     SEARCH = '/search',
@@ -8,6 +9,8 @@ export enum ClientUrl {
     PROFILE = '/profile',
     NOTIFICATION = '/notification',
     SETTINGS = '/settings',
+
+    ADMIN = '/admin',
 
     MESSAGELOG = '/dm/:dmId',
     SPECIFICPOST = '/post/:postId',

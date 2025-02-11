@@ -73,8 +73,8 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
     const logout = () => {
         // 쿠키 토큰 삭제
         Cookies.remove('info');
-
-        navigate(ClientUrl.HOME)
+        Cookies.remove('token');
+        navigate(ClientUrl.INDEX)
     };
 
     const createPost = async (postDTO: PostDTO) => {

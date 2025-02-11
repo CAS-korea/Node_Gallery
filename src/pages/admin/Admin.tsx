@@ -58,7 +58,6 @@ const Admin: React.FC = () => {
         if (!editingUser) return;
 
         try {
-            console.log(editingUser);
             await updateUserInfo(editingUser.userId, editingUser);
             alert('사용자가 수정되었습니다.');
             setEditingUser(null); // 수정 모드 종료
