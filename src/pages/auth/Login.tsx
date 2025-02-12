@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
 import {ClientUrl} from "../../constants/ClientUrl.ts"; // 서비스 훅 불러오기
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { useServices } from "../../context/ServicesProvider";
+import {useState} from "react";
+import {motion} from "framer-motion";
+import {useServices} from "../../context/ServicesProvider";
 import FloatingInput from "../../components/FloatingInput";
 
 
@@ -13,13 +13,13 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { login } = useServices();
+    const {login} = useServices();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        const loginDTO = { userId, password };
+        const loginDTO = {userId, password};
 
         try {
             await login(loginDTO);
@@ -63,10 +63,10 @@ const Login: React.FC = () => {
             {/* 오른쪽 영역: 로그인 폼 */}
             <div className="flex-1 flex items-center justify-center">
                 <motion.div
-                    initial={{ opacity: 0.7, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0.7, scale: 0.98 }}
-                    transition={{ duration: 0.1 }}
+                    initial={{opacity: 0.7, scale: 0.98}}
+                    animate={{opacity: 1, scale: 1}}
+                    exit={{opacity: 0.7, scale: 0.98}}
+                    transition={{duration: 0.1}}
                     className="w-full max-w-md p-6"
                 >
                     <h2 className="text-3xl font-bold mb-8 text-center">로그인</h2>
@@ -92,9 +92,12 @@ const Login: React.FC = () => {
                         )}
 
                         <div className="text-right">
-                            <button type="button" className="text-gray-500 hover:text-gray-700">
+                            <Link
+                                to={ClientUrl.FORGOT}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
                                 비밀번호를 잊으셨나요?
-                            </button>
+                            </Link>
                         </div>
 
                         <button

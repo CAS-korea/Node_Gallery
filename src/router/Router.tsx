@@ -2,9 +2,10 @@ import React from 'react';
 import {Routes, Route} from 'react-router-dom';
 import AuthLayout from '../layouts/AuthLayout.tsx';
 import BasicLayout from '../layouts/BasicLayout.tsx';
-import ProtectedRoute from './ProtectedRoute'; // ✅ 추가
+import ProtectedRoute from './ProtectedRoute';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
+import Forgot from '../pages/auth/Forgot.tsx';
 import Search from '../pages/basic/Search.tsx';
 import NewPost from '../pages/basic/NewPost.tsx';
 import DmList from '../pages/basic/DmList.tsx';
@@ -18,6 +19,7 @@ import Home from "../pages/basic/Home.tsx";
 import AdminLayout from "../layouts/AdminLayout.tsx";
 import Admin from "../pages/admin/Admin.tsx";
 import Index from "../pages/Index.tsx";
+import ResetPassword from "../pages/auth/ResetPassword.tsx";
 
 const Router: React.FC = () => {
     return (
@@ -31,6 +33,8 @@ const Router: React.FC = () => {
             <Route element={<AuthLayout/>}>
                 <Route path={ClientUrl.LOGIN} element={<Login/>}/>
                 <Route path={ClientUrl.REGISTER} element={<Register/>}/>
+                <Route path={ClientUrl.FORGOT} element={<Forgot />}/>
+                <Route path={ClientUrl.RESET_PASSWORD} element={<ResetPassword />}/>
             </Route>
 
             {/* 🔹 관리자 페이지 (CAS_CREATOR만 접근 가능)*/}

@@ -22,6 +22,27 @@ export const AuthService = {
         await apiHandler.post('/user_log/register', registerDTO)
     },
 
+    async duplicate(userId: string) {
+        const response = await apiHandler.get(`/user_log/duplicate/${userId}`);
+
+        return response.data;
+    },
+
+    async findUserId(email: string) {
+        await apiHandler.post(`/user_log/findid/${email}`);
+    },
+
+    async findPassword(email: string) {
+        await apiHandler.post(`/user_log/resetpassword/${email}`);
+    },
+
+    async resetPassword(token: string, newPassword: string) {
+        await apiHandler.put('/user_log/savenewpassword', {
+            token,
+            newPassword
+        });
+    },
+
     logout() {
         Cookies.remove('info');
         Cookies.remove('token');

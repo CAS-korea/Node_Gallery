@@ -4,6 +4,7 @@ import {motion} from "framer-motion";
 import {useServices} from "../../context/ServicesProvider";
 import {UserEntity, UserRole} from "../../types/UserEntity.ts";
 import {ClientUrl} from "../../constants/ClientUrl.ts";
+import FloatingInput from "../../components/FloatingInput";
 
 // 백엔드 유효성 검사와 동일한 조건을 적용하는 프론트엔드 검증 함수들
 const isIdValid = (id: string) => /^[A-Za-z0-9]{5,}$/.test(id);
@@ -13,7 +14,7 @@ const isNameValid = (name: string) => /^[A-Za-z가-힣]+$/.test(name);
 const isPhoneNumberValid = (phoneNumber: string) => /^[0-9]{11}$/.test(phoneNumber);
 const isStudentNumberValid = (studentNumber: string) => /^[0-9]{8}$/.test(studentNumber);
 const isEmailValid = (email: string) => /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/.test(email);
-import FloatingInput from "../../components/FloatingInput";
+
 
 const Register: React.FC = () => {
     // 다단계 진행 상태 및 입력 관련 상태
@@ -27,9 +28,11 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<UserRole>('STUDENT');
     const [confirmPassword, setConfirmPassword] = useState('');
+
     const [loading, setLoading] = useState(false);
 
-    const { register } = useServices();
+    const { register, duplicate } = useServices();
+    const [isIdChecked, setIsIdChecked] = useState(false);
     const stepLabels = ["정보 입력", "역할 선택", "학교 인증"];
 
     // 각 필드별 에러 상태
@@ -43,10 +46,32 @@ const Register: React.FC = () => {
         confirmPassword: "",
     });
 
+    const checkUserIdDuplicate = async () => {
+        if (!isIdValid(userId)) {
+            setErrors((prev) => ({ ...prev, userId: "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요." }));
+            return;
+        }
+        setLoading(true);
+        try {
+            if (await duplicate(userId)) {
+                setErrors((prev) => ({ ...prev, userId: "이미 사용 중인 ID입니다. 다른 ID를 입력해주세요." }));
+                setIsIdChecked(false);
+            } else {
+                setErrors((prev) => ({ ...prev, userId: "" }));
+                setIsIdChecked(true);
+            }
+        } catch (error) {
+            console.error("ID 중복 확인 실패", error);
+            setErrors((prev) => ({ ...prev, userId: "ID 확인 중 오류가 발생했습니다." }));
+            setIsIdChecked(false);
+        }
+        setLoading(false);
+    }
+
     const handleNext = async (e: React.FormEvent) => {
         e.preventDefault();
         if (currentStep === 1) {
-            let newErrors = {
+            const newErrors = {
                 userId: "",
                 name: "",
                 phoneNumber: "",
@@ -61,8 +86,8 @@ const Register: React.FC = () => {
             if (!userId.trim()) {
                 newErrors.userId = "ID가 채워지지 않았습니다.";
                 hasError = true;
-            } else if (!isIdValid(userId)) {
-                newErrors.userId = "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요.";
+            } else if (!isIdChecked) {
+                newErrors.userId = "ID 중복 확인을 완료해주세요.";
                 hasError = true;
             }
             // 이름 검증
@@ -130,7 +155,7 @@ const Register: React.FC = () => {
     // 스텝3에서 최종 제출 시 검증 및 제출 처리
     const handleFinalSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let newErrors = { ...errors};
+        const newErrors = { ...errors};
         if (password !== confirmPassword) {
             newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
             setErrors(newErrors);
@@ -149,7 +174,8 @@ const Register: React.FC = () => {
             role,
             isAuthorized: false,
             introduce: '',
-            profileImageUrl: ''
+            profileImageUrl: '',
+            bannedUntil: ''
         };
 
         try {
@@ -172,9 +198,21 @@ const Register: React.FC = () => {
                                 label="ID"
                                 name="id"
                                 value={userId}
-                                onChange={(e) => setUserId(e.target.value)}
+                                onChange={(e) => {
+                                    setUserId(e.target.value);
+                                    setIsIdChecked(false);
+                                }}
                                 error={errors.userId}
                             />
+                            <button
+                                type="button"
+                                onClick={checkUserIdDuplicate}
+                                className={`absolute right-2 top-8 px-4 py-2 rounded-lg text-white text-sm ${
+                                    isIdChecked ? "bg-green-500" : "bg-blue-500 hover:bg-blue-600"
+                                }`}
+                            >
+                                {isIdChecked ? "사용 가능" : "중복 확인"}
+                            </button>
                         </div>
                         <div>
                             <FloatingInput

@@ -16,7 +16,6 @@ const Admin: React.FC = () => {
     const [editingUser, setEditingUser] = useState<UserEntity | null>(null);
     const [banDays, setBanDays] = useState<number>(0);
 
-
     const fetchData = useCallback(async () => {
         try {
             const users = await getUserList();

@@ -23,6 +23,10 @@ export interface ServicesContextType {
     getUserList: () => Promise<UserEntity[]>;
     updateUserInfo: (userId: string, userEntity: UserEntity) => Promise<void>;
     banUser: (userId: string, days: number) => Promise<void>;
+    duplicate: (userId: string) => Promise<boolean>;
+    findUserId: (email: string) => Promise<void>;
+    findPassword: (email: string) => Promise<void>;
+    resetPassword: (token: string, newPassword: string) => Promise<void>;
 }
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -45,6 +49,10 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
             AuthService.logout();
             navigate('/');
         },
+        duplicate: (userId) => AuthService.duplicate(userId),
+        findUserId: (email) => AuthService.findUserId(email),
+        findPassword: (email) => AuthService.findPassword(email),
+        resetPassword: (token, newPassword) => AuthService.resetPassword(token, newPassword),
 
         // 포스트 관련 함수
         createPost: (postDTO) => PostService.createPost(postDTO),
@@ -59,7 +67,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) 
         getNonuserList: () => AdminService.getNonuserList(),
         getUserList: () => AdminService.getUserList(),
         updateUserInfo: (userId, userEntity) => AdminService.updateUserInfo(userId, userEntity),
-        banUser: (userId, days) => AdminService.banUser(userId, days)
+        banUser: (userId, days) => AdminService.banUser(userId, days),
     };
 
     return <ServicesContext.Provider value={value}>{children}</ServicesContext.Provider>;
