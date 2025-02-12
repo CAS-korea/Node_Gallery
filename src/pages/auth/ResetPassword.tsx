@@ -6,7 +6,7 @@ const ResetPassword: React.FC = () => {
     const { resetPassword } = useServices();
 
     const [searchParams] = useSearchParams();
-    const token = searchParams.get("token");
+    const token = searchParams.get("token") ?? "";
 
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,23 +18,30 @@ const ResetPassword: React.FC = () => {
         setLoading(true);
         setMessage("");
 
-        if (newPassword !== confirmPassword) {
-            setMessage("비밀번호가 일치하지 않습니다.");
+        if (!token) {
+            setMessage("잘못된 접근입니다. 유효한 링크를 확인하세요.");
+            setLoading(false);
             return;
         }
-
+        if (newPassword !== confirmPassword) {
+            setMessage("비밀번호가 일치하지 않습니다.");
+            setLoading(false);
+            return;
+        }
         try {
             await resetPassword(token, newPassword);
             setMessage("비밀번호가 변경되었습니다.");
+
+        } catch (error) {
+            console.error(error);
+            setMessage("오류가 발생했습니다.");
+        } finally {
             setLoading(false);
 
             // 2초 후 창 닫기
             setTimeout(() => {
                 window.close();
             }, 2000);
-        } catch (error) {
-            console.error(error);
-            setMessage("오류가 발생했습니다.");
         }
     };
 
@@ -57,9 +64,12 @@ const ResetPassword: React.FC = () => {
             />
             <button
                 onClick={handleResetPassword}
-                className="bg-blue-500 text-white px-4 py-2 mt-2"
+                className={`px-4 py-2 mt-2 text-white rounded-lg ${
+                    loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+                }`}
+                disabled={loading}
             >
-                비밀번호 변경
+                {loading ? "처리 중..." : "비밀번호 변경"}
             </button>
 
             {message && <p className="text-center text-gray-600">{message}</p>}

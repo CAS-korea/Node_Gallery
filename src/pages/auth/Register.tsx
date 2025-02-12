@@ -31,7 +31,7 @@ const Register: React.FC = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const { register, duplicate } = useServices();
+    const {register, duplicate} = useServices();
     const [isIdChecked, setIsIdChecked] = useState(false);
     const stepLabels = ["정보 입력", "역할 선택", "학교 인증"];
 
@@ -48,21 +48,21 @@ const Register: React.FC = () => {
 
     const checkUserIdDuplicate = async () => {
         if (!isIdValid(userId)) {
-            setErrors((prev) => ({ ...prev, userId: "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요." }));
+            setErrors((prev) => ({...prev, userId: "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요."}));
             return;
         }
         setLoading(true);
         try {
             if (await duplicate(userId)) {
-                setErrors((prev) => ({ ...prev, userId: "이미 사용 중인 ID입니다. 다른 ID를 입력해주세요." }));
+                setErrors((prev) => ({...prev, userId: "이미 사용 중인 ID입니다. 다른 ID를 입력해주세요."}));
                 setIsIdChecked(false);
             } else {
-                setErrors((prev) => ({ ...prev, userId: "" }));
+                setErrors((prev) => ({...prev, userId: ""}));
                 setIsIdChecked(true);
             }
         } catch (error) {
             console.error("ID 중복 확인 실패", error);
-            setErrors((prev) => ({ ...prev, userId: "ID 확인 중 오류가 발생했습니다." }));
+            setErrors((prev) => ({...prev, userId: "ID 확인 중 오류가 발생했습니다."}));
             setIsIdChecked(false);
         }
         setLoading(false);
@@ -155,7 +155,7 @@ const Register: React.FC = () => {
     // 스텝3에서 최종 제출 시 검증 및 제출 처리
     const handleFinalSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const newErrors = { ...errors};
+        const newErrors = {...errors};
         if (password !== confirmPassword) {
             newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
             setErrors(newErrors);
@@ -192,7 +192,7 @@ const Register: React.FC = () => {
         switch (currentStep) {
             case 1:
                 return (
-                    <div className="space-y-4">
+                    <div className="space-y-4 relative">
                         <div>
                             <FloatingInput
                                 label="ID"
@@ -281,8 +281,8 @@ const Register: React.FC = () => {
                             <motion.button
                                 type="button"
                                 onClick={() => setRole("STUDENT")}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{scale: 1.05}}
+                                whileTap={{scale: 0.95}}
                                 className={`px-5 py-2 rounded-full border ${
                                     role === "STUDENT"
                                         ? "bg-blue-500 text-white border-blue-500"
@@ -294,8 +294,8 @@ const Register: React.FC = () => {
                             <motion.button
                                 type="button"
                                 onClick={() => setRole("GRADUATE")}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{scale: 1.05}}
+                                whileTap={{scale: 0.95}}
                                 className={`px-5 py-2 rounded-full border ${
                                     role === "GRADUATE"
                                         ? "bg-blue-500 text-white border-blue-500"
@@ -307,8 +307,8 @@ const Register: React.FC = () => {
                             <motion.button
                                 type="button"
                                 onClick={() => setRole("PROFESSOR")}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{scale: 1.05}}
+                                whileTap={{scale: 0.95}}
                                 className={`px-5 py-2 rounded-full border ${
                                     role === "PROFESSOR"
                                         ? "bg-blue-500 text-white border-blue-500"
@@ -338,8 +338,8 @@ const Register: React.FC = () => {
                     <motion.button
                         type="button"
                         onClick={() => setCurrentStep(currentStep - 1)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
                         className="px-5 py-2 bg-gray-200 text-gray-700 rounded-full"
                     >
                         이전
@@ -348,8 +348,8 @@ const Register: React.FC = () => {
                 <motion.button
                     type="button"
                     onClick={currentStep < 3 ? handleNext : handleFinalSubmit}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{scale: 1.02}}
+                    whileTap={{scale: 0.98}}
                     disabled={loading}
                     className="px-6 py-2 bg-blue-500 text-white font-medium rounded-full shadow-md hover:bg-blue-600"
                 >
@@ -360,13 +360,14 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br rounded-2xl from-blue-100 to-purple-100 flex items-center justify-center p-4">
+        <div
+            className="min-h-screen bg-gradient-to-br rounded-2xl from-blue-100 to-purple-100 flex items-center justify-center p-4">
             {/* 외부 컨테이너에 motion.div를 적용하여 레이아웃 변화 시 부드러운 transition을 구현 */}
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.0, ease: [0.42, 0, 0.58, 1] }}
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                exit={{opacity: 0}}
+                transition={{duration: 1.0, ease: [0.42, 0, 0.58, 1]}}
                 className="w-full max-w-md bg-white rounded-2xl p-8 shadow-xl"
             >
                 {/* 프로그레스바 영역 - 중앙 정렬 및 업그레이드 */}
@@ -376,13 +377,13 @@ const Register: React.FC = () => {
                         {/* 애니메이션 진행률 표시 - currentStep: 1 ~ 3 */}
                         <motion.div
                             className="h-full rounded-full"
-                            style={{ background: "linear-gradient(90deg, #3b82f6, #9333ea)" }}
-                            initial={{ width: "0%" }}
+                            style={{background: "linear-gradient(90deg, #3b82f6, #9333ea)"}}
+                            initial={{width: "0%"}}
                             animate={{
                                 // 스텝 1: 0%, 스텝 2: 50%, 스텝 3: 100%
                                 width: `${((currentStep - 1) / (3 - 1)) * 100}%`,
                             }}
-                            transition={{ duration: 1.5, ease: "easeInOut" }}
+                            transition={{duration: 1.5, ease: "easeInOut"}}
                         />
                         {/* 스텝 인디케이터 원 (로딩바 위에 겹치게 배치) */}
                         <div className="absolute inset-0 flex items-center justify-between px-2">
@@ -410,16 +411,16 @@ const Register: React.FC = () => {
                 <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
                     <motion.div
                         key={currentStep}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                        exit={{opacity: 0}}
+                        transition={{duration: 0.5, ease: "easeInOut"}}
                     >
                         {renderStepContent()}
                     </motion.div>
                     {renderNavigation()}
                 </form>
-                <motion.div whileTap={{ scale: 0.95 }} className="mt-6 text-center">
+                <motion.div whileTap={{scale: 0.95}} className="mt-6 text-center">
                     <Link to={ClientUrl.LOGIN} className="text-gray-600 hover:text-gray-800">
                         이미 계정이 있으신가요? 로그인하기
                     </Link>
