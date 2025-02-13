@@ -271,6 +271,14 @@ const Register: React.FC = () => {
                                 error={errors.confirmPassword}
                             />
                         </div>
+                        <div className="text-right">
+                            <Link
+                                to={ClientUrl.LOGIN}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                로그인으로 돌아가기
+                            </Link>
+                        </div>
                     </div>
                 );
             case 2:
@@ -278,7 +286,7 @@ const Register: React.FC = () => {
                     <div className="flex flex-col items-center space-y-6">
                         <p className="text-lg font-medium text-gray-700">회원 유형 선택</p>
                         <div className="flex justify-center space-x-6">
-                            <motion.button
+                        <motion.button
                                 type="button"
                                 onClick={() => setRole("STUDENT")}
                                 whileHover={{scale: 1.05}}

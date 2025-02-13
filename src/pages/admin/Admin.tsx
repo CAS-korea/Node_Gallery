@@ -35,12 +35,20 @@ const Admin: React.FC = () => {
     }, [fetchData]);
 
 
-    const calculateRemainingDays = (bannedUntil: string): number => {
-        const now = new Date();
-        const banEndDate = new Date(bannedUntil);
+    const formatRemainingTime = (bannedUntil: string): string => {
+        const now = new Date().getTime(); // 현재 시간 (밀리초)
+        const banEndDate = new Date(bannedUntil).getTime(); // 정지 해제 시간 (밀리초)
+        const diff = banEndDate - now; // 남은 시간 (밀리초)
 
-        const differenceInMs = banEndDate.getTime() - now.getTime();
-        return Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+        if (diff <= 0) return "정지 해제됨"; // 이미 정지 해제된 경우
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const days = Math.floor(hours / 24);
+        const remainingHours = hours % 24;
+
+        if (hours < 1) return "1시간 이내"; // 1시간 이내일 때
+        if (days < 1) return `${hours}시간`; // 1일 미만일 때
+        return `${days}일 ${remainingHours}시간`; // n일 n시간 남음
     }
 
     // 사용자 승인 처리
@@ -145,13 +153,13 @@ const Admin: React.FC = () => {
                 <div>회원가입 요청한 사용자</div>
                 {nonuserList.length > 0 ? (
                     nonuserList.map(nonuser => {
-                        const remainingDays = nonuser.bannedUntil ? calculateRemainingDays(nonuser.bannedUntil) : 0;
+                        const remainingDays = nonuser.bannedUntil ? formatRemainingTime(nonuser.bannedUntil) : 0;
 
                         return (<div key={nonuser.userId}>
                                 <span>{nonuser.userId}</span>
-                                {!nonuser.isAuthorized && remainingDays > 0 && (
+                                {!nonuser.isAuthorized && remainingDays && (
                                     <span className="ml-2 text-red-500">
-                                (정지 해제까지 {remainingDays}일 남음)
+                                (정지 해제까지 {remainingDays} 남음)
                             </span>
                                 )}
                                 <div className="space-x-2">

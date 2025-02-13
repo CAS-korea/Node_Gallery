@@ -7,7 +7,6 @@ import FloatingInput from "../../components/FloatingInput";
 
 
 const Login: React.FC = () => {
-    // ✅ 로컬 상태
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
