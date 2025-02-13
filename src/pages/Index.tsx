@@ -139,18 +139,28 @@ const MovingBlurBackground: React.FC = () => {
                     {/* 회전하는 배경 원 대신 로고 이미지 사용 */}
                     <motion.div
                         className="absolute inset-0 flex justify-center items-center pointer-events-none"
-                        initial={{ rotate: 0 }}
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+                        initial={{rotate: 0}}
+                        animate={{rotate: 360}}
+                        transition={{duration: 40, repeat: Infinity, ease: 'linear'}}
                     >
                         <img
                             src="/circle.png"
                             alt="circle"
-                            className="w-80 h-80 rounded-full object-cover"
+                            className="w-96 h-96 absolute opacity-50"
+                        />
+                        <img
+                            src="/circle.png"
+                            alt="circle"
+                            className="w-72 h-72 absolute opacity-25 "
+                        />
+                        <img
+                            src="/circle.png"
+                            alt="circle"
+                            className="w-52 h-52 absolute opacity-10"
                         />
                     </motion.div>
                     <div className="relative">
-                        <img src="/Node_Logo_Refined.png" alt="NODE Logo" className="w-72 mx-auto mt-52"/>
+                        <img src="/Node_Logo_Refined.png" alt="NODE Logo" className="w-72 mx-auto mt-56 ml-32"/>
                         <h1 className="text-7xl font-serif text-white text-shadow tracking-wide leading-relaxed pt-12">
                             PROJECT : NODE
                         </h1>

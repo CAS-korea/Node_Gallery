@@ -15,7 +15,6 @@ const isPhoneNumberValid = (phoneNumber: string) => /^[0-9]{11}$/.test(phoneNumb
 const isStudentNumberValid = (studentNumber: string) => /^[0-9]{8}$/.test(studentNumber);
 const isEmailValid = (email: string) => /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/.test(email);
 
-
 const Register: React.FC = () => {
     // 다단계 진행 상태 및 입력 관련 상태
     const [currentStep, setCurrentStep] = useState(1);
@@ -28,12 +27,10 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<UserRole>('STUDENT');
     const [confirmPassword, setConfirmPassword] = useState('');
-
     const [loading, setLoading] = useState(false);
 
     const {register, duplicate} = useServices();
     const [isIdChecked, setIsIdChecked] = useState(false);
-    const stepLabels = ["정보 입력", "역할 선택", "학교 인증"];
 
     // 각 필드별 에러 상태
     const [errors, setErrors] = useState({
@@ -46,6 +43,7 @@ const Register: React.FC = () => {
         confirmPassword: "",
     });
 
+    // '다음' 버튼 클릭 시 단계별 검증 로직
     const checkUserIdDuplicate = async () => {
         if (!isIdValid(userId)) {
             setErrors((prev) => ({...prev, userId: "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요."}));
@@ -147,7 +145,7 @@ const Register: React.FC = () => {
             setErrors(newErrors);
             setCurrentStep(currentStep + 1);
         } else if (currentStep === 2) {
-            // 스텝2는 role이 기본값("student")으로 선택되어 있으므로 바로 진행
+            // 스텝2는 role이 기본값("STUDENT")으로 선택되어 있으므로 바로 진행
             setCurrentStep(currentStep + 1);
         }
     };
@@ -188,97 +186,76 @@ const Register: React.FC = () => {
         }
     };
 
+    // 각 단계별 화면 요소 렌더링 (case 1, 2, 3 유지)
     const renderStepContent = () => {
         switch (currentStep) {
             case 1:
                 return (
-                    <div className="space-y-4 relative">
-                        <div>
-                            <FloatingInput
-                                label="ID"
-                                name="id"
-                                value={userId}
-                                onChange={(e) => {
-                                    setUserId(e.target.value);
-                                    setIsIdChecked(false);
-                                }}
-                                error={errors.userId}
-                            />
-                            <button
-                                type="button"
-                                onClick={checkUserIdDuplicate}
-                                className={`absolute right-2 top-8 px-4 py-2 rounded-lg text-white text-sm ${
-                                    isIdChecked ? "bg-green-500" : "bg-blue-500 hover:bg-blue-600"
-                                }`}
-                            >
-                                {isIdChecked ? "사용 가능" : "중복 확인"}
-                            </button>
-                        </div>
-                        <div>
-                            <FloatingInput
-                                label="이름"
-                                name="name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                error={errors.name}
-                            />
-                        </div>
-                        <div>
-                            <FloatingInput
-                                label="전화번호"
-                                name="phoneNumber"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                error={errors.phoneNumber}
-                            />
-                        </div>
-                        <div>
-                            <FloatingInput
-                                label="학번"
-                                name="studentNumber"
-                                value={studentNumber}
-                                onChange={(e) => setStudentNumber(e.target.value)}
-                                error={errors.studentNumber}
-                            />
-                        </div>
-                        <div>
-                            <FloatingInput
-                                label="이메일"
-                                name="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                error={errors.email}
-                            />
-                        </div>
-                        <div>
-                            <FloatingInput
-                                label="비밀번호"
-                                name="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                error={errors.password}
-                            />
-                        </div>
-                        <div>
-                            <FloatingInput
-                                label="비밀번호 재입력"
-                                name="confirmPassword"
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                error={errors.confirmPassword}
-                            />
-                        </div>
-                        <div className="text-right">
-                            <Link
-                                to={ClientUrl.LOGIN}
-                                className="text-gray-500 hover:text-gray-700"
-                            >
-                                로그인으로 돌아가기
-                            </Link>
-                        </div>
+                    <div className="space-y-4">
+                        <FloatingInput
+                            label="ID"
+                            name="id"
+                            value={userId}
+                            onChange={(e) => {
+                                setUserId(e.target.value);
+                                setIsIdChecked(false)
+                            }}
+                            error={errors.userId}
+                        />
+                        <button
+                            type="button"
+                            onClick={checkUserIdDuplicate}
+                            className={`absolute right-2 top-8 px-4 py-2 rounded-lg text-white text-sm ${
+                                isIdChecked ? "bg-green-500" : "bg-blue-500 hover:bg-blue-600"
+                            }`}
+                        >
+                            {isIdChecked ? "사용 가능" : "중복 확인"}
+                        </button>
+                        <FloatingInput
+                            label="이름"
+                            name="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            error={errors.name}
+                        />
+                        <FloatingInput
+                            label="전화번호"
+                            name="phoneNumber"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            error={errors.phoneNumber}
+                        />
+                        <FloatingInput
+                            label="학번"
+                            name="studentNumber"
+                            value={studentNumber}
+                            onChange={(e) => setStudentNumber(e.target.value)}
+                            error={errors.studentNumber}
+                        />
+                        <FloatingInput
+                            label="이메일"
+                            name="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            error={errors.email}
+                        />
+                        <FloatingInput
+                            label="비밀번호"
+                            name="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            error={errors.password}
+                        />
+                        <FloatingInput
+                            label="비밀번호 재입력"
+                            name="confirmPassword"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            error={errors.confirmPassword}
+                        />
                     </div>
                 );
             case 2:
@@ -286,15 +263,15 @@ const Register: React.FC = () => {
                     <div className="flex flex-col items-center space-y-6">
                         <p className="text-lg font-medium text-gray-700">회원 유형 선택</p>
                         <div className="flex justify-center space-x-6">
-                        <motion.button
+                            <motion.button
                                 type="button"
                                 onClick={() => setRole("STUDENT")}
-                                whileHover={{scale: 1.05}}
-                                whileTap={{scale: 0.95}}
-                                className={`px-5 py-2 rounded-full border ${
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`px-5 py-2 rounded-full transition-colors ${
                                     role === "STUDENT"
-                                        ? "bg-blue-500 text-white border-blue-500"
-                                        : "bg-transparent text-gray-600 border-gray-300"
+                                        ? "bg-gray-900 text-white"
+                                        : "bg-gray-200 text-gray-800"
                                 }`}
                             >
                                 재학생
@@ -302,12 +279,12 @@ const Register: React.FC = () => {
                             <motion.button
                                 type="button"
                                 onClick={() => setRole("GRADUATE")}
-                                whileHover={{scale: 1.05}}
-                                whileTap={{scale: 0.95}}
-                                className={`px-5 py-2 rounded-full border ${
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`px-5 py-2 rounded-full transition-colors ${
                                     role === "GRADUATE"
-                                        ? "bg-blue-500 text-white border-blue-500"
-                                        : "bg-transparent text-gray-600 border-gray-300"
+                                        ? "bg-gray-900 text-white"
+                                        : "bg-gray-200 text-gray-800"
                                 }`}
                             >
                                 졸업생
@@ -315,12 +292,12 @@ const Register: React.FC = () => {
                             <motion.button
                                 type="button"
                                 onClick={() => setRole("PROFESSOR")}
-                                whileHover={{scale: 1.05}}
-                                whileTap={{scale: 0.95}}
-                                className={`px-5 py-2 rounded-full border ${
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`px-5 py-2 rounded-full transition-colors ${
                                     role === "PROFESSOR"
-                                        ? "bg-blue-500 text-white border-blue-500"
-                                        : "bg-transparent text-gray-600 border-gray-300"
+                                        ? "bg-gray-900 text-white"
+                                        : "bg-gray-200 text-gray-800"
                                 }`}
                             >
                                 교수
@@ -332,6 +309,7 @@ const Register: React.FC = () => {
                 return (
                     <div className="flex flex-col items-center space-y-6">
                         <p className="text-lg font-medium text-gray-700">학교 인증 (사진 첨부)</p>
+                        {/* 여기에 인증에 필요한 추가 UI를 배치할 수 있음 */}
                     </div>
                 );
             default:
@@ -339,6 +317,7 @@ const Register: React.FC = () => {
         }
     };
 
+    // 이전 / 다음 or 회원가입 버튼
     const renderNavigation = () => {
         return (
             <div className="flex justify-between mt-8">
@@ -346,89 +325,81 @@ const Register: React.FC = () => {
                     <motion.button
                         type="button"
                         onClick={() => setCurrentStep(currentStep - 1)}
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                        className="px-5 py-2 bg-gray-200 text-gray-700 rounded-full"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="text-gray-600 hover:text-gray-900"
                     >
                         이전
                     </motion.button>
                 )}
-                <motion.button
-                    type="button"
-                    onClick={currentStep < 3 ? handleNext : handleFinalSubmit}
-                    whileHover={{scale: 1.02}}
-                    whileTap={{scale: 0.98}}
-                    disabled={loading}
-                    className="px-6 py-2 bg-blue-500 text-white font-medium rounded-full shadow-md hover:bg-blue-600"
-                >
-                    {currentStep === 3 ? (loading ? "가입 중..." : "회원가입하기") : "다음"}
-                </motion.button>
+                {currentStep < 3 ? (
+                    <motion.button
+                        type="button"
+                        onClick={handleNext}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="bg-gray-900 text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-colors"
+                    >
+                        다음
+                    </motion.button>
+                ) : (
+                    <motion.button
+                        type="button"
+                        onClick={handleFinalSubmit}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        disabled={loading}
+                        className="bg-gray-900 text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-colors disabled:bg-gray-400"
+                    >
+                        {loading ? "가입 중..." : "회원가입하기"}
+                    </motion.button>
+                )}
             </div>
         );
     };
 
     return (
-        <div
-            className="min-h-screen bg-gradient-to-br rounded-2xl from-blue-100 to-purple-100 flex items-center justify-center p-4">
-            {/* 외부 컨테이너에 motion.div를 적용하여 레이아웃 변화 시 부드러운 transition을 구현 */}
+        <div className="min-h-screen bg-white flex items-center justify-center p-4">
+            {/* 두 번째 코드 스타일과 유사한 레이아웃 */}
             <motion.div
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                exit={{opacity: 0}}
-                transition={{duration: 1.0, ease: [0.42, 0, 0.58, 1]}}
-                className="w-full max-w-md bg-white rounded-2xl p-8 shadow-xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="w-full max-w-md"
             >
-                {/* 프로그레스바 영역 - 중앙 정렬 및 업그레이드 */}
-                <div className="mb-6 w-full max-w-md">
-                    {/* 로딩바 컨테이너 */}
-                    <div className="relative h-4 bg-gray-300 rounded-full overflow-hidden">
-                        {/* 애니메이션 진행률 표시 - currentStep: 1 ~ 3 */}
+                {/* 헤더 타이틀 디자인 */}
+                <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">회원가입</h1>
+
+                {/* 간단한 진행도 바 */}
+                <div className="mb-8">
+                    <div className="h-1 bg-gray-200 rounded-full">
                         <motion.div
-                            className="h-full rounded-full"
-                            style={{background: "linear-gradient(90deg, #3b82f6, #9333ea)"}}
-                            initial={{width: "0%"}}
-                            animate={{
-                                // 스텝 1: 0%, 스텝 2: 50%, 스텝 3: 100%
-                                width: `${((currentStep - 1) / (3 - 1)) * 100}%`,
-                            }}
-                            transition={{duration: 1.5, ease: "easeInOut"}}
+                            className="h-full bg-gray-900 rounded-full"
+                            initial={{ width: "0%" }}
+                            animate={{ width: `${(currentStep / 3) * 100}%` }}
+                            transition={{ duration: 0.5 }}
                         />
-                        {/* 스텝 인디케이터 원 (로딩바 위에 겹치게 배치) */}
-                        <div className="absolute inset-0 flex items-center justify-between px-2">
-                            {[1, 2, 3].map((step) => (
-                                <div
-                                    key={step}
-                                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold transition-colors ${
-                                        currentStep >= step
-                                            ? " text-white"
-                                            : " text-gray-600"
-                                    }`}
-                                >
-                                    {step}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="text-center mt-2 text-gray-700 font-semibold">
-                        Step {currentStep}: {stepLabels[currentStep - 1]}
                     </div>
                 </div>
 
-
-                <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">회원가입</h2>
                 <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+                    {/* 단계별 폼 내용 */}
                     <motion.div
                         key={currentStep}
-                        initial={{opacity: 0}}
-                        animate={{opacity: 1}}
-                        exit={{opacity: 0}}
-                        transition={{duration: 0.5, ease: "easeInOut"}}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
                     >
                         {renderStepContent()}
                     </motion.div>
+                    {/* 네비게이션(이전/다음/회원가입) 버튼 */}
                     {renderNavigation()}
                 </form>
-                <motion.div whileTap={{scale: 0.95}} className="mt-6 text-center">
+
+                {/* 로그인 페이지로 이동 링크 */}
+                <motion.div whileTap={{ scale: 0.95 }} className="mt-6 text-center">
                     <Link to={ClientUrl.LOGIN} className="text-gray-600 hover:text-gray-800">
                         이미 계정이 있으신가요? 로그인하기
                     </Link>
