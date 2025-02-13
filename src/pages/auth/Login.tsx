@@ -1,10 +1,9 @@
-import {Link} from "react-router-dom";
-import {ClientUrl} from "../../constants/ClientUrl.tsx"; // 서비스 훅 불러오기
+import { Link } from "react-router-dom";
+import { ClientUrl } from "../../constants/ClientUrl.tsx";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useServices } from "../../contextAPI/ServicesProvider";
 import FloatingInput from "../../components/FloatingInput";
-
 
 const Login: React.FC = () => {
     // ✅ 로컬 상태
@@ -15,6 +14,7 @@ const Login: React.FC = () => {
 
     const { login } = useServices();
 
+    // 로그인 시도 함수
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -35,42 +35,52 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex">
-            {/* 왼쪽 영역: 게시글 컨테이너 */}
-            <div className="flex-1 flex items-center justify-center ">
-                <div className="w-full max-w-md p-6 border border-bac-300 rounded-2xl shadow-md bg-white">
-                    {/* AnimatedCharacter: 게시글 내부에 위치 */}
-                    <div className="mb-4 flex justify-start">
-                    </div>
-
-                    <div className="mb-4">
-                        <h1 className="text-2xl font-bold mb-2">연결의 미학, 노드</h1>
-                        <p className="text-gray-600">
-                            노드에서 새로운 감각의 소통과 예술적 연결을 경험해보세요. 창의적 영감이 넘치는 이야기가 기다리고 있습니다.
-                        </p>
-                    </div>
-                    <div className="text-right">
-                        <Link
-                            to={ClientUrl.REGISTER}
-                            className="text-blue-400 hover:underline"
+        // 외부 컨테이너: 세로(column) 배치이지만 md 이상에서 좌우(row) 배치로 전환
+        <div className="min-h-screen flex flex-col md:flex-row bg-white">
+            {/*
+              (1) md ~ <lg 구간에서만 표시될 왼쪽 영역
+              - <md 구간: hidden
+              - md ~ <lg 구간: flex
+              - >= lg 구간: hidden
+            */}
+            <motion.div
+                className="hidden md:flex lg:hidden md:flex-1 md:items-center md:justify-center p-8"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="max-w-md">
+                    <h1 className="text-4xl font-bold mb-4 text-gray-900">연결의 미학, 노드</h1>
+                    <p className="text-xl text-gray-600 mb-8">
+                        노드에서 새로운 감각의 소통과 예술적 연결을 경험해보세요.
+                        <br />
+                        학술 교류와 협업 기회를 통해 지식을 나누고 함께 성장할 수 있습니다.
+                    </p>
+                    <Link to={ClientUrl.REGISTER}>
+                        <motion.span
+                            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             회원가입 하기
-                        </Link>
-                    </div>
+                        </motion.span>
+                    </Link>
                 </div>
-            </div>
+            </motion.div>
 
-            {/* 오른쪽 영역: 로그인 폼 */}
-            <div className="flex-1 flex items-center justify-center">
-                <motion.div
-                    initial={{ opacity: 0.7, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0.7, scale: 0.98 }}
-                    transition={{ duration: 0.1 }}
-                    className="w-full max-w-md p-6"
-                >
-                    <h2 className="text-3xl font-bold mb-8 text-center">로그인</h2>
-                    <form className="space-y-6" onSubmit={handleSubmit}>
+            {/*
+              (2) 오른쪽 영역: 로그인 폼
+              - 모든 화면에서 표시되나, 레이아웃은 md 이상에서 좌우 분할
+            */}
+            <motion.div
+                className="flex-1 flex items-center justify-center bg-gray-50 p-8"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="w-full max-w-md">
+                    <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">로그인</h2>
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <FloatingInput
                             label="UserID"
                             name="id"
@@ -78,7 +88,6 @@ const Login: React.FC = () => {
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
                         />
-
                         <FloatingInput
                             label="Password"
                             name="password"
@@ -88,25 +97,63 @@ const Login: React.FC = () => {
                         />
 
                         {error && (
-                            <p className="text-red-500 text-sm text-center">{error}</p>
+                            <motion.p
+                                className="text-red-500 text-sm text-center"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                {error}
+                            </motion.p>
                         )}
 
-                        <div className="text-right">
-                            <button type="button" className="text-gray-500 hover:text-gray-700">
+                        <div className="flex justify-end">
+                            <motion.button
+                                type="button"
+                                className="text-sm text-gray-600 hover:text-gray-900"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
                                 비밀번호를 잊으셨나요?
-                            </button>
+                            </motion.button>
                         </div>
 
-                        <button
+                        <motion.button
                             type="submit"
-                            className="w-full py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+                            className="w-full py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors disabled:bg-gray-400"
                             disabled={loading}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                         >
                             {loading ? "로그인 중..." : "로그인"}
-                        </button>
+                        </motion.button>
                     </form>
-                </motion.div>
-            </div>
+
+                    {/*
+                      (A) 작은 화면(<md): 회원가입 버튼을 폼 아래에 표시
+                    */}
+                    <div className="block md:hidden text-center mt-6">
+                        <Link
+                            to={ClientUrl.REGISTER}
+                            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                        >
+                            회원가입 하기
+                        </Link>
+                    </div>
+
+                    {/*
+                      (B) 큰 화면(lg 이상): 왼쪽 영역을 숨기는 대신, 회원가입 버튼을 다시 폼 아래에 표시
+                    */}
+                    <div className="hidden lg:block text-center mt-6">
+                        <Link
+                            to={ClientUrl.REGISTER}
+                            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                        >
+                            회원가입 하기
+                        </Link>
+                    </div>
+                </div>
+            </motion.div>
         </div>
     );
 };
