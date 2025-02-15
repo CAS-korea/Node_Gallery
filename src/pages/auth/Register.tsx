@@ -60,7 +60,7 @@ const Register: React.FC = () => {
 
             // ID 검증
             if (!userId.trim()) {
-                newErrors.userId = "ID가 채워지지 않았습니다.";
+                newErrors.userId = "UserID가 채워지지 않았습니다.";
                 hasError = true;
             } else if (!isIdValid(userId)) {
                 newErrors.userId = "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요.";
@@ -170,8 +170,8 @@ const Register: React.FC = () => {
                 return (
                     <div className="space-y-4">
                         <FloatingInput
-                            label="ID"
-                            name="id"
+                            label="UserID"
+                            name="Userid"
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
                             error={errors.userId}
