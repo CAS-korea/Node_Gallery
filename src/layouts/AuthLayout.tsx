@@ -82,7 +82,7 @@ const AuthLayout: React.FC = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.5 }}
                         >
-                            NODE: The Universe of Knowledge & Connections
+                            Welcome To NODE!
                         </motion.h1>
                         <AnimatePresence mode="wait">
                             <motion.p

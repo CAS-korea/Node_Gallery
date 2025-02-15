@@ -1,30 +1,30 @@
-import type React from "react"
-import { Link, useLocation } from "react-router-dom"
-import { ClientUrl } from "../constants/ClientUrl.tsx"
-import { motion } from "framer-motion"
-import { useServices } from "../contextAPI/ServicesProvider"
-import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from "lucide-react"
+import type React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ClientUrl } from "../constants/ClientUrl.tsx";
+import { motion } from "framer-motion";
+import { useServices } from "../contextAPI/ServicesProvider";
+import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from "lucide-react";
 
 const Sidebar: React.FC = () => {
-    const { logout } = useServices()
-    const location = useLocation()
+    const { logout } = useServices();
+    const location = useLocation();
 
     const navItems = [
         { path: ClientUrl.HOME, label: "홈", icon: <Home size={22} /> },
         { path: ClientUrl.SEARCH, label: "검색", icon: <Search size={22} /> },
         { path: ClientUrl.NEWPOST, label: "새 게시물", icon: <PlusCircle size={22} /> },
-        { path: ClientUrl.MESSAGELOG, label: "채팅", icon: <MessageCircle size={22} /> },
+        { path: ClientUrl.MESSAGE, label: "채팅", icon: <MessageCircle size={22} /> },
         { path: ClientUrl.PROFILE, label: "프로필", icon: <User size={22} /> },
         { path: ClientUrl.NOTIFICATION, label: "알림", icon: <Bell size={22} /> },
         { path: ClientUrl.SETTINGS, label: "설정", icon: <Settings size={22} /> },
-    ]
+    ];
 
     return (
         <motion.aside
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed w-64 h-screen bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 shadow-lg p-6 flex flex-col justify-between"
+            className="fixed w-64 h-screen bg-gradient-to-b from-white dark:from-gray-800 to-gray-50 dark:to-gray-900 border-r border-gray-200 dark:border-gray-700 shadow-lg p-6 flex flex-col justify-between"
         >
             <div>
                 <motion.div
@@ -33,8 +33,8 @@ const Sidebar: React.FC = () => {
                     transition={{ delay: 0.1, duration: 0.2 }}
                     className="mb-10 mt-10"
                 >
-                    <h1 className="text-2xl font-bold text-gray-800">Welcome Noder!</h1>
-                    <p className="text-sm text-gray-500">Connect and Create</p>
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Welcome Noder!</h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Connect and Create</p>
                 </motion.div>
                 <nav className="flex flex-col gap-y-2">
                     {navItems.map(({ path, label, icon }) => (
@@ -42,8 +42,12 @@ const Sidebar: React.FC = () => {
                             <motion.div
                                 whileHover={{ x: 3 }}
                                 whileTap={{ scale: 0.98 }}
-                                className={`relative flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 transition-all duration-400 ease-in-out overflow-hidden
-                                ${location.pathname === path ? "bg-gray-300 text-gray-900 font-medium" : "hover:bg-gray-100"}`}
+                                className={`relative flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-400 ease-in-out overflow-hidden 
+                  ${
+                                    location.pathname === path
+                                        ? "bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium"
+                                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                }`}
                             >
                                 <span className="relative z-10">{icon}</span>
                                 <span className="relative z-10 text-[16px]">{label}</span>
@@ -64,8 +68,7 @@ const Sidebar: React.FC = () => {
                 <span className="text-[16px] font-medium">로그아웃</span>
             </motion.button>
         </motion.aside>
-    )
-}
+    );
+};
 
-export default Sidebar
-
+export default Sidebar;

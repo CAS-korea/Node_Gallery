@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -8,14 +10,11 @@ interface ReportModalProps {
 
 type Phase = "selectReason" | "confirmReason" | "reported";
 
-const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => {
-    // 신고 사유
+const ChatReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => {
     const [reason, setReason] = useState<string>("불건전한 내용");
     const [customReason, setCustomReason] = useState("");
-    // 단계
     const [phase, setPhase] = useState<Phase>("selectReason");
 
-    // 라디오 변경 핸들러
     const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setReason(e.target.value);
         if (e.target.value !== "기타") {
@@ -23,22 +22,18 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
         }
     };
 
-    // 1단계 → 2단계
     const handleConfirmSelectReason = () => {
         setPhase("confirmReason");
     };
 
-    // 2단계 "예" 버튼: 3단계로 전환 (onConfirm 호출은 3단계에서 처리)
     const handleYes = () => {
         setPhase("reported");
     };
 
-    // 2단계 "아니요" 버튼: 1단계로 돌아감
     const handleNo = () => {
         setPhase("selectReason");
     };
 
-    // 3단계 "확인" 버튼: 최종 처리 후 모달 닫기 (여기서 onConfirm 호출)
     const handleCloseFinal = () => {
         const finalReason = reason === "기타" ? customReason : reason;
         onConfirm(finalReason || "기타");
@@ -47,7 +42,7 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/60 backdrop-blur-sm">
             <AnimatePresence mode="wait">
                 {phase === "selectReason" && (
                     <motion.div
@@ -59,12 +54,9 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     >
                         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-                            이 포스트를 신고하시겠습니까?
+                            이 채팅을 신고하시겠습니까?
                         </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                            사유를 알려주세요!
-                        </p>
-
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">사유를 알려주세요!</p>
                         <div className="space-y-2 mb-4">
                             {/* 불건전한 내용 */}
                             <label className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition">
@@ -74,32 +66,9 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                                     value="불건전한 내용"
                                     checked={reason === "불건전한 내용"}
                                     onChange={handleRadioChange}
-                                    className={`
-                    appearance-none 
-                    w-5 h-5 
-                    border border-gray-300 dark:border-gray-600 
-                    rounded-sm 
-                    cursor-pointer 
-                    transition-colors 
-                    checked:bg-red-500 
-                    checked:border-red-500 
-                    focus:ring-2 focus:ring-offset-1 focus:ring-red-300
-                    relative
-                    after:content-[''] 
-                    after:hidden 
-                    checked:after:block 
-                    after:absolute 
-                    after:inset-0
-                    after:text-white 
-                    after:text-sm 
-                    after:flex 
-                    after:items-center 
-                    after:justify-end 
-                    after:ml-1 
-                    checked:after:content-['✓']
-                  `}
+                                    className="appearance-none w-5 h-5 border border-gray-300 dark:border-gray-600 rounded-sm cursor-pointer transition-colors checked:bg-red-500 checked:border-red-500 focus:ring-2 focus:ring-offset-1 focus:ring-red-300"
                                 />
-                                <span className="text-gray-700 dark:text-gray-300">불건전한 내용</span>
+                                <span className="text-gray-700 dark:text-gray-200">불건전한 내용</span>
                             </label>
 
                             {/* 정치적인 내용 포함 */}
@@ -110,32 +79,9 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                                     value="정치적인 내용 포함"
                                     checked={reason === "정치적인 내용 포함"}
                                     onChange={handleRadioChange}
-                                    className={`
-                    appearance-none 
-                    w-5 h-5 
-                    border border-gray-300 dark:border-gray-600 
-                    rounded-sm 
-                    cursor-pointer 
-                    transition-colors 
-                    checked:bg-red-500 
-                    checked:border-red-500 
-                    focus:ring-2 focus:ring-offset-1 focus:ring-red-300
-                    relative
-                    after:content-[''] 
-                    after:hidden 
-                    checked:after:block 
-                    after:absolute 
-                    after:inset-0
-                    after:text-white 
-                    after:text-sm 
-                    after:flex 
-                    after:items-center 
-                    after:justify-end 
-                    after:ml-1 
-                    checked:after:content-['✓']
-                  `}
+                                    className="appearance-none w-5 h-5 border border-gray-300 dark:border-gray-600 rounded-sm cursor-pointer transition-colors checked:bg-red-500 checked:border-red-500 focus:ring-2 focus:ring-offset-1 focus:ring-red-300"
                                 />
-                                <span className="text-gray-700 dark:text-gray-300">정치적인 내용 포함</span>
+                                <span className="text-gray-700 dark:text-gray-200">정치적인 내용 포함</span>
                             </label>
 
                             {/* 기타 */}
@@ -146,35 +92,10 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                                     value="기타"
                                     checked={reason === "기타"}
                                     onChange={handleRadioChange}
-                                    className={`
-                    appearance-none 
-                    w-5 h-5 
-                    border border-gray-300 dark:border-gray-600 
-                    rounded-sm 
-                    cursor-pointer 
-                    transition-colors 
-                    checked:bg-red-500 
-                    checked:border-red-500 
-                    focus:ring-2 focus:ring-offset-1 focus:ring-red-300
-                    relative
-                    after:content-[''] 
-                    after:hidden 
-                    checked:after:block 
-                    after:absolute 
-                    after:inset-0
-                    after:text-white 
-                    after:text-sm 
-                    after:flex 
-                    after:items-center 
-                    after:justify-end 
-                    after:ml-1 
-                    checked:after:content-['✓']
-                  `}
+                                    className="appearance-none w-5 h-5 border border-gray-300 dark:border-gray-600 rounded-sm cursor-pointer transition-colors checked:bg-red-500 checked:border-red-500 focus:ring-2 focus:ring-offset-1 focus:ring-red-300"
                                 />
-                                <span className="text-gray-700 dark:text-gray-300">기타</span>
+                                <span className="text-gray-700 dark:text-gray-200">기타</span>
                             </label>
-
-                            {/* 기타 선택 시 텍스트 입력 */}
                             {reason === "기타" && (
                                 <motion.div
                                     key="custom-input"
@@ -193,7 +114,6 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                                 </motion.div>
                             )}
                         </div>
-
                         <div className="flex justify-end space-x-2">
                             <motion.button
                                 onClick={onClose}
@@ -227,10 +147,9 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
                             다음 사유로 신고하시겠습니까?
                         </h2>
-                        <p className="text-gray-700 dark:text-gray-300 mb-6">
+                        <p className="text-gray-700 dark:text-gray-200 mb-6">
                             {reason === "기타" && customReason ? customReason : reason}
                         </p>
-
                         <div className="flex justify-end space-x-2">
                             <motion.button
                                 onClick={handleNo}
@@ -264,10 +183,9 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
                         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
                             신고 처리 되었습니다.
                         </h2>
-                        <p className="text-gray-700 dark:text-gray-300 mb-6">
+                        <p className="text-gray-700 dark:text-gray-200 mb-6">
                             소중한 의견 감사합니다. 관리자가 확인 후 조치 예정입니다.
                         </p>
-
                         <div className="flex justify-end">
                             <motion.button
                                 onClick={handleCloseFinal}
@@ -285,4 +203,4 @@ const PostReportModal: React.FC<ReportModalProps> = ({ onClose, onConfirm }) => 
     );
 };
 
-export default PostReportModal;
+export default ChatReportModal;

@@ -40,7 +40,6 @@ const PostView: React.FC = () => {
     /** 좋아요 토글 */
     const handleLike = () => {
         if (!post) return
-
         if (hasLiked) {
             // 좋아요 취소
             setPost({ ...post, likesCount: Math.max(0, post.likesCount - 1) })
@@ -86,11 +85,11 @@ const PostView: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="relative bg-white rounded-2xl shadow-lg overflow-hidden"
+                        className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
                     >
                         <div className="p-6 space-y-4">
                             <motion.h1
-                                className="text-3xl font-bold text-gray-900 leading-tight"
+                                className="text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1, duration: 0.3 }}
@@ -98,7 +97,7 @@ const PostView: React.FC = () => {
                                 {post.title}
                             </motion.h1>
                             <motion.p
-                                className="text-sm text-gray-500"
+                                className="text-sm text-gray-500 dark:text-gray-300"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.3 }}
@@ -106,7 +105,7 @@ const PostView: React.FC = () => {
                                 작성자: {post.username}
                             </motion.p>
                             <motion.div
-                                className="prose max-w-none mt-6"
+                                className="prose dark:prose-invert max-w-none mt-6"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.3 }}
@@ -115,7 +114,7 @@ const PostView: React.FC = () => {
                         </div>
 
                         {/* 하단 버튼 영역 */}
-                        <div className="px-6 py-4 bg-gray-50 flex justify-between items-center">
+                        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
                             <div className="flex space-x-4">
                                 {/* 좋아요 버튼 (빈 하트 ↔ 빨간 하트) */}
                                 <motion.button
@@ -132,7 +131,7 @@ const PostView: React.FC = () => {
                                             <Heart className="w-5 h-5 fill-current text-red-500" />
                                         ) : (
                                             <Heart
-                                                className="w-5 h-5 stroke-current text-gray-600 hover:text-red-500"
+                                                className="w-5 h-5 stroke-current text-gray-600 dark:text-gray-300 hover:text-red-500"
                                                 fill="none"
                                                 strokeWidth={2}
                                             />
@@ -142,7 +141,7 @@ const PostView: React.FC = () => {
                                         className={`font-medium ${
                                             hasLiked
                                                 ? "text-red-500"
-                                                : "text-gray-600"
+                                                : "text-gray-600 dark:text-gray-300"
                                         }`}
                                     >
                                         {post.likesCount}
@@ -153,7 +152,7 @@ const PostView: React.FC = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="text-gray-600 hover:text-blue-500 transition-colors duration-300"
+                                    className="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-300"
                                 >
                                     <MessageCircle className="w-5 h-5" />
                                 </motion.button>
@@ -162,7 +161,7 @@ const PostView: React.FC = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="text-gray-600 hover:text-green-500 transition-colors duration-300"
+                                    className="text-gray-600 dark:text-gray-300 hover:text-green-500 transition-colors duration-300"
                                 >
                                     <Share2 className="w-5 h-5" />
                                 </motion.button>
@@ -171,12 +170,12 @@ const PostView: React.FC = () => {
                             {/* 신고 버튼 */}
                             <motion.button
                                 onClick={handleReport}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: !hasReported ? 1.1 : 1 }}
+                                whileTap={{ scale: !hasReported ? 0.95 : 1 }}
                                 className={`transition-colors duration-300 ${
                                     hasReported
                                         ? "text-red-500 cursor-not-allowed"
-                                        : "text-gray-600 hover:text-red-500"
+                                        : "text-gray-600 dark:text-gray-300 hover:text-red-500"
                                 }`}
                                 disabled={hasReported}
                             >
@@ -193,7 +192,7 @@ const PostView: React.FC = () => {
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center text-gray-600 py-10"
+                    className="text-center text-gray-600 dark:text-gray-300 py-10"
                 >
                     게시물을 불러오는 중...
                 </motion.p>
@@ -202,4 +201,4 @@ const PostView: React.FC = () => {
     )
 }
 
-export default PostView
+export default PostView;

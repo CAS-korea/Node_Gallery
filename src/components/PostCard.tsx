@@ -25,28 +25,28 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative bg-white rounded-2xl shadow-lg overflow-hidden"
+            className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
         >
             <div className="p-6 space-y-4">
                 <Link to={`/post/${post.postID}`} className="block">
                     <motion.h2
-                        className="text-2xl font-semibold text-gray-900 leading-tight"
+                        className="text-2xl font-semibold text-gray-900 dark:text-gray-100 leading-tight"
                         whileHover={{ x: 5 }}
                         transition={{ type: "spring", stiffness: 300 }}
                     >
                         {post.title}
                     </motion.h2>
                 </Link>
-                <p className="text-sm text-gray-500">By {post.username}</p>
-                <p className="text-base text-gray-700 line-clamp-3">{post.content}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">By {post.username}</p>
+                <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">{post.content}</p>
             </div>
 
-            <div className="px-6 py-4 bg-gray-50 flex justify-end items-center">
+            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-end items-center">
                 <motion.button
                     onClick={handleScrap}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="flex items-center space-x-2 text-gray-600 transition-colors duration-300"
+                    className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 transition-colors duration-300"
                 >
                     <motion.div
                         animate={{ scale: isScrapped ? 1.2 : 1 }}
@@ -54,7 +54,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                     >
                         <Bookmark
                             className={`w-5 h-5 ${
-                                isScrapped ? "fill-current text-blue-500" : "stroke-current text-gray-600"
+                                isScrapped
+                                    ? "fill-current text-blue-500"
+                                    : "stroke-current text-gray-600 dark:text-gray-300"
                             }`}
                         />
                     </motion.div>
@@ -65,4 +67,4 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
     )
 }
 
-export default PostCard
+export default PostCard;

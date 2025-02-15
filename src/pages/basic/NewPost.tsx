@@ -48,25 +48,27 @@ const NewPost: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-8">
                 {/* 좌측 입력 영역 */}
                 <div className="md:w-1/2 flex flex-col">
-                    <h1 className="text-4xl font-bold mb-6 text-gray-800">새 게시물 작성</h1>
+                    <h1 className="text-4xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+                        새 게시물 작성
+                    </h1>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="제목을 입력하세요"
-                            className="w-full px-6 py-4 bg-white/30 backdrop-blur-sm rounded-xl text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
                         <textarea
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             placeholder="내용을 작성하세요"
-                            className="w-full px-6 py-4 bg-white/30 backdrop-blur-sm rounded-xl text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                             rows={12}
                         />
                         <button
                             type="submit"
-                            className="w-full py-4 bg-white text-black font-semibold rounded-full shadow-lg hover:from-blue-600 hover:to-purple-600 transition"
+                            className="w-full py-4 bg-white dark:bg-gray-800 text-black dark:text-gray-100 font-semibold rounded-full shadow-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                         >
                             게시물 올리기
                         </button>
@@ -74,11 +76,11 @@ const NewPost: React.FC = () => {
                 </div>
 
                 {/* 우측 미리보기 영역 */}
-                <div className="md:w-1/2 flex flex-col">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800">미리보기</h2>
+                <div className="md:w-1/2 flex flex-col dark:text-white">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">미리보기</h2>
                     <div
-                        className="p-6 bg-white/30 backdrop-blur-sm rounded-xl border border-gray-200 overflow-auto prose prose-stone max-h-[600px]"
-                        dangerouslySetInnerHTML={{ __html: previewContent }}
+                        className="p-6 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-600 overflow-auto prose prose-stone dark:prose-invert max-h-[600px]"
+                        dangerouslySetInnerHTML={{__html: previewContent}}
                     />
                 </div>
             </div>

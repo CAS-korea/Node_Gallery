@@ -4,7 +4,7 @@ import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container"; // container 컴포넌트 import
 
 const Home: React.FC = () => {
-    //  더미 데이터 (content 속성 추가)
+    // 더미 데이터 (content 속성 추가)
     const dummyPosts: PostEntity[] = [
         {
             postID: "1",
@@ -48,7 +48,7 @@ const Home: React.FC = () => {
         }
     ];
 
-    //  상태 관리 (초기값 빈 배열)
+    // 상태 관리 (초기값 빈 배열)
     const [posts, setPosts] = useState<PostEntity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -61,22 +61,24 @@ const Home: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900">
                 {/* Tailwind CSS 스피너 / Loading Bar */}
-                <div className="w-16 h-16 border-4 border-black opacity-5 border-t-transparent rounded-full animate-spin"></div>
-                <div className="w-30 h-16 px-3 py-5 text-gray-400"> 잠시만 기다려주세요! </div>
+                <div className="w-16 h-16 border-4 border-black dark:border-white opacity-5 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-30 h-16 px-3 py-5 text-gray-400 dark:text-gray-300">
+                    잠시만 기다려주세요!
+                </div>
             </div>
         );
     }
 
     return (
         <PostContainer>
-            <h1 className="text-3xl font-semibold">홈</h1>
+            <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">홈</h1>
             <div className="space-y-4">
                 {posts.length > 0 ? (
                     posts.map(post => <PostCard key={post.postID} post={post} />)
                 ) : (
-                    <p className="text-gray-400 text-center">게시물이 없습니다.</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-center">게시물이 없습니다.</p>
                 )}
             </div>
         </PostContainer>
