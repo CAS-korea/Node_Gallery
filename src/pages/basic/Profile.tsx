@@ -52,7 +52,7 @@ const Profile: React.FC = () => {
                 <div className="space-y-4 mt-4">
                     {posts.length > 0 ? (
                         posts.map(post => (
-                            <PostCard key={post.postID} post={post} interactive={false} />
+                            <PostCard key={post.postId} post={post} interactive={false} />
                         ))
                     ) : (
                         <p className="text-gray-400">게시물이 없습니다.</p>

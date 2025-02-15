@@ -51,7 +51,7 @@ const Router: React.FC = () => {
                 <Route path={ClientUrl.PROFILE} element={<Profile/>}/>
                 <Route path={ClientUrl.NOTIFICATION} element={<Alarm/>}/>
                 <Route path={ClientUrl.SETTINGS} element={<Settings/>}/>
-                <Route path={ClientUrl.MESSAGELOG} element={<DetailDm/>}/>
+                <Route path={ClientUrl.MESSAGE} element={<DetailDm/>}/>
                 <Route path={ClientUrl.SPECIFICPOST} element={<PostView/>}/>
             </Route>
         </Routes>

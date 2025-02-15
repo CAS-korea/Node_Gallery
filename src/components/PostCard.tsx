@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { PostEntity } from '../types/PostEntity.ts';
 import { motion } from 'framer-motion';
 import { FaHeart } from "react-icons/fa";
+import {ClientUrl} from "../constants/ClientUrl.ts";
 
 interface PostCardProps {
     post: PostEntity;
@@ -25,13 +26,16 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             className="relative bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-lg transition-transform duration-300"
         >
             {/* 게시글 제목 */}
-            <Link to={`/post/${post.postID}`}>
+            <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`}>
                 <h2 className="text-2xl font-semibold text-black hover:underline">
                     {post.title}
                 </h2>
             </Link>
-            <p className="mt-2 text-sm text-black">작성자: {post.username}</p>
-
+            <Link to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}>
+                <p className="mt-2 text-sm text-black hover:underline">
+                    {post.userId}
+                </p>
+            </Link>
             {/* 게시글 내용 */}
             <p className="mt-4 text-gray-700 text-sm line-clamp-3 pb-16">
                 {post.content}

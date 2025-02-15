@@ -15,9 +15,9 @@ const PostView: React.FC = () => {
 
     useEffect(() => {
         const dummyPost: PostEntity = {
-            postID: "1",
+            postId: "1",
             title: "김아프간타의 은밀한 사생활",
-            username: "김아프간타",
+            userId: "김아프간타",
             content: "# 하핫!\n\n이 게시물은 UI 테스트를 위한 임시 데이터입니다.",
             likesCount: 42,
             reportCount: 3
@@ -66,7 +66,7 @@ const PostView: React.FC = () => {
 
                     {/* 게시글 제목 & 내용 */}
                     <h1 className="text-3xl font-semibold">{post.title}</h1>
-                    <p className="text-gray-400 text-sm">작성자: {post.username}</p>
+                    <p className="text-gray-400 text-sm">작성자: {post.userId}</p>
 
                     {/* 본문 (아래쪽 여유 공간 확보) */}
                     <div

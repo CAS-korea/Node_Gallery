@@ -13,7 +13,7 @@ const Sidebar: React.FC = () => {
         { path: ClientUrl.HOME, label: "홈", icon: <Home size={22} /> },
         { path: ClientUrl.SEARCH, label: "검색", icon: <Search size={22} /> },
         { path: ClientUrl.NEWPOST, label: "새 게시물", icon: <PlusCircle size={22} /> },
-        { path: ClientUrl.MESSAGELOG, label: "채팅", icon: <MessageCircle size={22} /> },
+        { path: ClientUrl.MESSAGE, label: "채팅", icon: <MessageCircle size={22} /> },
         { path: ClientUrl.PROFILE, label: "프로필", icon: <User size={22} /> },
         { path: ClientUrl.NOTIFICATION, label: "알림", icon: <Bell size={22} /> },
         { path: ClientUrl.SETTINGS, label: "설정", icon: <Settings size={22} /> }

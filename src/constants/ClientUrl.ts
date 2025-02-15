@@ -5,6 +5,8 @@ export enum ClientUrl {
     FORGOT = '/forgot',
     RESET_PASSWORD = '/reset-password',
 
+    ADMIN = '/admin',
+
     HOME = '/home',
     SEARCH = '/search',
     NEWPOST = '/post',
@@ -13,8 +15,7 @@ export enum ClientUrl {
     NOTIFICATION = '/notification',
     SETTINGS = '/settings',
 
-    ADMIN = '/admin',
-
-    MESSAGELOG = '/dm/:dmId',
-    SPECIFICPOST = '/post/:postId'
+    SPECIFICPROFILE = '/user',
+    SPECIFICMESSAGE = '/message',
+    SPECIFICPOST = '/post'
 }

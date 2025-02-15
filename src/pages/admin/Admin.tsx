@@ -40,7 +40,7 @@ const Admin: React.FC = () => {
         const banEndDate = new Date(bannedUntil).getTime(); // 정지 해제 시간 (밀리초)
         const diff = banEndDate - now; // 남은 시간 (밀리초)
 
-        if (diff <= 0) return "정지 해제됨"; // 이미 정지 해제된 경우
+        if (diff <= 0) return "0"; // 이미 정지 해제된 경우
 
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const days = Math.floor(hours / 24);
