@@ -71,7 +71,7 @@ const Login: React.FC = () => {
               - 모든 화면에서 표시되나, 레이아웃은 md 이상에서 좌우 분할
             */}
             <motion.div
-                className="flex-1 flex items-center justify-center bg-gray-50 p-8"
+                className="flex-1 flex items-center justify-center  p-8"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}

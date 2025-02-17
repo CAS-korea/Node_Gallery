@@ -2,10 +2,10 @@ import type React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ClientUrl } from "../constants/ClientUrl.tsx";
 import { motion } from "framer-motion";
-import { useServices } from "../context/ServicesProvider";
+import { useServices } from "../contextAPI/ServicesProvider";
 import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from "lucide-react";
 
-const Sidebar: React.FC = () => {
+const Adminsidebar: React.FC = () => {
     const { logout } = useServices();
     const location = useLocation();
 
@@ -17,6 +17,7 @@ const Sidebar: React.FC = () => {
         { path: ClientUrl.PROFILE, label: "프로필", icon: <User size={22} /> },
         { path: ClientUrl.NOTIFICATION, label: "알림", icon: <Bell size={22} /> },
         { path: ClientUrl.SETTINGS, label: "설정", icon: <Settings size={22} /> },
+        { path: ClientUrl.ADMIN, label: "관리자 페이지" }
     ];
 
     return (
@@ -33,8 +34,8 @@ const Sidebar: React.FC = () => {
                     transition={{ delay: 0.1, duration: 0.2 }}
                     className="mb-10 mt-10"
                 >
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Welcome Noder!</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Connect and Create</p>
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">관리자님 어서오세요!</h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">-관리자 전용 계정-</p>
                 </motion.div>
                 <nav className="flex flex-col gap-y-2">
                     {navItems.map(({ path, label, icon }) => (
@@ -71,4 +72,4 @@ const Sidebar: React.FC = () => {
     );
 };
 
-export default Sidebar;
+export default Adminsidebar;

@@ -82,7 +82,7 @@ const Register: React.FC = () => {
 
             // ID 검증
             if (!userId.trim()) {
-                newErrors.userId = "ID가 채워지지 않았습니다.";
+                newErrors.userId = "UserID가 채워지지 않았습니다.";
                 hasError = true;
             } else if (!isIdChecked) {
                 newErrors.userId = "ID 중복 확인을 완료해주세요.";
@@ -193,8 +193,8 @@ const Register: React.FC = () => {
                 return (
                     <div className="space-y-4">
                         <FloatingInput
-                            label="ID"
-                            name="id"
+                            label="UserID"
+                            name="Userid"
                             value={userId}
                             onChange={(e) => {
                                 setUserId(e.target.value);
