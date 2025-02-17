@@ -28,7 +28,7 @@ const Admin: React.FC = () => {
         setTimeout(() => {
             fetchData();
             setLoading(false);
-        }, 500);
+        }, 100);
     }, [getUserList, getNonuserList]);
 
     // 사용자 승인 처리

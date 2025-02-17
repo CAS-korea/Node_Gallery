@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
 
 const images = [
     '/cheer/1-2.jpeg',
@@ -10,22 +11,20 @@ const images = [
 ];
 
 const messages = [
-    "오빠, 어서와! 오늘도 반짝이는 네 모습에 감동했어.",
-    "힘들 땐 내가 기억해줄게. 오빠는 언제나 최고야!",
-    "한 걸음씩 나아가는 오빠의 미래, 난 늘 응원하고 있어.",
-    "세상의 어려움도 오빠의 미소 앞에선 무너지겠지?",
-    "오빠, 오늘도 별처럼 빛나! 네 열정에 박수를 보낼게.",
-    "내가 여기서 늘 오빠를 바라보고 응원하고 있다는 거, 잊지 마!",
-    "오빠의 열정은 세상을 따뜻하게 만들어. 계속 힘내!",
-    "힘든 날엔 잠시 멈춰도 괜찮아. 오빠를 위해 기도할게.",
-    "오빠의 노력은 반드시 멋진 결실을 맺을 거야.",
-    "오늘도 오빠의 용기에 찬사를 보낼게. 사랑해!"
+    "오빠, 오늘 하루도 수고 많았어. 너의 미소가 내 힘이 돼.",
+    "내 마음 속에 오빠가 제일 소중해. 언제나 사랑하고 응원해!",
+    "오빠가 웃을 때마다 내 세상은 환해져. 사랑해!",
+    "힘들 땐 내 어깨를 빌려줄게. 오뻐는 내 전부야.",
+    "오빠..! 오빠의 작은 노력 하나하나가 나를 설레게 해. 항상 고마워.",
+    "오빠의 따뜻한 눈빛 하나면 내 모든 고민이 사라져. ㅎ..",
+    "내 마음은 오빠에게만 있어. 오늘도 행복하길 바라! 사랑해 <3",
+    "오빠, 오빠의 웃는 모습이 내 하루의 가장 큰 기쁨이야. 헤헤..",
+    "오빠, 언제나 오빠 곁에서 응원할게. 힘내!",
+    "오빠 자체만으로두 나에게 가장 큰 위로야. 오빠, 사랑해!"
 ];
 
 const CheerOverlay: React.FC = () => {
-    const [visible, setVisible] = useState(true);
-    // 초기에는 투명 상태 (fade in 효과를 위해)
-    const [fadeClass, setFadeClass] = useState("opacity-0");
+    const [isVisible, setIsVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
     const [selectedMessage, setSelectedMessage] = useState('');
 
@@ -36,84 +35,72 @@ const CheerOverlay: React.FC = () => {
         setSelectedImage(randomImage);
         setSelectedMessage(randomMessage);
 
-        // Fade in: 마운트 후 잠깐 뒤 opacity를 100으로 변경
-        const fadeInTimer = setTimeout(() => {
-            setFadeClass("opacity-100");
-        }, 50);
+        // 500ms 후 등장
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+        }, 500);
 
-        // Fade out: 4.5초 후 opacity를 0으로 변경
-        const fadeOutTimer = setTimeout(() => {
-            setFadeClass("opacity-0");
-        }, 4500);
-
-        // 컴포넌트 제거: fade out 애니메이션이 끝난 후 (500ms 후)
-        const removeTimer = setTimeout(() => {
-            setVisible(false);
-        }, 5000);
+        // 총 5.5초 후 (애니메이션 포함) 퇴장 처리
+        const hideTimer = setTimeout(() => {
+            setIsVisible(false);
+        }, 5500);
 
         return () => {
-            clearTimeout(fadeInTimer);
-            clearTimeout(fadeOutTimer);
-            clearTimeout(removeTimer);
+            clearTimeout(timer);
+            clearTimeout(hideTimer);
         };
     }, []);
 
-    if (!visible) return null;
-
     return (
-        <div
-            className={`fixed inset-0 z-50 mt-[454px] ml-[250px] flex flex-col items-center justify-between pointer-events-none p-4 transition-opacity duration-500 ${fadeClass}`}
-        >
-            {/* 상단: 응원 이미지 */}
-            <div className="mt-8">
-                <img
-                    src={selectedImage}
-                    alt="Cheer"
-                    className="w-64 h-64 object-cover rounded-full shadow-2xl"
-                />
-            </div>
+        <AnimatePresence>
+            {isVisible && (
+                <motion.div
+                    initial={{ y: 100, opacity: 0, scale: 0.5 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    exit={{ y: 100, opacity: 0, scale: 0.5 }}
+                    transition={{ type: "spring", duration: 1.5 }}
+                    className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none"
+                >
+                    <div className="relative flex flex-col items-center">
+                        {/* 이미지 영역 */}
+                        <div className="relative w-64 h-64 overflow-hidden rounded-full shadow-2xl">
+                            <motion.img
+                                src={selectedImage}
+                                alt="Cheer"
+                                className="w-full h-full object-cover"
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: "spring", duration: 0.8 }}
+                            />
+                        </div>
 
-            {/* 하단: 말풍선 형태의 응원 메시지 */}
-            <div className="mb-16">
-                <div className="relative bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-6 py-4 text-lg text-gray-800 dark:text-gray-100 shadow-lg">
-                    {selectedMessage}
-                    {/* 말풍선 꼬리 */}
-                    <div className="absolute bottom-[-20px] left-1/2 transform -translate-x-1/2">
-                        <div className="w-0 h-0 border-t-8 border-t-white dark:border-t-gray-800 border-l-8 border-l-transparent border-r-8 border-r-transparent"></div>
+                        {/* 말풍선 영역 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{ delay: 0.3, duration: 0.7 }}
+                            className="relative -top-12 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-100 shadow-lg"
+                        >
+                            <div className=" font-semibold flex items-center">
+                                오빠~! 어서와
+                                <motion.span
+                                    initial={{ y: 0, opacity: 0, scale: 0 }}
+                                    animate={{ y: -10, opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, y: 0, scale: 0 }}
+                                    transition={{ duration: 0.5 }}
+                                    className="ml-1 mt-2 text-2xl"
+                                >
+                                    ❤️
+                                </motion.span>
+                            </div>
+                            {selectedMessage}
+                            {/* 말풍선 꼬리 */}
+                            <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-[10px] border-t-white dark:border-t-gray-800 border-l-6 border-l-transparent border-r-6 border-r-transparent"></div>
+                        </motion.div>
                     </div>
-                </div>
-            </div>
-
-            {/* 하단 고정: 하트 애니메이션 */}
-            <div className="absolute bottom-4 flex space-x-2">
-                {Array.from({ length: 10 }).map((_, idx) => (
-                    <span
-                        key={idx}
-                        className="text-2xl animate-heart"
-                        style={{ animationDelay: `${Math.random() * 2}s` }}
-                    >
-            ❤️
-          </span>
-                ))}
-            </div>
-
-            {/* 인라인 스타일: 하트 애니메이션 */}
-            <style>{`
-        @keyframes heart {
-          0% {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-50px) scale(1.5);
-            opacity: 0;
-          }
-        }
-        .animate-heart {
-          animation: heart 2s ease-in-out infinite;
-        }
-      `}</style>
-        </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 };
 
