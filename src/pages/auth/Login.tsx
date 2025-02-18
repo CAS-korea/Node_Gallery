@@ -106,14 +106,16 @@ const Login: React.FC = () => {
                         )}
 
                         <div className="flex justify-end">
-                            <motion.button
-                                type="button"
-                                className="text-sm text-gray-600 hover:text-gray-900"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                비밀번호를 잊으셨나요?
-                            </motion.button>
+                            <Link to={ClientUrl.FORGOT} className="text-sm text-gray-600 hover:text-gray-900">
+                                <motion.button
+                                    type="button"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="focus:outline-none"
+                                >
+                                    비밀번호를 잊으셨나요?
+                                </motion.button>
+                            </Link>
                         </div>
 
                         <motion.button
