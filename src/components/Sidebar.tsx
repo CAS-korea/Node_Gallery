@@ -1,6 +1,6 @@
 import type React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ClientUrl } from "../constants/ClientUrl.tsx";
+import { ClientUrl } from "../constants/ClientUrl.ts";
 import { motion } from "framer-motion";
 import { useServices } from "../context/ServicesProvider";
 import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from "lucide-react";

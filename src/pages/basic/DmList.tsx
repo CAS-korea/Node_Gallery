@@ -20,7 +20,7 @@ const DmList: React.FC = () => {
     const navigate = useNavigate();
 
     const handleDMClick = (dm: DM) => {
-        navigate(ClientUrl.MESSAGELOG, { state: { dm } });
+        navigate(ClientUrl.SPECIFICMESSAGE, { state: { dm } });
     };
 
     return (

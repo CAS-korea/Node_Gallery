@@ -28,7 +28,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
         >
             <div className="p-6 space-y-4">
-                <Link to={`/post/${post.postID}`} className="block">
+                <Link to={`/post/${post.postId}`} className="block">
                     <motion.h2
                         className="text-2xl font-semibold text-gray-900 dark:text-gray-100 leading-tight"
                         whileHover={{ x: 5 }}
@@ -37,7 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                         {post.title}
                     </motion.h2>
                 </Link>
-                <p className="text-sm text-gray-500 dark:text-gray-400">By {post.username}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">By {post.userId}</p>
                 <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">{post.content}</p>
             </div>
 

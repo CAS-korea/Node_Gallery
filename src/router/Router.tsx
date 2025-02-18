@@ -37,18 +37,9 @@ const Router: React.FC = () => {
                 <Route path={ClientUrl.RESET_PASSWORD} element={<ResetPassword />}/>
             </Route>
 
-            {/* 🔹 관리자 페이지 (CAS_CREATOR만 접근 가능)*/}
+            {/* 🔹 관리자 페이지 */}
             <Route element={<ProtectedRoute isAdminRoute><AdminLayout/></ProtectedRoute>}>
                 <Route path={ClientUrl.ADMIN} element={<Admin/>}/>
-                <Route path={ClientUrl.HOME} element={<Home/>}/>
-                <Route path={ClientUrl.SEARCH} element={<Search/>}/>
-                <Route path={ClientUrl.NEWPOST} element={<NewPost/>}/>
-                <Route path={ClientUrl.PROFILE} element={<Profile/>}/>
-                <Route path={ClientUrl.NOTIFICATION} element={<Notification/>}/>
-                <Route path={ClientUrl.SETTINGS} element={<Settings/>}/>
-                <Route path={ClientUrl.MESSAGE} element={<DmList/>}/>
-                <Route path={ClientUrl.MESSAGELOG} element={<DetailDm/>}/>
-                <Route path={ClientUrl.SPECIFICPOST} element={<PostView/>}/>
             </Route>
 
             {/* 🔹 로그인 후 접근 가능한 모든 페이지를 한 번에 보호 */}
@@ -59,7 +50,8 @@ const Router: React.FC = () => {
                 <Route path={ClientUrl.PROFILE} element={<Profile/>}/>
                 <Route path={ClientUrl.NOTIFICATION} element={<Notification/>}/>
                 <Route path={ClientUrl.SETTINGS} element={<Settings/>}/>
-                <Route path={ClientUrl.MESSAGE} element={<DetailDm/>}/>
+                <Route path={ClientUrl.MESSAGE} element={<DmList/>}/>
+                <Route path={ClientUrl.SPECIFICMESSAGE} element={<DetailDm/>}/>
                 <Route path={ClientUrl.SPECIFICPOST} element={<PostView/>}/>
             </Route>
         </Routes>

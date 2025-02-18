@@ -3,22 +3,90 @@ import { useState } from "react"
 import PostContainer from "../../components/Container"
 import { Edit2, ImageIcon, X } from "lucide-react"
 import PostCard from "../../components/PostCard"
+import {PostEntity} from "../../types/PostEntity.ts";
 
 const dummyUserInfo = {
     name: "김아프간타",
     role: "중앙관리본부 개발 담당 인턴",
-    profileImage: "/kimafganta.png?height=150&width=150",
+    profileImageUrl: "/kimafganta.png?height=150&width=150",
     postsCount: 42,
     followersCount: 1337,
     followingCount: 420,
-    bio: "열정적인 개발자, 창의적인 문제 해결사, 그리고 끊임없는 학습자입니다. 새로운 기술에 대한 호기심과 도전 정신으로 가득 차 있습니다. 함께 성장하고 혁신을 만들어가는 것이 제 목표입니다.",
+    introduce: "열정적인 개발자, 창의적인 문제 해결사, 그리고 끊임없는 학습자입니다. 새로운 기술에 대한 호기심과 도전 정신으로 가득 차 있습니다. 함께 성장하고 혁신을 만들어가는 것이 제 목표입니다.",
 }
 
-const dummyPosts = [
-    { id: 1, title: "React의 신비한 세계", username: "김아프간타", content: "React를 사용하면서 발견한 놀라운 점들..." },
-    { id: 2, title: "TypeScript 마스터하기", username: "김아프간타", content: "TypeScript의 고급 기능을 파헤쳐봅시다." },
-    { id: 3, title: "Next.js로 SEO 최적화하기", username: "김아프간타", content: "Next.js를 활용한 SEO 최적화 전략" },
-]
+const dummyPosts: PostEntity[] = [
+    {
+        postId: "1",
+        userId: "kim_afganta",
+        title: "React의 신비한 세계",
+        content: "React를 사용하면서 발견한 놀라운 점들...",
+        summary: "React의 강력한 기능과 활용법을 소개합니다.",
+        userTag: ["#React", "#Frontend", "#JavaScript"],
+        createAt: new Date("2025-02-13T10:00:00"),
+        commentsCount: 3,
+        likesCount: 25,
+        scrapsCount: 5,
+        reportsCount: 1,
+        postVisibility: "public" as const,  // `as const` 추가
+    },
+    {
+        postId: "2",
+        userId: "kim_afganta",
+        title: "TypeScript 마스터하기",
+        content: "TypeScript의 고급 기능을 파헤쳐봅시다.",
+        summary: "제네릭, 유틸리티 타입 등 TypeScript의 고급 기능을 탐구합니다.",
+        userTag: ["#TypeScript", "#JavaScript", "#Coding"],
+        createAt: new Date("2025-02-13T12:30:00"),
+        commentsCount: 5,
+        likesCount: 40,
+        scrapsCount: 12,
+        reportsCount: 0,
+        postVisibility: "public" as const,
+    },
+    {
+        postId: "3",
+        userId: "kim_afganta",
+        title: "Next.js로 SEO 최적화하기",
+        content: "Next.js를 활용한 SEO 최적화 전략",
+        summary: "SEO 최적화를 위한 Next.js의 활용법을 알아봅니다.",
+        userTag: ["#Next.js", "#SEO", "#Web"],
+        createAt: new Date("2025-02-13T15:45:00"),
+        commentsCount: 8,
+        likesCount: 33,
+        scrapsCount: 7,
+        reportsCount: 2,
+        postVisibility: "private" as const,
+    },
+    {
+        postId: "4",
+        userId: "kim_afganta",
+        title: "GraphQL 완전 정복",
+        content: "GraphQL의 개념과 활용법, REST API와의 차이를 살펴봅니다.",
+        summary: "GraphQL을 이해하고 프로젝트에 적용하는 방법을 설명합니다.",
+        userTag: ["#GraphQL", "#API", "#WebDevelopment"],
+        createAt: new Date("2025-02-13T18:20:00"),
+        commentsCount: 10,
+        likesCount: 50,
+        scrapsCount: 20,
+        reportsCount: 3,
+        postVisibility: "public" as const,
+    },
+    {
+        postId: "5",
+        userId: "kim_afganta",
+        title: "AI와 머신러닝 입문",
+        content: "AI와 머신러닝의 개념과 기본 원리를 소개합니다.",
+        summary: "AI를 처음 접하는 사람들을 위한 입문 가이드입니다.",
+        userTag: ["#AI", "#MachineLearning", "#DeepLearning"],
+        createAt: new Date("2025-02-13T21:10:00"),
+        commentsCount: 6,
+        likesCount: 28,
+        scrapsCount: 10,
+        reportsCount: 1,
+        postVisibility: "followersOnly" as const,
+    },
+];
 
 const Profile: React.FC = () => {
     const [postVisibility, setPostVisibility] = useState<"public" | "private">("public")
@@ -34,7 +102,7 @@ const Profile: React.FC = () => {
                     <div className="p-8">
                         <div className="flex items-center space-x-6">
                             <img
-                                src={dummyUserInfo.profileImage || "/kimafganta.png"}
+                                src={dummyUserInfo.profileImageUrl || "/kimafganta.png"}
                                 alt={dummyUserInfo.name}
                                 className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
                             />
@@ -78,7 +146,7 @@ const Profile: React.FC = () => {
                         </div>
                         <div className="mt-6">
                             <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">자기소개</h2>
-                            <p className="text-gray-700 dark:text-gray-300">{dummyUserInfo.bio}</p>
+                            <p className="text-gray-700 dark:text-gray-300">{dummyUserInfo.introduce}</p>
                         </div>
                     </div>
                 </div>
@@ -111,7 +179,7 @@ const Profile: React.FC = () => {
                     </div>
                     <div className="space-y-4">
                         {dummyPosts.map((post) => (
-                            <PostCard key={post.id} post={post} />
+                            <PostCard key={post.postId} post={post} />
                         ))}
                     </div>
                 </div>

@@ -22,13 +22,19 @@ const PostView: React.FC = () => {
     useEffect(() => {
         // 예시: 더미 데이터
         const dummyPost: PostEntity = {
-            postId: "1",
-            title: "김아프간타의 은밀한 사생활",
-            userId: "김아프간타",
-            content: "# 하핫!\n\n이 게시물은 UI 테스트를 위한 임시 데이터입니다.",
-            likesCount: 42,
-            reportCount: 3,
-        }
+                postId: "1",
+                userId: "hajin",
+                title: "오늘의 날씨가 참 좋아요!",
+                content: "하늘이 맑고 기분 좋은 하루입니다.",
+                summary: "맑은 하늘과 좋은 기분",
+                userTag: ["#날씨", "#기분좋음"],
+                createAt: new Date("2025-02-13T08:30:00"),
+                commentsCount: 3,
+                likesCount: 10,
+                scrapsCount: 2,
+                reportsCount: 1,
+                postVisibility: "public"
+            }
 
         if (postId) {
             setPost(dummyPost)
@@ -62,7 +68,7 @@ const PostView: React.FC = () => {
     const confirmReport = (reason: string) => {
         console.log("선택된 신고 사유:", reason)
         if (post) {
-            setPost({ ...post, reportCount: post.reportCount + 1 })
+            setPost({ ...post, reportsCount: post.reportsCount + 1 })
         }
         setHasReported(true)
         setShowReportModal(false)
@@ -102,7 +108,7 @@ const PostView: React.FC = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.3 }}
                             >
-                                작성자: {post.username}
+                                작성자: {post.userId}
                             </motion.p>
                             <motion.div
                                 className="prose dark:prose-invert max-w-none mt-6"

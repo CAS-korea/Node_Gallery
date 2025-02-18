@@ -109,7 +109,8 @@ const Admin: React.FC = () => {
         return (
             <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
                 {/* Tailwind CSS 스피너 / Loading Bar */}
-                <div className="w-16 h-16 border-4 border-black dark:border-white opacity-5 border-t-transparent rounded-full animate-spin"></div>
+                <div
+                    className="w-16 h-16 border-4 border-black dark:border-white opacity-5 border-t-transparent rounded-full animate-spin"></div>
                 <div className="w-30 h-16 px-3 py-5 text-gray-400 dark:text-gray-300">
                     잠시만 기다려주세요!
                 </div>
@@ -151,14 +152,24 @@ const Admin: React.FC = () => {
                                         <td className="py-2 px-3 text-gray-700 dark:text-gray-200">
                                             {user.userId}
                                         </td>
-                                        <td className="py-2 px-3">
+                                        <td className="flex space-x-2">
                                             <button
-                                                onClick={() =>
-                                                    setEditingUser({ ...user, password: null })
-                                                }
+                                                onClick={() => {
+                                                    setEditingUser({...user, password: null});
+                                                    setEditMode('update');
+                                                }}
                                                 className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
                                             >
                                                 수정
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setEditingUser({...user, password: null});
+                                                    setEditMode('ban');
+                                                }}
+                                                className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                            >
+                                                활동 정지
                                             </button>
                                         </td>
                                     </tr>
@@ -179,60 +190,75 @@ const Admin: React.FC = () => {
                         가입 요청 사용자
                     </h2>
                     {nonuserList.length > 0 ? (
-                        <div className="overflow-auto max-h-80">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                <tr className="border-b border-gray-200 dark:border-gray-700">
-                                    <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
-                                        유저ID
-                                    </th>
-                                    <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
-                                        작업
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {nonuserList.map((nonuser) => (
-                                    <tr
-                                        key={nonuser.userId}
-                                        className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-                                    >
-                                        <td className="py-2 px-3 text-gray-700 dark:text-gray-200">
-                                            {nonuser.userId}
-                                        </td>
-                                        <td className="py-2 px-3">
-                                            <div className="flex space-x-2">
-                                                <button
-                                                    onClick={() => handleAccept(nonuser.userId)}
-                                                    className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
-                                                >
-                                                    승인
-                                                </button>
-                                                <button
-                                                    onClick={() => handleReject(nonuser.userId)}
-                                                    className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                                                >
-                                                    거부
-                                                </button>
-                                            </div>
-                                        </td>
+                            <div className="overflow-auto max-h-80">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                                        <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
+                                            유저ID
+                                        </th>
+                                        <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
+                                            작업
+                                        </th>
                                     </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p className="text-gray-400 dark:text-gray-500 text-center py-4">
-                            가입 요청 사용자가 없습니다.
-                        </p>
-                    )}
+                                    </thead>
+                                    <tbody>
+                                    {nonuserList.map(nonuser => {
+                                            const remainingDays = nonuser.bannedUntil ? formatRemainingTime(nonuser.bannedUntil) : '';
+
+                                            return (
+                                                <tr
+                                                    key={nonuser.userId}
+                                                    className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                                                >
+                                                    <td className="py-2 px-3 text-gray-700 dark:text-gray-200">
+                                                        {nonuser.userId}
+                                                        {!nonuser.isAuthorized && remainingDays && (
+                                                            <span className="ml-2 text-red-500">(-{remainingDays})</span>
+                                                        )}
+                                                        {!nonuser.isAuthorized && !remainingDays && (
+                                                            <span className="ml-2 text-red-500">(NEW!)</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="py-2 px-3">
+                                                        <div className="flex space-x-2">
+                                                            <button
+                                                                onClick={() => handleAccept(nonuser.userId)}
+                                                                className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                                                            >
+                                                                승인
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleReject(nonuser.userId)}
+                                                                className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                                            >
+                                                                거부
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        }
+                                    )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) :
+                        (
+                            <p className="text-gray-400 dark:text-gray-500 text-center py-4">
+                                가입 요청 사용자가 없습니다.
+                            </p>
+                        )
+                    }
                 </div>
             </div>
 
             {/* 사용자 정보 수정 폼 (모달) */}
             {editingUser && editMode === 'update' && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center">
-                    <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg space-y-4 w-96">
+                <div
+                    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center">
+                    <div
+                        className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg space-y-4 w-96">
                         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
                             사용자 정보 수정
                         </h2>
@@ -241,7 +267,7 @@ const Admin: React.FC = () => {
                             placeholder="이름"
                             value={editingUser.name}
                             onChange={(e) =>
-                                setEditingUser({ ...editingUser, name: e.target.value })
+                                setEditingUser({...editingUser, name: e.target.value})
                             }
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-transparent text-gray-800 dark:text-gray-100 focus:outline-none"
                         />
