@@ -4,9 +4,12 @@ import {PostEntity} from "../types/PostEntity.ts";
 
 export const PostService = {
     async createPost(postDTO: PostDTO) {
+        console.log(JSON.stringify(postDTO, null, 2));
+        console.log("포스트 보내기 시도 중");
         await apiHandler.post('/post_relation/create', postDTO, {
-            withCredentials: true
+            withCredentials: true,
         });
+        console.log("포스트 전송 완료");
     },
 
     async getAllPosts(): Promise<PostEntity[]> {

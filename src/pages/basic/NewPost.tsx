@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { marked } from 'marked';
-import { PostDTO } from '../../types/PostDTO.ts';
-import { useServices } from "../../context/ServicesProvider.tsx";
+import React, {useState, useEffect} from 'react';
+import {marked} from 'marked';
+import {PostDTO, postVisibility} from '../../types/PostDTO.ts';
+import {useServices} from "../../context/ServicesProvider.tsx";
 import PostContainer from "../../components/Container";
+import {X} from "lucide-react";
 
 // 마크다운 옵션 설정 (GFM, 줄바꿈, 스마트 리스트 등)
 marked.setOptions({
     gfm: true,
     breaks: true,
-    // 코드 하이라이팅 추가 예시 (highlight.js 설치 후 사용)
-    // highlight: function(code, lang) {
-    //   const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-    //   return hljs.highlight(code, { language }).value;
-    // }
 });
 
 const NewPost: React.FC = () => {
-    const { createPost } = useServices();
+    const {createPost} = useServices();
+
     const [title, setTitle] = useState<string>('');
     const [content, setContent] = useState<string>('');
     const [previewContent, setPreviewContent] = useState<string>('');
+    const [userTag, setUserTag] = useState<string[]>([]);
+    const [tagInput, setTagInput] = useState<string>('');
+    const [postVisibility, setPostVisibility] = useState<postVisibility>('PUBLIC');
 
     // 제목과 본문이 바뀔 때마다 미리보기 업데이트
     useEffect(() => {
@@ -27,14 +27,36 @@ const NewPost: React.FC = () => {
         setPreviewContent(marked.parse(markdown));
     }, [title, content]);
 
+    const handleAddTag = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' && tagInput.trim() !== '') {
+            e.preventDefault();
+            if (!userTag.includes(tagInput.trim())) {
+                setUserTag([...userTag, tagInput.trim()]);
+            }
+            setTagInput('');
+        }
+    };
+
+    const handleRemoveTag = (tag: string) => {
+        setUserTag(userTag.filter(t => t !== tag));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const postDTO: PostDTO = { title, content };
+        const postDTO: PostDTO = {
+            title,
+            content,
+            userTag,
+            postVisibility
+        };
+
         try {
             await createPost(postDTO);
             alert('게시물이 성공적으로 작성되었습니다!');
             setTitle('');
             setContent('');
+            setUserTag([]);
+            setTagInput('');
         } catch (error) {
             console.error(error);
             alert('게시물 작성 중 오류가 발생했습니다.');
@@ -43,12 +65,35 @@ const NewPost: React.FC = () => {
 
     return (
         <PostContainer>
+            {/* 🔹 상단 우측 버튼 정렬 */}
+            <div className="flex justify-end items-center gap-4 mb-6">
+                {/* postVisibility 드롭다운 */}
+                <select
+                    value={postVisibility}
+                    onChange={(e) => setPostVisibility(e.target.value as postVisibility)}
+                    className="p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100"
+                >
+                    <option value="PUBLIC">공개</option>
+                    <option value="PRIVATE">비공개</option>
+                    <option value="FOLLOWERS_ONLY">팔로워만</option>
+                </select>
+
+                {/* 게시물 올리기 버튼 */}
+                <button
+                    onClick={handleSubmit}
+                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                >
+                    게시물 올리기
+                </button>
+            </div>
+
             <div className="flex flex-col md:flex-row gap-8">
                 {/* 좌측 입력 영역 */}
                 <div className="md:w-1/2 flex flex-col">
-                    <h1 className="text-4xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+                    <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">
                         새 게시물 작성
                     </h1>
+
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <input
                             type="text"
@@ -64,12 +109,31 @@ const NewPost: React.FC = () => {
                             className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                             rows={12}
                         />
-                        <button
-                            type="submit"
-                            className="w-full py-4 bg-white dark:bg-gray-800 text-black dark:text-gray-100 font-semibold rounded-full shadow-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition"
-                        >
-                            게시물 올리기
-                        </button>
+
+                        {/* 태그 입력 */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                태그 입력 (Enter 키로 추가)
+                            </label>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {userTag.map((tag, index) => (
+                                    <span key={index} className="bg-blue-200 dark:bg-blue-500 text-blue-800 dark:text-white px-3 py-1 rounded-full flex items-center">
+                                        {tag}
+                                        <button type="button" onClick={() => handleRemoveTag(tag)} className="ml-2 text-red-500">
+                                            <X size={16} />
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                            <input
+                                type="text"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyDown={handleAddTag}
+                                placeholder="태그 입력 후 Enter"
+                                className="w-full mt-2 px-6 py-2 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            />
+                        </div>
                     </form>
                 </div>
 

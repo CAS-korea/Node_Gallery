@@ -1,3 +1,5 @@
+export type postVisibility = 'public' | 'private' | 'followersOnly';
+
 export interface PostEntity {
     postId: string;
     userId: string;
@@ -10,6 +12,6 @@ export interface PostEntity {
     likesCount: number;
     scrapsCount: number;
     reportsCount: number;
-    postVisibility: "public" | "private" | "followersOnly";
+    postVisibility: postVisibility;
     thumbNailImage: string;
 }

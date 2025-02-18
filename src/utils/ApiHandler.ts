@@ -3,7 +3,7 @@ import {ErrorMessages} from "../constants/ErrorMessages.ts";
 import {ServerUrl} from "../constants/ServerUrl.ts";
 
 const apiHandler = axios.create({
-    baseURL: ServerUrl.SERVER, // 백엔드 URL로 수정
+    baseURL: ServerUrl.SERVER,
     timeout: 5000,
 });
 

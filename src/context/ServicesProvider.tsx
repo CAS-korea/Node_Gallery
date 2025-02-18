@@ -1,12 +1,12 @@
-import {createContext, ReactNode, useContext} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {AuthService} from "../services/AuthService.ts";
-import {PostService} from "../services/PostService.ts";
-import {AdminService} from "../services/AdminService.ts";
-import {LoginDTO} from "../types/LoginDTO.ts";
-import {UserEntity} from "../types/UserEntity.ts";
-import {PostDTO} from "../types/PostDTO.ts";
-import {PostEntity} from "../types/PostEntity.ts";
+import { createContext, ReactNode, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthService } from "../services/AuthService.ts";
+import { PostService } from "../services/PostService.ts";
+import { AdminService } from "../services/AdminService.ts";
+import { LoginDTO } from "../types/LoginDTO.ts";
+import { UserEntity } from "../types/UserEntity.ts";
+import { PostDTO } from "../types/PostDTO.ts";
+import { PostEntity } from "../types/PostEntity.ts";
 
 export interface ServicesContextType {
     login: (loginDTO: LoginDTO) => Promise<void>;
@@ -18,7 +18,7 @@ export interface ServicesContextType {
     likePost: (postID: string) => Promise<void>;
     reportPost: (postID: string) => Promise<void>;
     getUserPosts: (userId: string) => Promise<PostEntity[]>;
-    authorizeUser: (userId: string, status: 'accept' | 'reject') => Promise<void>;
+    authorizeUser: (userId: string, status: "accept" | "reject") => Promise<void>;
     getNonuserList: () => Promise<UserEntity[]>;
     getUserList: () => Promise<UserEntity[]>;
     updateUserInfo: (userId: string, userEntity: UserEntity) => Promise<void>;
@@ -31,53 +31,51 @@ export interface ServicesContextType {
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
 
-export const ServicesProvider: React.FC<{ children: ReactNode }> = ({children}) => {
+export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
 
     const value: ServicesContextType = {
-
-        // 인증 관련 함수
+        // 🔹 인증 관련 함수 (await 추가)
         login: async (loginDTO) => {
             await AuthService.login(loginDTO);
-            navigate('/home');
+            navigate("/home");
         },
         register: async (userEntity) => {
             await AuthService.register(userEntity);
-            navigate('/login');
+            navigate("/login");
         },
-        logout: () => {
-            AuthService.logout();
-            navigate('/');
+        logout: async () => {
+            await AuthService.logout();
+            navigate("/");
         },
-        duplicate: (userId) => AuthService.duplicate(userId),
-        findUserId: (email) => AuthService.findUserId(email),
-        findPassword: (email) => AuthService.findPassword(email),
-        resetPassword: (token, newPassword) => AuthService.resetPassword(token, newPassword),
+        duplicate: async (userId) => await AuthService.duplicate(userId),
+        findUserId: async (email) => await AuthService.findUserId(email),
+        findPassword: async (email) => await AuthService.findPassword(email),
+        resetPassword: async (token, newPassword) => await AuthService.resetPassword(token, newPassword),
 
-        // 포스트 관련 함수
-        createPost: (postDTO) => PostService.createPost(postDTO),
-        getAllPosts: () => PostService.getAllPosts(),
-        getPostById: (postID) => PostService.getPostById(postID),
-        likePost: (postID) => PostService.likePost(postID),
-        reportPost: (postID) => PostService.reportPost(postID),
-        getUserPosts: (userId) => PostService.getUserPosts(userId),
+        // 🔹 포스트 관련 함수 (await 추가)
+        createPost: async (postDTO) => await PostService.createPost(postDTO),
+        getAllPosts: async () => await PostService.getAllPosts(),
+        getPostById: async (postID) => await PostService.getPostById(postID),
+        likePost: async (postID) => await PostService.likePost(postID),
+        reportPost: async (postID) => await PostService.reportPost(postID),
+        getUserPosts: async (userId) => await PostService.getUserPosts(userId),
 
-        // 어드민 관련 함수
-        authorizeUser: (userId, status) => AdminService.authorizeUser(userId, status),
-        getNonuserList: () => AdminService.getNonuserList(),
-        getUserList: () => AdminService.getUserList(),
-        updateUserInfo: (userId, userEntity) => AdminService.updateUserInfo(userId, userEntity),
-        banUser: (userId, days) => AdminService.banUser(userId, days),
+        // 🔹 어드민 관련 함수 (await 추가)
+        authorizeUser: async (userId, status) => await AdminService.authorizeUser(userId, status),
+        getNonuserList: async () => await AdminService.getNonuserList(),
+        getUserList: async () => await AdminService.getUserList(),
+        updateUserInfo: async (userId, userEntity) => await AdminService.updateUserInfo(userId, userEntity),
+        banUser: async (userId, days) => await AdminService.banUser(userId, days),
     };
 
     return <ServicesContext.Provider value={value}>{children}</ServicesContext.Provider>;
 };
 
-
 export const useServices = () => {
     const context = useContext(ServicesContext);
     if (!context) {
-        throw new Error('useServices must be used within a ServicesProvider');
+        throw new Error("useServices must be used within a ServicesProvider");
     }
     return context;
-}
+};
