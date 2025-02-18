@@ -4,7 +4,7 @@ import type { PostEntity } from "../../types/PostEntity";
 import { marked } from "marked";
 import PostContainer from "../../components/Container";
 import { motion } from "framer-motion";
-import { Heart, Flag, MessageCircle, Share2 } from "lucide-react";
+import { Heart, Flag, MessageCircle } from "lucide-react";
 import PostReportModal from "../../components/PostReportModal";
 import PostComments from "../../components/PostComments";
 import { dummyPosts } from "../../data/dummyPosts";
@@ -70,15 +70,29 @@ const SpecificPost: React.FC = () => {
                         transition={{ duration: 0.3 }}
                         className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
                     >
+                        {/* 상단 배너: 썸네일 이미지 */}
+                        <img
+                            src={post.thumbNailImage}
+                            alt="Thumbnail"
+                            className="w-full h-64 object-cover"
+                        />
+
+                        {/* 본문 영역 */}
                         <div className="p-6 space-y-4">
-                            <motion.h1
-                                className="text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1, duration: 0.3 }}
-                            >
-                                {post.title}
-                            </motion.h1>
+                            {/* 타이틀과 날짜를 한 줄에 배치 */}
+                            <div className="flex justify-between items-center">
+                                <motion.h1
+                                    className="text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1, duration: 0.3 }}
+                                >
+                                    {post.title}
+                                </motion.h1>
+                                <span className="text-sm text-gray-500 dark:text-gray-300">
+                  {new Date(post.createAt).toLocaleDateString()}
+                </span>
+                            </div>
                             <motion.p
                                 className="text-sm text-gray-500 dark:text-gray-300"
                                 initial={{ opacity: 0 }}
@@ -96,6 +110,7 @@ const SpecificPost: React.FC = () => {
                             />
                         </div>
 
+                        {/* 하단 액션 영역 */}
                         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
                             <div className="flex space-x-4">
                                 <motion.button
@@ -125,24 +140,18 @@ const SpecificPost: React.FC = () => {
                                                 : "text-gray-600 dark:text-gray-300"
                                         }`}
                                     >
-                                        {post.likesCount}
-                                    </span>
+                    {post.likesCount}
+                  </span>
                                 </motion.button>
 
+                                {/* 댓글 버튼 + 댓글 수 */}
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-300"
+                                    className="flex items-center space-x-1 text-gray-700 transition-colors duration-300"
                                 >
                                     <MessageCircle className="w-5 h-5" />
-                                </motion.button>
-
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="text-gray-600 dark:text-gray-300 hover:text-green-500 transition-colors duration-300"
-                                >
-                                    <Share2 className="w-5 h-5" />
+                                    <span className="text-s">{post.commentsCount}</span>
                                 </motion.button>
                             </div>
 

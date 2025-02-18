@@ -64,7 +64,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                     </span>
                 </div>
                 <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">
-                    {post.content}
+                    {post.summary}
                 </p>
             </div>
 
