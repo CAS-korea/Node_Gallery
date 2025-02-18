@@ -33,10 +33,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         if (userInfo.role !== 'CAS_CREATOR') {
             return <Navigate to={ClientUrl.HOME} replace />;
         }
-    } else { // 어드민 사용자 권한
-        if (userInfo.role === 'CAS_CREATOR') {
-            return <Navigate to={ClientUrl.ADMIN} replace />;
-        }
     }
 
     // 3. 인증 사용자 페이지 접근
