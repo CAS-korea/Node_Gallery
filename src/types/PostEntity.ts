@@ -11,4 +11,5 @@ export interface PostEntity {
     scrapsCount: number;
     reportsCount: number;
     postVisibility: "public" | "private" | "followersOnly";
+    thumbNailImage: string;
 }

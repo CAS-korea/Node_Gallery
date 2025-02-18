@@ -1,12 +1,11 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import type { PostEntity } from "../types/PostEntity"
 import { motion } from "framer-motion"
-import { Bookmark } from "lucide-react"
-import {ClientUrl} from "../constants/ClientUrl.ts";
+import { Bookmark, Heart, MessageSquare } from "lucide-react"
+import { ClientUrl } from "../constants/ClientUrl.ts"
 
 interface PostCardProps {
     post: PostEntity
@@ -28,6 +27,17 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
         >
+            {/* 썸네일 영역: 카드 상단에 위치, 카드 높이의 절반 정도를 덮으며
+                하단은 둥근 모서리로 처리 */}
+            <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80">
+                <img
+                    src={post.thumbNailImage}
+                    alt="Thumbnail"
+                    className="w-full h-full object-cover"
+                />
+            </div>
+
+            {/* 본문 영역 */}
             <div className="p-6 space-y-4">
                 <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`} className="block">
                     <motion.h2
@@ -38,42 +48,75 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                         {post.title}
                     </motion.h2>
                 </Link>
-                <Link to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`} className="block">
-                    <motion.p
-                        className="text-sm text-gray-500 dark:text-gray-400"
-                        whileHover={{ x: 5 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                    >
-                        By {post.userId}
-                    </motion.p>
-                </Link>
-                <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">{post.content}</p>
+                {/* 사용자 정보: userId와 날짜 */}
+                <div className="flex items-center">
+                    <Link to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`} className="block">
+                        <motion.p
+                            className="text-sm text-gray-500 dark:text-gray-400"
+                            whileHover={{ x: 5 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                        >
+                            By {post.userId}
+                        </motion.p>
+                    </Link>
+                    <span className="ml-2 text-xs text-gray-400">
+                        {new Date(post.createAt).toLocaleDateString()}
+                    </span>
+                </div>
+                <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">
+                    {post.content}
+                </p>
             </div>
 
-            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-end items-center">
-                <motion.button
-                    onClick={handleScrap}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 transition-colors duration-300"
-                >
-                    <motion.div
-                        animate={{ scale: isScrapped ? 1.2 : 1 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
+            {/* 하단 영역 */}
+            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
+                {/* 왼쪽 영역: 태그 */}
+                <div className="flex space-x-2">
+                    {post.userTag.map((tag, index) => (
+                        <span
+                            key={index}
+                            className="text-sm text-blue-500 hover:underline cursor-default"
+                        >
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+                {/* 오른쪽 영역: 좋아요, 댓글, 스크랩 아이콘 */}
+                <div className="flex items-center space-x-4">
+                    {/* 좋아요 아이콘 */}
+                    <div className="flex items-center space-x-1 text-red-600">
+                        <Heart className="w-5 h-5" />
+                        <span className="text-xs">{post.likesCount}</span>
+                    </div>
+                    {/* 댓글 아이콘 */}
+                    <div className="flex items-center space-x-1 text-blue-600">
+                        <MessageSquare className="w-5 h-5" />
+                        <span className="text-xs">{post.commentsCount}</span>
+                    </div>
+                    {/* 스크랩 버튼 */}
+                    <motion.button
+                        onClick={handleScrap}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 transition-colors duration-300"
                     >
-                        <Bookmark
-                            className={`w-5 h-5 ${
-                                isScrapped
-                                    ? "fill-current text-blue-500"
-                                    : "stroke-current text-gray-600 dark:text-gray-300"
-                            }`}
-                        />
-                    </motion.div>
-                    <span className="font-medium">{isScrapped ? "스크랩됨" : "스크랩하기"}</span>
-                </motion.button>
+                        <motion.div
+                            animate={{ scale: isScrapped ? 1.2 : 1 }}
+                            transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                        >
+                            <Bookmark
+                                className={`w-5 h-5 ${
+                                    isScrapped
+                                        ? "fill-current text-blue-500"
+                                        : "stroke-current text-gray-600 dark:text-gray-300"
+                                }`}
+                            />
+                        </motion.div>
+                    </motion.button>
+                </div>
             </div>
         </motion.div>
     )
 }
 
-export default PostCard;
+export default PostCard
