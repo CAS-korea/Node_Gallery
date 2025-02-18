@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import type { PostEntity } from "../types/PostEntity"
 import { motion } from "framer-motion"
 import { Bookmark } from "lucide-react"
+import {ClientUrl} from "../constants/ClientUrl.ts";
 
 interface PostCardProps {
     post: PostEntity
@@ -28,7 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
         >
             <div className="p-6 space-y-4">
-                <Link to={`/post/${post.postId}`} className="block">
+                <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`} className="block">
                     <motion.h2
                         className="text-2xl font-semibold text-gray-900 dark:text-gray-100 leading-tight"
                         whileHover={{ x: 5 }}
@@ -37,7 +38,15 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                         {post.title}
                     </motion.h2>
                 </Link>
-                <p className="text-sm text-gray-500 dark:text-gray-400">By {post.userId}</p>
+                <Link to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`} className="block">
+                    <motion.p
+                        className="text-sm text-gray-500 dark:text-gray-400"
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                    >
+                        By {post.userId}
+                    </motion.p>
+                </Link>
                 <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">{post.content}</p>
             </div>
 

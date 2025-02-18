@@ -23,7 +23,7 @@ const dummyMessages: ChatMessage[] = [
     { id: 4, sender: "홍길동", content: "아 실수라고", isMine: false, timestamp: "12:04", isRead: false },
 ];
 
-const DetailDm: React.FC = () => {
+const SpecificMessage: React.FC = () => {
     const [messages, setMessages] = useState<ChatMessage[]>(dummyMessages);
     const [messageInput, setMessageInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -196,4 +196,4 @@ const DetailDm: React.FC = () => {
     );
 };
 
-export default DetailDm;
+export default SpecificMessage;

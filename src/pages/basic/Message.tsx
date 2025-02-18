@@ -16,7 +16,7 @@ const dummyDMs: DM[] = [
     { id: 3, name: "박영희", role: "관리자", lastMessage: "마지막 메시지" },
 ];
 
-const DmList: React.FC = () => {
+const Message: React.FC = () => {
     const navigate = useNavigate();
 
     const handleDMClick = (dm: DM) => {
@@ -55,4 +55,4 @@ const DmList: React.FC = () => {
     );
 };
 
-export default DmList;
+export default Message;

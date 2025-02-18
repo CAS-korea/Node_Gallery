@@ -8,11 +8,11 @@ import Register from '../pages/auth/Register';
 import Forgot from '../pages/auth/Forgot.tsx';
 import Search from '../pages/basic/Search.tsx';
 import NewPost from '../pages/basic/NewPost.tsx';
-import DmList from '../pages/basic/DmList.tsx';
+import Message from '../pages/basic/Message.tsx';
 import Profile from '../pages/basic/Profile.tsx';
 import Notification from '../pages/basic/Notification.tsx';
 import Settings from '../pages/basic/Settings.tsx';
-import DetailDm from '../pages/basic/DetailDm.tsx';
+import SpecificMessage from '../pages/basic/SpecificMessage.tsx';
 import PostView from '../pages/basic/PostView.tsx';
 import {ClientUrl} from "../constants/ClientUrl.ts";
 import Home from "../pages/basic/Home.tsx";
@@ -50,8 +50,8 @@ const Router: React.FC = () => {
                 <Route path={ClientUrl.PROFILE} element={<Profile/>}/>
                 <Route path={ClientUrl.NOTIFICATION} element={<Notification/>}/>
                 <Route path={ClientUrl.SETTINGS} element={<Settings/>}/>
-                <Route path={ClientUrl.MESSAGE} element={<DmList/>}/>
-                <Route path={ClientUrl.SPECIFICMESSAGE} element={<DetailDm/>}/>
+                <Route path={ClientUrl.MESSAGE} element={<Message/>}/>
+                <Route path={ClientUrl.SPECIFICMESSAGE} element={<SpecificMessage/>}/>
                 <Route path={ClientUrl.SPECIFICPOST} element={<PostView/>}/>
             </Route>
         </Routes>
