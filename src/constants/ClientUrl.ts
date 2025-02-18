@@ -17,5 +17,5 @@ export enum ClientUrl {
 
     SPECIFICPROFILE = '/user',
     SPECIFICMESSAGE = '/message',
-    SPECIFICPOST = '/post'
+    SPECIFICPOST = '/post1'
 }

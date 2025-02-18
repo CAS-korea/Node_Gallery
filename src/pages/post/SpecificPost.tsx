@@ -1,82 +1,60 @@
-"use client"
-
-import type React from "react"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import type { PostEntity } from "../../types/PostEntity.ts"
-import { marked } from "marked"
-import PostContainer from "../../components/Container.tsx"
-import { motion } from "framer-motion"
-import { Heart, Flag, MessageCircle, Share2 } from "lucide-react"
-import PostReportModal from "../../components/PostReportModal.tsx" // 신고 모달
-import PostComments from "../../components/PostComments.tsx" // 댓글 컴포넌트 추가
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import type { PostEntity } from "../../types/PostEntity";
+import { marked } from "marked";
+import PostContainer from "../../components/Container";
+import { motion } from "framer-motion";
+import { Heart, Flag, MessageCircle, Share2 } from "lucide-react";
+import PostReportModal from "../../components/PostReportModal";
+import PostComments from "../../components/PostComments";
+import { dummyPosts } from "../../data/dummyPosts";
 
 const SpecificPost: React.FC = () => {
-    const { postId } = useParams<{ postId: string }>()
+    const { postId } = useParams<{ postId: string }>();
 
-    const [post, setPost] = useState<PostEntity | null>(null)
-    const [hasLiked, setHasLiked] = useState(false)
-    const [hasReported, setHasReported] = useState(false)
-    const [showReportModal, setShowReportModal] = useState(false)
+    const [post, setPost] = useState<PostEntity | null>(null);
+    const [hasLiked, setHasLiked] = useState(false);
+    const [hasReported, setHasReported] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
 
     useEffect(() => {
-        // 예시: 더미 데이터
-        const dummyPost: PostEntity = {
-                postId: "1",
-                userId: "hajin",
-                title: "오늘의 날씨가 참 좋아요!",
-                content: "하늘이 맑고 기분 좋은 하루입니다.",
-                summary: "맑은 하늘과 좋은 기분",
-                userTag: ["#날씨", "#기분좋음"],
-                createAt: new Date("2025-02-13T08:30:00"),
-                commentsCount: 3,
-                likesCount: 10,
-                scrapsCount: 2,
-                reportsCount: 1,
-                postVisibility: "public"
-            }
-
         if (postId) {
-            setPost(dummyPost)
+            // dummyPosts에서 postId에 해당하는 게시물을 찾습니다.
+            const foundPost = dummyPosts.find((p) => p.postId === postId) || null;
+            setPost(foundPost);
         } else {
-            console.error("postId가 전달되지 않았습니다.")
+            console.error("postId가 전달되지 않았습니다.");
         }
-    }, [postId])
+    }, [postId]);
 
-    /** 좋아요 토글 */
     const handleLike = () => {
-        if (!post) return
+        if (!post) return;
         if (hasLiked) {
-            // 좋아요 취소
-            setPost({ ...post, likesCount: Math.max(0, post.likesCount - 1) })
-            setHasLiked(false)
+            setPost({ ...post, likesCount: Math.max(0, post.likesCount - 1) });
+            setHasLiked(false);
         } else {
-            // 좋아요 누르기
-            setPost({ ...post, likesCount: post.likesCount + 1 })
-            setHasLiked(true)
+            setPost({ ...post, likesCount: post.likesCount + 1 });
+            setHasLiked(true);
         }
-    }
+    };
 
-    /** 신고 버튼 -> 모달 열기 */
     const handleReport = () => {
         if (!hasReported) {
-            setShowReportModal(true)
+            setShowReportModal(true);
         }
-    }
+    };
 
-    /** 모달에서 확인 시 신고 처리 */
     const confirmReport = (reason: string) => {
-        console.log("선택된 신고 사유:", reason)
+        console.log("선택된 신고 사유:", reason);
         if (post) {
-            setPost({ ...post, reportsCount: post.reportsCount + 1 })
+            setPost({ ...post, reportsCount: post.reportsCount + 1 });
         }
-        setHasReported(true)
-        setShowReportModal(false)
-    }
+        setHasReported(true);
+        setShowReportModal(false);
+    };
 
     return (
         <PostContainer>
-            {/* 신고 모달 */}
             {showReportModal && (
                 <PostReportModal
                     onClose={() => setShowReportModal(false)}
@@ -86,7 +64,6 @@ const SpecificPost: React.FC = () => {
 
             {post ? (
                 <>
-                    {/* 게시물 UI */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -119,10 +96,8 @@ const SpecificPost: React.FC = () => {
                             />
                         </div>
 
-                        {/* 하단 버튼 영역 */}
                         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
                             <div className="flex space-x-4">
-                                {/* 좋아요 버튼 (빈 하트 ↔ 빨간 하트) */}
                                 <motion.button
                                     onClick={handleLike}
                                     whileHover={{ scale: 1.1 }}
@@ -154,7 +129,6 @@ const SpecificPost: React.FC = () => {
                                     </span>
                                 </motion.button>
 
-                                {/* 댓글 버튼 */}
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
@@ -163,7 +137,6 @@ const SpecificPost: React.FC = () => {
                                     <MessageCircle className="w-5 h-5" />
                                 </motion.button>
 
-                                {/* 공유 버튼 */}
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
@@ -173,7 +146,6 @@ const SpecificPost: React.FC = () => {
                                 </motion.button>
                             </div>
 
-                            {/* 신고 버튼 */}
                             <motion.button
                                 onClick={handleReport}
                                 whileHover={{ scale: !hasReported ? 1.1 : 1 }}
@@ -190,11 +162,10 @@ const SpecificPost: React.FC = () => {
                         </div>
                     </motion.div>
 
-                    {/* 댓글 영역 - 게시물 하단에 위치 */}
-                    <PostComments />
+                    {/* 댓글 영역: postId를 전달하여 해당 게시물의 댓글만 필터링 */}
+                    <PostComments postId={post.postId} />
                 </>
             ) : (
-                // 게시물 없는 경우 로딩 메시지
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -204,7 +175,7 @@ const SpecificPost: React.FC = () => {
                 </motion.p>
             )}
         </PostContainer>
-    )
-}
+    );
+};
 
 export default SpecificPost;
