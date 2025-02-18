@@ -3,15 +3,15 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import type { PostEntity } from "../../types/PostEntity"
+import type { PostEntity } from "../../types/PostEntity.ts"
 import { marked } from "marked"
-import PostContainer from "../../components/Container"
+import PostContainer from "../../components/Container.tsx"
 import { motion } from "framer-motion"
 import { Heart, Flag, MessageCircle, Share2 } from "lucide-react"
-import PostReportModal from "../../components/PostReportModal" // 신고 모달
-import PostComments from "../../components/PostComments" // 댓글 컴포넌트 추가
+import PostReportModal from "../../components/PostReportModal.tsx" // 신고 모달
+import PostComments from "../../components/PostComments.tsx" // 댓글 컴포넌트 추가
 
-const PostView: React.FC = () => {
+const SpecificPost: React.FC = () => {
     const { postId } = useParams<{ postId: string }>()
 
     const [post, setPost] = useState<PostEntity | null>(null)
@@ -207,4 +207,4 @@ const PostView: React.FC = () => {
     )
 }
 
-export default PostView;
+export default SpecificPost;

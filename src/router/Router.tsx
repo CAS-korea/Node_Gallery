@@ -13,7 +13,7 @@ import Profile from '../pages/basic/Profile.tsx';
 import Notification from '../pages/basic/Notification.tsx';
 import Settings from '../pages/basic/Settings.tsx';
 import SpecificMessage from '../pages/basic/SpecificMessage.tsx';
-import PostView from '../pages/basic/PostView.tsx';
+import SpecificPost from '../pages/post/SpecificPost.tsx';
 import {ClientUrl} from "../constants/ClientUrl.ts";
 import Home from "../pages/basic/Home.tsx";
 import AdminLayout from "../layouts/AdminLayout.tsx";
@@ -52,9 +52,10 @@ const Router: React.FC = () => {
                 <Route path={ClientUrl.SETTINGS} element={<Settings/>}/>
                 <Route path={ClientUrl.MESSAGE} element={<Message/>}/>
                 <Route path={ClientUrl.SPECIFICMESSAGE} element={<SpecificMessage/>}/>
-                <Route path={ClientUrl.SPECIFICPOST} element={<PostView/>}/>
+                <Route path={`${ClientUrl.SPECIFICPOST}/:postId`} element={<SpecificPost/>}/>
             </Route>
         </Routes>
+
     );
 };
 
