@@ -1,4 +1,4 @@
-import {Navigate, useLocation} from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import Cookies from "js-cookie";
 import {ClientUrl} from "../constants/ClientUrl.ts";
 
@@ -14,19 +14,22 @@ interface UserInfo {
     role: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children, isAdminRoute}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+                                                           children,
+                                                           isAdminRoute,
+                                                       }) => {
     const location = useLocation();
     const token = Cookies.get('info');
     const userInfo: UserInfo | null = token ? JSON.parse(token) : null;
 
-
-    // 1. 미인증 사용자 페이지 제한
+    // 1. 로그인 안 되었으면 로그인 페이지로 이동
     if (!userInfo) {
-        return <Navigate to={ClientUrl.LOGIN} state={{from: location}} replace/>;
+        return <Navigate to={ClientUrl.LOGIN} state={{ from: location }} replace />;
     }
 
     // 2. 관리자 페이지 접근 시 역할 검사
-    if (isAdminRoute) { // 일반 사용자 권한
+    if (isAdminRoute) {
+        // 관리자 권한 없으면 홈으로 보냄
         if (userInfo.role !== 'CAS_CREATOR') {
             return <Navigate to={ClientUrl.HOME} replace />;
         }

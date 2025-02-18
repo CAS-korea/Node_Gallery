@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../components/HeaderMain';
 import Adminsidebar from "../components/AdminSidebar";
 import PostContainer from "../components/Container";
+import CheerOverlay from "../components/secretfile/CheerOverlay"; // 추가
 
 interface AdminLayoutProps {
     children?: ReactNode;
@@ -11,7 +12,7 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
         <PostContainer>
-            <div className="flex flex-col min-h-screen min-w-[1024px] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors">
+            <div className="flex flex-col min-h-screen min-w-[1024px] bg-white dark:bg-gray-900 dark:text-gray-200">
                 {/* 전체 레이아웃: Sidebar + 메인 컨텐츠 */}
                 <div className="flex flex-1">
                     {/* 사이드바 영역 */}
@@ -28,6 +29,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     </div>
                 </div>
             </div>
+            {/* CheerOverlay 추가 – 나중에 쉽게 제거할 수 있습니다 */}
+            <CheerOverlay />
         </PostContainer>
     );
 };
