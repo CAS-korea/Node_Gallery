@@ -8,8 +8,6 @@ import PostContainer from "../../components/Container";
 marked.setOptions({
     gfm: true,
     breaks: true,
-    smartLists: true,
-    smartypants: true,
     // 코드 하이라이팅 추가 예시 (highlight.js 설치 후 사용)
     // highlight: function(code, lang) {
     //   const language = hljs.getLanguage(lang) ? lang : 'plaintext';

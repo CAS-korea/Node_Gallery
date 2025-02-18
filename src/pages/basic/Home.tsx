@@ -120,7 +120,7 @@ const Home: React.FC = () => {
         },
     ];
 
-// 총 30개까지 반복 생성
+    // 총 30개까지 반복 생성
     for (let i = 9; i <= 30; i++) {
         dummyPosts.push({
             postId: `${i}`,
