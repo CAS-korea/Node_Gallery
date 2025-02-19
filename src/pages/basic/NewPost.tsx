@@ -28,6 +28,7 @@ const NewPost: React.FC = () => {
     const [tagInput, setTagInput] = useState<string>('');
     const [postVisibility, setPostVisibility] = useState<postVisibility>('PUBLIC');
     const [thumbNailImage, setThumbNailImage] = useState<string>("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // 미리보기 업데이트
     useEffect(() => {
@@ -81,13 +82,18 @@ const NewPost: React.FC = () => {
     }, []);
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter' && tagInput.trim() !== '') {
-            e.preventDefault();
-            if (!userTag.includes(tagInput.trim())) {
-                setUserTag([...userTag, tagInput.trim()]);
+        if (e.key !== 'Enter' || tagInput.trim() === '') return;
+
+        e.preventDefault();
+        const newTag = tagInput.trim();
+
+        setUserTag((prevTags) => {
+            if (!prevTags.includes(newTag)) {
+                return [...prevTags, newTag];
             }
-            setTagInput('');
-        }
+            return prevTags;
+        });
+        setTimeout(() => setTagInput(''), 0);
     };
 
     const handleRemoveTag = (tag: string) => {
@@ -96,6 +102,10 @@ const NewPost: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
         const postDTO: PostDTO = {
             title,
             content,
@@ -115,6 +125,8 @@ const NewPost: React.FC = () => {
         } catch (error) {
             console.error(error);
             alert('게시물 작성 중 오류가 발생했습니다.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -133,12 +145,14 @@ const NewPost: React.FC = () => {
                     <option value="FOLLOWERS_ONLY">팔로워만</option>
                 </select>
 
-                {/* 게시물 올리기 버튼 */}
                 <button
                     onClick={handleSubmit}
-                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                    disabled={isSubmitting} // 비활성화 조건 추가
+                    className={`px-6 py-2 rounded-lg transition ${
+                        isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'
+                    }`}
                 >
-                    게시물 올리기
+                    {isSubmitting ? '게시물 작성 중...' : '게시물 올리기'}
                 </button>
             </div>
 
