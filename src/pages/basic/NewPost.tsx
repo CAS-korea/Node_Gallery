@@ -12,6 +12,12 @@ marked.setOptions({
     breaks: true,
 });
 
+const extractFirstImageUrl = (content: string): string => {
+    const regex = /!\[\]\((https?:\/\/[^\s)]+)\)/; // 마크다운 이미지 URL 패턴
+    const match = content.match(regex);
+    return match ? match[1] : ""; // 첫 번째 매칭된 URL 반환
+};
+
 const NewPost: React.FC = () => {
     const {createPost} = useServices();
 
@@ -21,11 +27,14 @@ const NewPost: React.FC = () => {
     const [userTag, setUserTag] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState<string>('');
     const [postVisibility, setPostVisibility] = useState<postVisibility>('PUBLIC');
+    const [thumbNailImage, setThumbNailImage] = useState<string>("");
 
     // 미리보기 업데이트
     useEffect(() => {
         const markdown = `# ${title}\n\n${content}`;
         setPreviewContent(marked.parse(markdown));
+
+        setThumbNailImage(extractFirstImageUrl(content));
     }, [title, content]);
 
     const handlePaste = async (event: ClipboardEvent) => {
@@ -52,6 +61,10 @@ const NewPost: React.FC = () => {
                         prevContent.substring(endPos)
                     );
                 });
+
+                if (!thumbNailImage) {
+                    setThumbNailImage(imageUrl);
+                }
 
                 // 새 커서 위치를 이미지 URL이 추가된 위치 바로 뒤로 이동
                 setTimeout(() => {
@@ -87,7 +100,8 @@ const NewPost: React.FC = () => {
             title,
             content,
             userTag,
-            postVisibility
+            postVisibility,
+            thumbNailImage
         };
 
         try {
@@ -97,6 +111,7 @@ const NewPost: React.FC = () => {
             setContent('');
             setUserTag([]);
             setTagInput('');
+            setThumbNailImage("");
         } catch (error) {
             console.error(error);
             alert('게시물 작성 중 오류가 발생했습니다.');

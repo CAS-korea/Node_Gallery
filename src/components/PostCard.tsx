@@ -46,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                         className="w-full h-full flex items-center justify-center text-white text-xl font-bold"
                         style={{ backgroundColor: randomBgColor }}
                     >
-                        {post.title} {/* 제목의 첫 글자를 표시 */}
+                        {post.title}
                     </div>
                 )}
             </div>

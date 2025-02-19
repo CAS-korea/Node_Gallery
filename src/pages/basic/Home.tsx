@@ -5,12 +5,6 @@ import PostContainer from "../../components/Container";
 import { dummyPosts } from '../../data/dummyPosts';
 import {useServices} from "../../context/ServicesProvider.tsx";
 
-const extractFirstImageUrl = (content: string): string => {
-    const regex = /!\[\]\((https?:\/\/[^\s)]+)\)/; // 마크다운 이미지 URL 패턴
-    const match = content.match(regex);
-    return match ? match[1] : ""; // 첫 번째 매칭된 URL 반환
-};
-
 const Home: React.FC = () => {
     const [posts, setPosts] = useState<PostEntity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -22,11 +16,7 @@ const Home: React.FC = () => {
         const fetchPosts = async () => {
             setLoading(true);
             const allPosts = await getAllPosts();
-            const updatedPosts = allPosts.map((post) => ({
-                ...post,
-                thumbNailImage: extractFirstImageUrl(post.content)
-            }));
-            setPosts(updatedPosts.slice(0, visibleCount));
+            setPosts(allPosts.slice(0, visibleCount));
             setLoading(false);
         }
         fetchPosts();

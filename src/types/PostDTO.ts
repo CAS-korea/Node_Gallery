@@ -4,5 +4,6 @@ export interface PostDTO {
     title : string,
     content : string,
     userTag: string[],
-    postVisibility: postVisibility
+    postVisibility: postVisibility,
+    thumbNailImage: string
 }
