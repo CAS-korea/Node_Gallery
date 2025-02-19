@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { Link } from "react-router-dom"
 import type { PostEntity } from "../types/PostEntity"
 import { motion } from "framer-motion"
-import { Bookmark, Heart, MessageSquare } from "lucide-react"
+import { Bookmark, Heart, MessageSquare } from 'lucide-react'
 import { ClientUrl } from "../constants/ClientUrl.ts"
 
 interface PostCardProps {
@@ -12,47 +12,57 @@ interface PostCardProps {
     interactive?: boolean
 }
 
-const generateRandomColor = () => {
-    const hue = Math.floor(Math.random() * 360);
-    return `hsl(${hue}, 70%, 70%)`;
+const pastelColors = [
+    "#FCE4EC", "#E3F2FD", "#E8F5E9", "#FFF3E0", "#F3E5F5", "#E0F7FA", "#E8EAF6",
+]
+
+const getFixedBackgroundColor = (seed: string) => {
+    let hash = 0
+    for (let i = 0; i < seed.length; i++) {
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash)
+    }
+    const index = Math.abs(hash) % pastelColors.length
+    return pastelColors[index]
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
     const [isScrapped, setIsScrapped] = useState<boolean>(false)
-    const randomBgColor = generateRandomColor();
+    const fixedBgColor = useMemo(() => getFixedBackgroundColor(post.postId), [post.postId])
 
-    const handleScrap = () => {
+    const handleScrap = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
         if (!interactive) return
         setIsScrapped((prev) => !prev)
     }
 
     return (
-        <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`} className="block">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden cursor-pointer"
-            >
-                {/* 📌 썸네일 영역: 이미지 또는 랜덤 배경 */}
-                <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80 flex items-center justify-center">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
+        >
+            <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`} className="block">
+                {/* Thumbnail area */}
+                <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80 flex items-center justify-center relative">
                     {post.thumbNailImage ? (
                         <img
-                            src={post.thumbNailImage}
+                            src={post.thumbNailImage || "/placeholder.svg"}
                             alt="Thumbnail"
                             className="w-full h-full object-cover"
                         />
                     ) : (
                         <div
-                            className="w-full h-full flex items-center justify-center text-white text-xl font-bold"
-                            style={{ backgroundColor: randomBgColor }}
+                            className="w-full h-full flex items-center justify-center text-black text-xl font-bold"
+                            style={{ backgroundColor: fixedBgColor }}
                         >
                             {post.title}
                         </div>
                     )}
                 </div>
 
-                {/* 본문 영역 */}
+                {/* Content area */}
                 <div className="p-6 space-y-4">
                     <motion.h2
                         className="text-2xl font-semibold text-gray-900 dark:text-gray-100 leading-tight"
@@ -61,56 +71,50 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                     >
                         {post.title}
                     </motion.h2>
-                    <div className="flex items-center">
-                        <Link
-                            to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="block"
-                        >
-                            <motion.p
-                                className="text-sm text-gray-500 dark:text-gray-400"
-                                whileHover={{ x: 5 }}
-                                transition={{ type: "spring", stiffness: 300 }}
+
+                    {/* Author and date info in vertical layout */}
+                    <div className="flex flex-col">
+                        <div className="flex items-center space-x-2">
+                            <Link
+                                to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-sm text-gray-500 dark:text-gray-400 hover:underline"
                             >
                                 By {post.userId}
-                            </motion.p>
-                        </Link>
-                        <span className="ml-2 text-xs text-gray-400">
-              {new Date(post.createAt).toLocaleDateString()}
-            </span>
+                            </Link>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                            {new Date(post.createAt).toLocaleDateString()}
+                        </span>
                     </div>
+
                     <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">
                         {post.summary}
                     </p>
                 </div>
             </Link>
 
-                {/* 하단 영역 */}
-                <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
-                    {/* 왼쪽 영역: 태그 */}
-                    <div className="flex space-x-2">
+            {/* Footer area */}
+            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                <div className="flex justify-between items-center">
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2">
                         {post.userTag.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="text-sm text-blue-500 hover:underline cursor-default"
-                            >
+                            <span key={index} className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200">
                                 {tag}
                             </span>
                         ))}
                     </div>
-                    {/* 오른쪽 영역: 좋아요, 댓글, 스크랩 아이콘 */}
+                    {/* Interaction icons */}
                     <div className="flex items-center space-x-4">
-                        {/* 좋아요 아이콘 */}
-                        <div className="flex items-center space-x-1 text-red-600">
+                        <div className="flex items-center space-x-1 text-red-500 dark:text-white">
                             <Heart className="w-5 h-5" />
                             <span className="text-xs">{post.likesCount}</span>
                         </div>
-                        {/* 댓글 아이콘 */}
-                        <div className="flex items-center space-x-1 text-blue-600">
+                        <div className="flex items-center space-x-1 text-blue-500 dark:text-white">
                             <MessageSquare className="w-5 h-5" />
                             <span className="text-xs">{post.commentsCount}</span>
                         </div>
-                        {/* 스크랩 버튼 */}
                         <motion.button
                             onClick={handleScrap}
                             whileHover={{ scale: 1.1 }}
@@ -124,7 +128,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                                 <Bookmark
                                     className={`w-5 h-5 ${
                                         isScrapped
-                                            ? "fill-current text-blue-500"
+                                            ? "fill-current text-blue-400"
                                             : "stroke-current text-gray-600 dark:text-gray-300"
                                     }`}
                                 />
@@ -132,8 +136,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                         </motion.button>
                     </div>
                 </div>
-            </motion.div>
-        </Link>
+            </div>
+        </motion.div>
     )
 }
 
