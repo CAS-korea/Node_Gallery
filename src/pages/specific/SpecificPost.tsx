@@ -100,7 +100,7 @@ const SpecificPost: React.FC = () => {
                 />
             )}
 
-            <div className="max-w-3xl mx-auto px-4 py-8">
+            <div className="max-w-3xl mx-auto px-4">
                 {/* 게시글 카드 영역 */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -140,7 +140,7 @@ const SpecificPost: React.FC = () => {
                                     <Link
                                         to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="text-sm text-black dark:text-gray-400 hover:underline"
+                                        className="text-sm text-black dark:text-white hover:underline"
                                     >
                                         {post.userId}
                                     </Link>

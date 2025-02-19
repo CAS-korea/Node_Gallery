@@ -37,7 +37,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({ children }) => {
                 </div>
 
                 {/* 메인 컨텐츠 영역: Header + Outlet */}
-                <div className="flex flex-col flex-1 py-8">
+                <div className="flex flex-col flex-1 pt-14 rounded-3xl">
                     <Header />
                     <main className="flex-1 bg-white dark:bg-gray-800 p-6">
                         {/* children 있으면 children 렌더, 없으면 Outlet 사용 */}
