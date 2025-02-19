@@ -15,9 +15,9 @@ export interface ServicesContextType {
     logout: () => void;
     createPost: (postDTO: PostDTO) => Promise<void>;
     getAllPosts: () => Promise<PostEntity[]>;
-    getPostById: (postID: string) => Promise<PostEntity>;
-    likePost: (postID: string) => Promise<void>;
-    reportPost: (postID: string) => Promise<void>;
+    getPostById: (postId: string) => Promise<PostEntity>;
+    likePost: (postId: string) => Promise<void>;
+    reportPost: (postId: string) => Promise<void>;
     getUserPosts: (userId: string) => Promise<PostEntity[]>;
     authorizeUser: (userId: string, status: "accept" | "reject") => Promise<void>;
     getNonuserList: () => Promise<UserEntity[]>;
@@ -58,9 +58,9 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         // 🔹 포스트 관련 함수 (await 추가)
         createPost: async (postDTO) => await PostService.createPost(postDTO),
         getAllPosts: async () => await PostService.getAllPosts(),
-        getPostById: async (postID) => await PostService.getPostById(postID),
-        likePost: async (postID) => await PostService.likePost(postID),
-        reportPost: async (postID) => await PostService.reportPost(postID),
+        getPostById: async (postId) => await PostService.getPostById(postId),
+        likePost: async (postId) => await PostService.likePost(postId),
+        reportPost: async (postId) => await PostService.reportPost(postId),
         getUserPosts: async (userId) => await PostService.getUserPosts(userId),
 
         // 🔹 어드민 관련 함수 (await 추가)

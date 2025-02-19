@@ -7,25 +7,43 @@ import { motion } from "framer-motion";
 import { Heart, Flag, MessageCircle, Share2 } from "lucide-react";
 import PostReportModal from "../../components/PostReportModal";
 import PostComments from "../../components/PostComments";
-import { dummyPosts } from "../../data/dummyPosts";
+import {useServices} from "../../context/ServicesProvider.tsx";
 
 const SpecificPost: React.FC = () => {
     const { postId } = useParams<{ postId: string }>();
+    const validPostId = postId ?? "";
+    const {getPostById} = useServices();
 
     const [post, setPost] = useState<PostEntity | null>(null);
     const [hasLiked, setHasLiked] = useState(false);
     const [hasReported, setHasReported] = useState(false);
     const [showReportModal, setShowReportModal] = useState(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (postId) {
-            // dummyPosts에서 postId에 해당하는 게시물을 찾습니다.
-            const foundPost = dummyPosts.find((p) => p.postId === postId) || null;
-            setPost(foundPost);
-        } else {
-            console.error("postId가 전달되지 않았습니다.");
+        if (!validPostId) {
+            console.log("❌ 유효하지 않은 postId: ", validPostId);
+            return;
         }
-    }, [postId]);
+
+        const fetchPost = async () => {
+            try {
+                const response = await getPostById(validPostId);
+
+                if (response) {
+                    setPost(response.data);
+                } else {
+                    console.error("게시물이 존재하지 않습니다.");
+                }
+            } catch (error) {
+                console.error("게시물 불러오기 실패: ", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPost();
+    }, [validPostId]);
 
     const handleLike = () => {
         if (!post) return;
@@ -52,6 +70,9 @@ const SpecificPost: React.FC = () => {
         setHasReported(true);
         setShowReportModal(false);
     };
+
+    if (loading) return <p>로딩 중...</p>;
+    if (!post) return <p>게시물을 찾을 수 없습니다.</p>;
 
     return (
         <PostContainer>

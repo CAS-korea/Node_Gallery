@@ -18,7 +18,7 @@ export const PostService = {
     },
 
     async getPostById(postID: string): Promise<PostEntity> {
-        const response = await apiHandler.get(`/post_log/specific/${postID}`);
+        const response = await apiHandler.get(`/post_log/${postID}`);
         return response.data;
     },
 
