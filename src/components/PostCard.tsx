@@ -14,10 +14,17 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
     const [isScrapped, setIsScrapped] = useState<boolean>(false)
+    const [hasLiked, setHasLiked] = useState<boolean>(false)
 
     const handleScrap = () => {
         if (!interactive) return
         setIsScrapped((prev) => !prev)
+    }
+
+    const handleLike = () => {
+        if (!interactive) return
+        setHasLiked((prev) => !prev)
+        // 실제 좋아요 수 업데이트 로직은 필요에 따라 구현
     }
 
     return (
@@ -27,19 +34,20 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
         >
-            {/* 썸네일 영역: 카드 상단에 위치, 카드 높이의 절반 정도를 덮으며
-                하단은 둥근 모서리로 처리 */}
-            <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80">
-                <img
-                    src={post.thumbNailImage}
-                    alt="Thumbnail"
-                    className="w-full h-full object-cover"
-                />
-            </div>
+            {/* 썸네일 영역: Link로 감싸서 클릭 시 상세 페이지로 이동 */}
+            <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`}>
+                <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80">
+                    <img
+                        src={post.thumbNailImage}
+                        alt="Thumbnail"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            </Link>
 
-            {/* 본문 영역 */}
-            <div className="p-6 space-y-4">
-                <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`} className="block">
+            {/* 상단 영역: 제목, 작성자, 날짜, 요약 내용 */}
+            <Link to={`${ClientUrl.SPECIFICPOST}/${post.postId}`} className="block">
+                <div className="p-6 space-y-4">
                     <motion.h2
                         className="text-2xl font-semibold text-gray-900 dark:text-gray-100 leading-tight"
                         whileHover={{ x: 5 }}
@@ -47,50 +55,62 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                     >
                         {post.title}
                     </motion.h2>
-                </Link>
-                {/* 사용자 정보: userId와 날짜 */}
-                <div className="flex items-center">
-                    <Link to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`} className="block">
-                        <motion.p
-                            className="text-sm text-gray-500 dark:text-gray-400"
-                            whileHover={{ x: 5 }}
-                            transition={{ type: "spring", stiffness: 300 }}
+                    <div className="flex items-center">
+                        <Link
+                            to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="block"
                         >
-                            By {post.userId}
-                        </motion.p>
-                    </Link>
-                    <span className="ml-2 text-xs text-gray-400">
-                        {new Date(post.createAt).toLocaleDateString()}
-                    </span>
+                            <motion.p
+                                className="text-sm text-gray-500 dark:text-gray-400"
+                                whileHover={{ x: 5 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                            >
+                                By {post.userId}
+                            </motion.p>
+                        </Link>
+                        <span className="ml-2 text-xs text-gray-400">
+              {new Date(post.createAt).toLocaleDateString()}
+            </span>
+                    </div>
+                    <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">
+                        {post.summary}
+                    </p>
                 </div>
-                <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">
-                    {post.summary}
-                </p>
-            </div>
+            </Link>
 
-            {/* 하단 영역 */}
+            {/* 하단 영역: 아이콘 영역 */}
             <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
                 {/* 왼쪽 영역: 태그 */}
                 <div className="flex space-x-2">
                     {post.userTag.map((tag, index) => (
                         <span
                             key={index}
-                            className="text-sm text-blue-500 hover:underline cursor-default"
+                            className="text-sm text-blue-500 dark:text-blue-400 hover:underline cursor-default"
                         >
-                            {tag}
-                        </span>
+              {tag}
+            </span>
                     ))}
                 </div>
                 {/* 오른쪽 영역: 좋아요, 댓글, 스크랩 아이콘 */}
                 <div className="flex items-center space-x-4">
                     {/* 좋아요 아이콘 */}
-                    <div className="flex items-center space-x-1 text-red-600">
-                        <Heart className="w-5 h-5" />
+                    <div
+                        onClick={handleLike}
+                        className="flex cursor-pointer items-center space-x-1 text-red-600"
+                    >
+                        <Heart
+                            className={`w-5 h-5 ${
+                                hasLiked
+                                    ? "fill-current"
+                                    : "stroke-current text-gray-600 dark:text-gray-300 dark:stroke-white hover:text-red-500"
+                            }`}
+                        />
                         <span className="text-xs">{post.likesCount}</span>
                     </div>
                     {/* 댓글 아이콘 */}
                     <div className="flex items-center space-x-1 text-blue-600">
-                        <MessageSquare className="w-5 h-5" />
+                        <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         <span className="text-xs">{post.commentsCount}</span>
                     </div>
                     {/* 스크랩 버튼 */}
@@ -108,7 +128,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                                 className={`w-5 h-5 ${
                                     isScrapped
                                         ? "fill-current text-blue-500"
-                                        : "stroke-current text-gray-600 dark:text-gray-300"
+                                        : "stroke-current text-gray-600 dark:text-gray-300 dark:stroke-white"
                                 }`}
                             />
                         </motion.div>

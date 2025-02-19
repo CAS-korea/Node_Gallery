@@ -21,17 +21,17 @@ const AuthLayout: React.FC = () => {
     // 특징(Features): 아이콘, 제목, 설명
     const features = [
         {
-            icon: <Users className="w-6 h-6 text-white mr-3" />,
+            icon: <Users className="w-6 h-6 text-black mr-3" />,
             title: "Connect & Collaborate",
             desc: "다양한 분야의 Noders와 함께 성장하고 지식을 공유해보세요.",
         },
         {
-            icon: <BookOpen className="w-6 h-6 text-white mr-3" />,
+            icon: <BookOpen className="w-6 h-6 text-black mr-3" />,
             title: "Academic Exchange",
             desc: "학술 교류를 통해 폭넓은 인사이트와 정보를 얻을 수 있습니다.",
         },
         {
-            icon: <Share2 className="w-6 h-6 text-white mr-3" />,
+            icon: <Share2 className="w-6 h-6 text-black mr-3" />,
             title: "Inspire & Innovate",
             desc: "창의적인 아이디어를 나누고, 새로운 프로젝트에 도전하세요.",
         },
@@ -41,7 +41,7 @@ const AuthLayout: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentQuote((prev) => (prev + 1) % quotes.length)
-        }, 5000)
+        }, 7000)
         return () => clearInterval(interval)
     }, [quotes.length])
 
@@ -58,7 +58,7 @@ const AuthLayout: React.FC = () => {
                     className="hidden lg:flex flex-1 flex-col items-center justify-center p-10 text-center relative overflow-hidden"
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
+                    transition={{ duration: 2.0, delay: 0.5 }}
                 >
                     {/* 배경 그라디언트 (quotes 변경에 따라 변함) */}
                     <motion.div
@@ -71,27 +71,27 @@ const AuthLayout: React.FC = () => {
                                 "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
                             ][currentQuote],
                         }}
-                        transition={{ duration: 1, ease: "easeInOut" }}
+                        transition={{ duration: 3, ease: "easeInOut" }}
                     />
 
                     {/* 메인 헤딩 & quote 영역 */}
                     <div className="relative z-10">
                         <motion.h1
-                            className="text-4xl font-bold text-white mb-4"
+                            className="text-4xl font-bold text-black mb-4"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.5 }}
+                            transition={{ duration: 1.5, delay: 0.5 }}
                         >
                             Welcome To NODE!
                         </motion.h1>
                         <AnimatePresence mode="wait">
                             <motion.p
                                 key={currentQuote}
-                                className="text-xl text-white/90 mb-6"
+                                className="text-xl text-black/90 mb-6"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.5 }}
+                                transition={{ duration: 2 }}
                             >
                                 {quotes[currentQuote]}
                             </motion.p>
@@ -103,18 +103,18 @@ const AuthLayout: React.FC = () => {
                         {features.map((item, idx) => (
                             <motion.div
                                 key={idx}
-                                className="flex items-center justify-center bg-white/20 rounded-xl p-4 text-left"
+                                className="flex items-center justify-center bg-white rounded-xl p-4 text-left bg-opacity-35 shadow-lg group hover:bg-opacity-70 transition-colors"
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.5 + idx * 0.2 }}
+                                transition={{ duration: 1.5, delay: 0.5 + idx * 0.2 }}
                                 whileHover={{ scale: 1.03 }}
                             >
                                 {item.icon}
                                 <div>
-                                    <h4 className="text-white text-lg font-semibold">
+                                    <h4 className="text-black text-lg font-semibold">
                                         {item.title}
                                     </h4>
-                                    <p className="text-white/80 text-sm">{item.desc}</p>
+                                    <p className="text-black/80 text-sm">{item.desc}</p>
                                 </div>
                             </motion.div>
                         ))}

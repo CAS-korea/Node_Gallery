@@ -1,190 +1,175 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import type { PostEntity } from "../../types/PostEntity";
-import { marked } from "marked";
-import PostContainer from "../../components/Container";
-import { motion } from "framer-motion";
-import { Heart, Flag, MessageCircle } from "lucide-react";
-import PostReportModal from "../../components/PostReportModal";
-import PostComments from "../../components/PostComments";
-import { dummyPosts } from "../../data/dummyPosts";
+"use client"
+
+import type React from "react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import type { PostEntity } from "../../types/PostEntity"
+import { marked } from "marked"
+import { motion } from "framer-motion"
+import { Heart, Flag, MessageCircle, User } from "lucide-react"
+import PostReportModal from "../../components/PostReportModal"
+import PostComments from "../../components/PostComments"
+import { dummyPosts } from "../../data/dummyPosts"
+import Container from "../../components/Container"
+
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
+import { Button } from "../../components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/card"
+import { Separator } from "../../components/ui/separator"
+
+
 
 const SpecificPost: React.FC = () => {
-    const { postId } = useParams<{ postId: string }>();
-
-    const [post, setPost] = useState<PostEntity | null>(null);
-    const [hasLiked, setHasLiked] = useState(false);
-    const [hasReported, setHasReported] = useState(false);
-    const [showReportModal, setShowReportModal] = useState(false);
+    const { postId } = useParams<{ postId: string }>()
+    const [post, setPost] = useState<PostEntity | null>(null)
+    const [hasLiked, setHasLiked] = useState(false)
+    const [hasReported, setHasReported] = useState(false)
+    const [showReportModal, setShowReportModal] = useState(false)
 
     useEffect(() => {
         if (postId) {
-            // dummyPosts에서 postId에 해당하는 게시물을 찾습니다.
-            const foundPost = dummyPosts.find((p) => p.postId === postId) || null;
-            setPost(foundPost);
+            const foundPost = dummyPosts.find((p) => p.postId === postId) || null
+            setPost(foundPost)
         } else {
-            console.error("postId가 전달되지 않았습니다.");
+            console.error("postId was not provided")
         }
-    }, [postId]);
+    }, [postId])
 
     const handleLike = () => {
-        if (!post) return;
-        if (hasLiked) {
-            setPost({ ...post, likesCount: Math.max(0, post.likesCount - 1) });
-            setHasLiked(false);
-        } else {
-            setPost({ ...post, likesCount: post.likesCount + 1 });
-            setHasLiked(true);
-        }
-    };
+        if (!post) return
+        setPost({ ...post, likesCount: hasLiked ? Math.max(0, post.likesCount - 1) : post.likesCount + 1 })
+        setHasLiked(!hasLiked)
+    }
 
     const handleReport = () => {
         if (!hasReported) {
-            setShowReportModal(true);
+            setShowReportModal(true)
         }
-    };
+    }
 
     const confirmReport = (reason: string) => {
-        console.log("선택된 신고 사유:", reason);
+        console.log("Selected report reason:", reason)
         if (post) {
-            setPost({ ...post, reportsCount: post.reportsCount + 1 });
+            setPost({ ...post, reportsCount: post.reportsCount + 1 })
         }
-        setHasReported(true);
-        setShowReportModal(false);
-    };
+        setHasReported(true)
+        setShowReportModal(false)
+    }
+
+    if (!post) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-lg text-gray-600 dark:text-gray-300">Loading post...</p>
+            </div>
+        )
+    }
 
     return (
-        <PostContainer>
-            {showReportModal && (
-                <PostReportModal
-                    onClose={() => setShowReportModal(false)}
-                    onConfirm={confirmReport}
-                />
-            )}
+        <Container>
+        <div className="max-w-3xl mx-auto px-4 py-8">
+            {showReportModal && <PostReportModal onClose={() => setShowReportModal(false)} onConfirm={confirmReport} />}
 
-            {post ? (
-                <>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
-                    >
-                        {/* 상단 배너: 썸네일 이미지 */}
-                        <img
-                            src={post.thumbNailImage}
-                            alt="Thumbnail"
-                            className="w-full h-64 object-cover"
-                        />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                <Card className="overflow-hidden">
+                    <CardHeader className="p-0">
+                        <img src={post.thumbNailImage || "/placeholder.svg"} alt="Thumbnail" className="w-full h-64 object-cover" />
+                    </CardHeader>
+                    <CardContent className="p-6">
+                        <motion.h1
+                            className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                            {post.title}
+                        </motion.h1>
 
-                        {/* 본문 영역 */}
-                        <div className="p-6 space-y-4">
-                            {/* 타이틀과 날짜를 한 줄에 배치 */}
-                            <div className="flex justify-between items-center">
-                                <motion.h1
-                                    className="text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1, duration: 0.3 }}
-                                >
-                                    {post.title}
-                                </motion.h1>
-                                <span className="text-sm text-gray-500 dark:text-gray-300">
-                  {new Date(post.createAt).toLocaleDateString()}
-                </span>
-                            </div>
-                            <motion.p
-                                className="text-sm text-gray-500 dark:text-gray-300"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.2, duration: 0.3 }}
-                            >
-                                작성자: {post.userId}
-                            </motion.p>
-                            <motion.div
-                                className="prose dark:prose-invert max-w-none mt-6"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3, duration: 0.3 }}
-                                dangerouslySetInnerHTML={{ __html: marked(post.content) }}
-                            />
-                        </div>
+                        {/* 사용자 정보 (아바타 + 이름 + 역할) */}
+                        <div className="flex items-center space-x-4 mb-6">
+                            <Avatar>
+                                <AvatarImage src="/placeholder-avatar.jpg" alt={post.userId} />
+                                <AvatarFallback>
+                                    <User />
+                                </AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <div className="flex items-center space-x-2">
+                                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{post.userId}</p>
 
-                        {/* 하단 액션 영역 */}
-                        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
-                            <div className="flex space-x-4">
-                                <motion.button
-                                    onClick={handleLike}
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center space-x-2 transition-colors duration-300"
-                                >
-                                    <motion.div
-                                        animate={{ scale: hasLiked ? 1.2 : 1 }}
-                                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                                    >
-                                        {hasLiked ? (
-                                            <Heart className="w-5 h-5 fill-current text-red-500" />
-                                        ) : (
-                                            <Heart
-                                                className="w-5 h-5 stroke-current text-gray-600 dark:text-gray-300 hover:text-red-500"
-                                                fill="none"
-                                                strokeWidth={2}
-                                            />
-                                        )}
-                                    </motion.div>
+                                    {/* 역할 표시 (배지 스타일) */}
                                     <span
-                                        className={`font-medium ${
-                                            hasLiked
-                                                ? "text-red-500"
-                                                : "text-gray-600 dark:text-gray-300"
+                                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                            post.role === "PROFESSOR"
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-gray-500 text-white"
                                         }`}
                                     >
-                    {post.likesCount}
-                  </span>
-                                </motion.button>
-
-                                {/* 댓글 버튼 + 댓글 수 */}
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center space-x-1 text-gray-700 transition-colors duration-300"
-                                >
-                                    <MessageCircle className="w-5 h-5" />
-                                    <span className="text-s">{post.commentsCount}</span>
-                                </motion.button>
+                                        {post.role}
+                                    </span>
+                                </div>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    {new Date(post.createAt).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </p>
                             </div>
-
-                            <motion.button
-                                onClick={handleReport}
-                                whileHover={{ scale: !hasReported ? 1.1 : 1 }}
-                                whileTap={{ scale: !hasReported ? 0.95 : 1 }}
-                                className={`transition-colors duration-300 ${
-                                    hasReported
-                                        ? "text-red-500 cursor-not-allowed"
-                                        : "text-gray-600 dark:text-gray-300 hover:text-red-500"
-                                }`}
-                                disabled={hasReported}
-                            >
-                                <Flag className="w-5 h-5" />
-                            </motion.button>
                         </div>
-                    </motion.div>
 
-                    {/* 댓글 영역: postId를 전달하여 해당 게시물의 댓글만 필터링 */}
-                    <PostComments postId={post.postId} />
-                </>
-            ) : (
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center text-gray-600 dark:text-gray-300 py-10"
-                >
-                    게시물을 불러오는 중...
-                </motion.p>
-            )}
-        </PostContainer>
-    );
-};
+                        {/* 본문 내용 */}
+                        <motion.div
+                            className="prose dark:prose-invert max-w-none"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3, duration: 0.5 }}
+                            dangerouslySetInnerHTML={{ __html: marked(post.content) }}
+                        />
+                    </CardContent>
+                    <Separator />
 
-export default SpecificPost;
+                    {/* 하단 버튼 영역 */}
+                    <CardFooter className="p-6 flex justify-between items-center">
+                        <div className="flex space-x-4">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleLike}
+                                className={`flex items-center space-x-2 ${hasLiked ? "text-red-500" : ""}`}
+                            >
+                                <Heart className={`w-6 h-6 ${hasLiked ? "fill-current" : ""}`} />
+                                <span>{post.likesCount}</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                                <MessageCircle className="w-6 h-6" />
+                                <span>{post.commentsCount}</span>
+                            </Button>
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleReport}
+                            disabled={hasReported}
+                            className={hasReported ? "text-red-500 cursor-not-allowed" : ""}
+                        >
+                            <Flag className="w-6 h-6" />
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="mt-8"
+            >
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Comments</h2>
+                <PostComments postId={post.postId} />
+            </motion.div>
+        </div>
+        </Container>
+    )
+}
+
+export default SpecificPost
