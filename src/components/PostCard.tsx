@@ -12,8 +12,14 @@ interface PostCardProps {
     interactive?: boolean
 }
 
+const generateRandomColor = () => {
+    const hue = Math.floor(Math.random() * 360);
+    return `hsl(${hue}, 70%, 70%)`;
+}
+
 const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
     const [isScrapped, setIsScrapped] = useState<boolean>(false)
+    const randomBgColor = generateRandomColor();
 
     const handleScrap = () => {
         if (!interactive) return
@@ -27,14 +33,22 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
         >
-            {/* 썸네일 영역: 카드 상단에 위치, 카드 높이의 절반 정도를 덮으며
-                하단은 둥근 모서리로 처리 */}
-            <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80">
-                <img
-                    src={post.thumbNailImage}
-                    alt="Thumbnail"
-                    className="w-full h-full object-cover"
-                />
+            {/* 📌 썸네일 영역: 이미지 또는 랜덤 배경 */}
+            <div className="h-48 overflow-hidden rounded-t-[50px] rounded-b-[20px] opacity-80 flex items-center justify-center">
+                {post.thumbNailImage ? (
+                    <img
+                        src={post.thumbNailImage}
+                        alt="Thumbnail"
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div
+                        className="w-full h-full flex items-center justify-center text-white text-xl font-bold"
+                        style={{ backgroundColor: randomBgColor }}
+                    >
+                        {post.title} {/* 제목의 첫 글자를 표시 */}
+                    </div>
+                )}
             </div>
 
             {/* 본문 영역 */}
@@ -64,7 +78,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                     </span>
                 </div>
                 <p className="text-base text-gray-700 dark:text-gray-300 line-clamp-3">
-                    {post.content}
+                    {post.summary}
                 </p>
             </div>
 

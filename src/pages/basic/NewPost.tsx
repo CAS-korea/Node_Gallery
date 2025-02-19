@@ -4,6 +4,7 @@ import {PostDTO, postVisibility} from '../../types/PostDTO.ts';
 import {useServices} from "../../context/ServicesProvider.tsx";
 import PostContainer from "../../components/Container";
 import {X} from "lucide-react";
+import {FileService} from "../../services/FileService.ts";
 
 // 마크다운 옵션 설정 (GFM, 줄바꿈, 스마트 리스트 등)
 marked.setOptions({
@@ -21,11 +22,50 @@ const NewPost: React.FC = () => {
     const [tagInput, setTagInput] = useState<string>('');
     const [postVisibility, setPostVisibility] = useState<postVisibility>('PUBLIC');
 
-    // 제목과 본문이 바뀔 때마다 미리보기 업데이트
+    // 미리보기 업데이트
     useEffect(() => {
         const markdown = `# ${title}\n\n${content}`;
         setPreviewContent(marked.parse(markdown));
     }, [title, content]);
+
+    const handlePaste = async (event: ClipboardEvent) => {
+        const clipboardItems = event.clipboardData?.items;
+        if (!clipboardItems) return;
+
+        const textarea = document.activeElement as HTMLTextAreaElement;
+        if (!textarea) return;
+
+        const startPos = textarea.selectionStart;
+        const endPos = textarea.selectionEnd;
+
+        for (const item of clipboardItems) {
+            if (item.type.startsWith("image/")) {
+                const file = item.getAsFile();
+                if (!file) return;
+
+                const imageUrl = await FileService.uploadImage(file);
+
+                setContent((prevContent) => {
+                    return (
+                        prevContent.substring(0, startPos) +
+                        `\n![](${imageUrl})\n` +
+                        prevContent.substring(endPos)
+                    );
+                });
+
+                // 새 커서 위치를 이미지 URL이 추가된 위치 바로 뒤로 이동
+                setTimeout(() => {
+                    textarea.selectionStart = textarea.selectionEnd = startPos + `\n![](${imageUrl})\n`.length;
+                }, 0);
+            }
+        }
+    };
+
+    // 🔹 컴포넌트 마운트 시 붙여넣기 이벤트 리스너 추가
+    useEffect(() => {
+        document.addEventListener("paste", handlePaste);
+        return () => document.removeEventListener("paste", handlePaste);
+    }, []);
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter' && tagInput.trim() !== '') {
@@ -117,10 +157,12 @@ const NewPost: React.FC = () => {
                             </label>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {userTag.map((tag, index) => (
-                                    <span key={index} className="bg-blue-200 dark:bg-blue-500 text-blue-800 dark:text-white px-3 py-1 rounded-full flex items-center">
+                                    <span key={index}
+                                          className="bg-blue-200 dark:bg-blue-500 text-blue-800 dark:text-white px-3 py-1 rounded-full flex items-center">
                                         {tag}
-                                        <button type="button" onClick={() => handleRemoveTag(tag)} className="ml-2 text-red-500">
-                                            <X size={16} />
+                                        <button type="button" onClick={() => handleRemoveTag(tag)}
+                                                className="ml-2 text-red-500">
+                                            <X size={16}/>
                                         </button>
                                     </span>
                                 ))}

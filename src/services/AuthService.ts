@@ -5,9 +5,7 @@ import {UserEntity} from "../types/UserEntity.ts";
 
 export const AuthService = {
     async login(loginDTO: LoginDTO) {
-        const response = await apiHandler.post('/user_log/login', loginDTO, {
-            withCredentials: true
-        });
+        const response = await apiHandler.post('/user_log/login', loginDTO);
 
         Cookies.set('info', JSON.stringify(response.data.userInfo), {
             expires: 1,

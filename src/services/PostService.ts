@@ -4,16 +4,11 @@ import {PostEntity} from "../types/PostEntity.ts";
 
 export const PostService = {
     async createPost(postDTO: PostDTO) {
-        console.log(JSON.stringify(postDTO, null, 2));
-        console.log("포스트 보내기 시도 중");
-        await apiHandler.post('/post_relation/create', postDTO, {
-            withCredentials: true,
-        });
-        console.log("포스트 전송 완료");
+        await apiHandler.post('/post_relation/create', postDTO);
     },
 
     async getAllPosts(): Promise<PostEntity[]> {
-        const response = await apiHandler.get('/post_log/');
+        const response = await apiHandler.get('/post_log/allposts');
         return response.data;
     },
 
@@ -28,14 +23,10 @@ export const PostService = {
     },
 
     async likePost(postID: string) {
-        await apiHandler.post(`/post_relation/likes/${postID}`, {}, {
-            withCredentials: true
-        });
+        await apiHandler.post(`/post_relation/likes/${postID}`, {});
     },
 
     async reportPost(postID: string) {
-        await apiHandler.post(`/post_relation/report/${postID}`, {}, {
-            withCredentials: true
-        });
+        await apiHandler.post(`/post_relation/report/${postID}`, {});
     }
 };

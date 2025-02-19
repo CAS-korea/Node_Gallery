@@ -7,6 +7,7 @@ import { LoginDTO } from "../types/LoginDTO.ts";
 import { UserEntity } from "../types/UserEntity.ts";
 import { PostDTO } from "../types/PostDTO.ts";
 import { PostEntity } from "../types/PostEntity.ts";
+import {FileService} from "../services/FileService.ts";
 
 export interface ServicesContextType {
     login: (loginDTO: LoginDTO) => Promise<void>;
@@ -27,6 +28,7 @@ export interface ServicesContextType {
     findUserId: (email: string) => Promise<void>;
     findPassword: (email: string) => Promise<void>;
     resetPassword: (token: string, newPassword: string) => Promise<void>;
+    uploadImage: (file: File) => Promise<string>;
 }
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -67,6 +69,9 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         getUserList: async () => await AdminService.getUserList(),
         updateUserInfo: async (userId, userEntity) => await AdminService.updateUserInfo(userId, userEntity),
         banUser: async (userId, days) => await AdminService.banUser(userId, days),
+
+        // 🔹 파일 관련 함수 (await 추가)
+        uploadImage: async (file) => await FileService.uploadImage(file)
     };
 
     return <ServicesContext.Provider value={value}>{children}</ServicesContext.Provider>;
