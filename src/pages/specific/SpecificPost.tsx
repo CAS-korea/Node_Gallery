@@ -1,16 +1,13 @@
-"use client"
-
-import type React from "react"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import type { PostEntity } from "../../types/PostEntity"
-import { marked } from "marked"
-import { motion } from "framer-motion"
-import { Heart, Flag, MessageCircle, User } from "lucide-react"
-import PostReportModal from "../../components/PostReportModal"
-import PostComments from "../../components/PostComments"
-import { dummyPosts } from "../../data/dummyPosts"
-import Container from "../../components/Container"
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import type { PostEntity } from "../../types/PostEntity";
+import { marked } from "marked";
+import PostContainer from "../../components/Container";
+import { motion } from "framer-motion";
+import { Heart, Flag, MessageCircle, Share2 } from "lucide-react";
+import PostReportModal from "../../components/PostReportModal";
+import PostComments from "../../components/PostComments";
+import {useServices} from "../../context/ServicesProvider.tsx";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
 import { Button } from "../../components/ui/button"
@@ -18,28 +15,52 @@ import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/c
 import { Separator } from "../../components/ui/separator"
 
 
-
 const SpecificPost: React.FC = () => {
-    const { postId } = useParams<{ postId: string }>()
-    const [post, setPost] = useState<PostEntity | null>(null)
-    const [hasLiked, setHasLiked] = useState(false)
-    const [hasReported, setHasReported] = useState(false)
-    const [showReportModal, setShowReportModal] = useState(false)
+    const { postId } = useParams<{ postId: string }>();
+    const validPostId = postId ?? "";
+    const {getPostById} = useServices();
+
+    const [post, setPost] = useState<PostEntity | null>(null);
+    const [hasLiked, setHasLiked] = useState(false);
+    const [hasReported, setHasReported] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (postId) {
-            const foundPost = dummyPosts.find((p) => p.postId === postId) || null
-            setPost(foundPost)
-        } else {
-            console.error("postId was not provided")
+        if (!validPostId) {
+            console.log("❌ 유효하지 않은 postId: ", validPostId);
+            return;
         }
-    }, [postId])
+
+        const fetchPost = async () => {
+            try {
+                const response = await getPostById(validPostId);
+
+                if (response) {
+                    setPost(response.data);
+                } else {
+                    console.error("게시물이 존재하지 않습니다.");
+                }
+            } catch (error) {
+                console.error("게시물 불러오기 실패: ", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPost();
+    }, [validPostId]);
 
     const handleLike = () => {
-        if (!post) return
-        setPost({ ...post, likesCount: hasLiked ? Math.max(0, post.likesCount - 1) : post.likesCount + 1 })
-        setHasLiked(!hasLiked)
-    }
+        if (!post) return;
+        if (hasLiked) {
+            setPost({ ...post, likesCount: Math.max(0, post.likesCount - 1) });
+            setHasLiked(false);
+        } else {
+            setPost({ ...post, likesCount: post.likesCount + 1 });
+            setHasLiked(true);
+        }
+    };
 
     const handleReport = () => {
         if (!hasReported) {
@@ -48,7 +69,7 @@ const SpecificPost: React.FC = () => {
     }
 
     const confirmReport = (reason: string) => {
-        console.log("Selected report reason:", reason)
+        console.log("선택된 신고 사유:", reason);
         if (post) {
             setPost({ ...post, reportsCount: post.reportsCount + 1 })
         }
@@ -56,13 +77,17 @@ const SpecificPost: React.FC = () => {
         setShowReportModal(false)
     }
 
-    if (!post) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-lg text-gray-600 dark:text-gray-300">Loading post...</p>
-            </div>
-        )
-    }
+    if (loading) return <p>로딩 중...</p>;
+    if (!post) return <p>게시물을 찾을 수 없습니다.</p>;
+
+    return (
+        <PostContainer>
+            {showReportModal && (
+                <PostReportModal
+                    onClose={() => setShowReportModal(false)}
+                    onConfirm={confirmReport}
+                />
+            )}
 
     return (
         <Container>
@@ -158,6 +183,21 @@ const SpecificPost: React.FC = () => {
                 </Card>
             </motion.div>
 
+                    {/* 댓글 영역: postId를 전달하여 해당 게시물의 댓글만 필터링 */}
+                    <PostComments postId={post.postId} />
+                </>
+            ) : (
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center text-gray-600 dark:text-gray-300 py-10"
+                >
+                    게시물이 존재하지 않습니다.
+                </motion.p>
+            )};
+        </PostContainer>
+    );
+};
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

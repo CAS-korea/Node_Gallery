@@ -1,3 +1,5 @@
+export type postVisibility = 'public' | 'private' | 'followersOnly';
+
 export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR';
 
 export interface PostEntity {
@@ -12,7 +14,7 @@ export interface PostEntity {
     likesCount: number;
     scrapsCount: number;
     reportsCount: number;
-    postVisibility: "public" | "private" | "followersOnly";
+    postVisibility: postVisibility;
     thumbNailImage: string;
     role: UserRole;
 }

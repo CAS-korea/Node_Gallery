@@ -1,19 +1,26 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { PostEntity } from '../../types/PostEntity';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {PostEntity} from '../../types/PostEntity.ts';
 import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container";
 import { dummyPosts } from '../../data/dummyPosts';
+import {useServices} from "../../context/ServicesProvider.tsx";
 
 const Home: React.FC = () => {
     const [posts, setPosts] = useState<PostEntity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [visibleCount, setVisibleCount] = useState(5);
+    const {getAllPosts} = useServices()
     const observerRef = useRef<IntersectionObserver | null>(null);
 
     useEffect(() => {
-        setPosts(dummyPosts.slice(0, visibleCount));
-        setLoading(false);
-    }, [visibleCount]);
+        const fetchPosts = async () => {
+            setLoading(true);
+            const allPosts = await getAllPosts();
+            setPosts(allPosts.slice(0, visibleCount));
+            setLoading(false);
+        }
+        fetchPosts();
+    }, []);
 
     const lastPostRef = useCallback((node: HTMLDivElement) => {
         if (loading) return;
@@ -42,17 +49,11 @@ const Home: React.FC = () => {
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">홈</h1>
             <div className="space-y-4">
                 {posts.length > 0 ? (
-                    posts.map((post, index) => {
-                        if (index === posts.length - 1) {
-                            return (
-                                <div ref={lastPostRef} key={post.postId}>
-                                    <PostCard post={post} />
-                                </div>
-                            );
-                        } else {
-                            return <PostCard key={post.postId} post={post} />;
-                        }
-                    })
+                    posts.map((post, index) => (
+                        <div ref={index === posts.length - 1 ? lastPostRef : null} key={post.postId}>
+                            <PostCard post={post} />
+                        </div>
+                    ))
                 ) : (
                     <p className="text-gray-400 dark:text-gray-500 text-center">게시물이 없습니다.</p>
                 )}

@@ -1,21 +1,22 @@
-export enum ClientUrl {
-    INDEX = '/',
-    LOGIN = '/login',
-    REGISTER = '/register',
-    FORGOT = '/forgot',
-    RESET_PASSWORD = '/reset-password',
+export const ClientUrl = {
+    INDEX: "/",
+    LOGIN: "/login",
+    REGISTER: "/register",
+    FORGOT: "/forgot",
+    RESET_PASSWORD: "/reset-password",
 
-    ADMIN = '/admin',
+    ADMIN: "/admin",
 
-    HOME = '/home',
-    SEARCH = '/search',
-    NEWPOST = '/post',
-    MESSAGE = '/message',
-    PROFILE = '/profile',
-    NOTIFICATION = '/notification',
-    SETTINGS = '/settings',
+    HOME: "/home",
+    SEARCH: "/search",
+    NOTIFICATION: "/notification",
+    SETTINGS: "/settings",
 
-    SPECIFICPROFILE = '/user',
-    SPECIFICMESSAGE = '/message',
-    SPECIFICPOST = '/post1'
-}
+    NEWPOST: "/post",
+    PROFILE: "/user",
+    MESSAGE: "/message",
+
+    SPECIFICPOST: "/post",
+    SPECIFICPROFILE: "/user",
+    SPECIFICMESSAGE: "/message",
+} as const;

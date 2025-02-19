@@ -4,13 +4,11 @@ import {PostEntity} from "../types/PostEntity.ts";
 
 export const PostService = {
     async createPost(postDTO: PostDTO) {
-        await apiHandler.post('/post_relation/create', postDTO, {
-            withCredentials: true
-        });
+        await apiHandler.post('/post_relation/create', postDTO);
     },
 
     async getAllPosts(): Promise<PostEntity[]> {
-        const response = await apiHandler.get('/post_log/');
+        const response = await apiHandler.get('/post_log/allposts');
         return response.data;
     },
 
@@ -20,19 +18,15 @@ export const PostService = {
     },
 
     async getPostById(postID: string): Promise<PostEntity> {
-        const response = await apiHandler.get(`/post_log/specific/${postID}`);
+        const response = await apiHandler.get(`/post_log/${postID}`);
         return response.data;
     },
 
     async likePost(postID: string) {
-        await apiHandler.post(`/post_relation/likes/${postID}`, {}, {
-            withCredentials: true
-        });
+        await apiHandler.post(`/post_relation/likes/${postID}`, {});
     },
 
     async reportPost(postID: string) {
-        await apiHandler.post(`/post_relation/report/${postID}`, {}, {
-            withCredentials: true
-        });
+        await apiHandler.post(`/post_relation/report/${postID}`, {});
     }
 };
