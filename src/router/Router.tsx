@@ -51,7 +51,6 @@ const Router: React.FC = () => {
                 <Route element={<BasicLayout />}>
                     <Route path={ClientUrl.HOME} element={<Home />} />
                     <Route path={ClientUrl.SEARCH} element={<Search />} />
-                    <Route path={ClientUrl.NEWPOST} element={<NewPost />} />
                     <Route path={ClientUrl.PROFILE} element={<Profile />} />
                     <Route path={ClientUrl.NOTIFICATION} element={<Notification />} />
                     <Route path={ClientUrl.SETTINGS} element={<Settings />} />
@@ -59,6 +58,7 @@ const Router: React.FC = () => {
                     <Route path={ClientUrl.SPECIFICMESSAGE} element={<SpecificMessage />} />
                     <Route path={`${ClientUrl.SPECIFICPOST}/:postId`} element={<SpecificPost />} />
                 </Route>
+                <Route path={ClientUrl.NEWPOST} element={<NewPost />} />
             </Route>
         </Routes>
     );
