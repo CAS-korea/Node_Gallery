@@ -138,7 +138,8 @@ const SpecificPost: React.FC = () => {
                                 </Avatar>
                                 <div>
                                     <Link
-                                        to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
+                                        to={`${ClientUrl.OTHERSPROFILE}`}
+                                        //to={`${ClientUrl.OTHERSPROFILE}/${post.userId}`} 지금 이건 임시입니당 ㅎㅎ 나중에 해여
                                         onClick={(e) => e.stopPropagation()}
                                         className="text-sm text-black dark:text-white hover:underline"
                                     >

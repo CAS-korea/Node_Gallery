@@ -76,7 +76,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                     <div className="flex flex-col">
                         <div className="flex items-center space-x-2">
                             <Link
-                                to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
+                                to={`${ClientUrl.OTHERSPROFILE}`}
+                                //to={`${ClientUrl.OTHERSPROFILE}/${post.userId}`} 헤헤 이것두 나중에~
                                 onClick={(e) => e.stopPropagation()}
                                 className="text-sm text-gray-500 dark:text-gray-400 hover:underline"
                             >
