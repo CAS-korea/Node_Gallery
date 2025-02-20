@@ -1,25 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import type { PostEntity } from "../../types/PostEntity";
 import { marked } from "marked";
 import PostContainer from "../../components/Container";
 import { motion } from "framer-motion";
-import { Heart, Flag, MessageCircle, Share2 } from "lucide-react";
+import { Heart, Flag, MessageCircle } from "lucide-react";
 import PostReportModal from "../../components/PostReportModal";
 import PostComments from "../../components/PostComments";
-import {useServices} from "../../context/ServicesProvider.tsx";
+import { useServices } from "../../context/ServicesProvider.tsx";
 
+// UI 컴포넌트들
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/card";
+import { Separator } from "../../components/ui/separator";
+import {ClientUrl} from "../../constants/ClientUrl.ts";
+
+// ─────────────────────────────────────────────
+// SpecificPost 컴포넌트: 게시글 상세보기 페이지
+// ─────────────────────────────────────────────
 const SpecificPost: React.FC = () => {
+    // URL 파라미터에서 postId 추출
     const { postId } = useParams<{ postId: string }>();
     const validPostId = postId ?? "";
-    const {getPostById} = useServices();
+    const { getPostById } = useServices();
 
+    // 상태값들 선언
     const [post, setPost] = useState<PostEntity | null>(null);
     const [hasLiked, setHasLiked] = useState(false);
     const [hasReported, setHasReported] = useState(false);
     const [showReportModal, setShowReportModal] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
 
+    // 게시글 데이터를 비동기로 불러오기
     useEffect(() => {
         if (!validPostId) {
             console.log("❌ 유효하지 않은 postId: ", validPostId);
@@ -29,8 +42,6 @@ const SpecificPost: React.FC = () => {
         const fetchPost = async () => {
             try {
                 const response = await getPostById(validPostId);
-
-                console.log(response);
                 if (response) {
                     setPost(response);
                 } else {
@@ -44,8 +55,9 @@ const SpecificPost: React.FC = () => {
         };
 
         fetchPost();
-    }, [validPostId]);
+    }, [validPostId, getPostById]);
 
+    // 좋아요 토글 핸들러
     const handleLike = () => {
         if (!post) return;
         if (hasLiked) {
@@ -57,12 +69,14 @@ const SpecificPost: React.FC = () => {
         }
     };
 
+    // 신고 모달 열기 핸들러
     const handleReport = () => {
         if (!hasReported) {
             setShowReportModal(true);
         }
     };
 
+    // 신고 확인 후 처리하는 핸들러
     const confirmReport = (reason: string) => {
         console.log("선택된 신고 사유:", reason);
         if (post) {
@@ -72,11 +86,13 @@ const SpecificPost: React.FC = () => {
         setShowReportModal(false);
     };
 
+    // 로딩 중 또는 게시글 데이터가 없을 경우의 처리
     if (loading) return <p>로딩 중...</p>;
     if (!post) return <p>게시물을 찾을 수 없습니다.</p>;
 
     return (
         <PostContainer>
+            {/* 신고 모달: showReportModal이 true일 때 표시 */}
             {showReportModal && (
                 <PostReportModal
                     onClose={() => setShowReportModal(false)}
@@ -84,118 +100,115 @@ const SpecificPost: React.FC = () => {
                 />
             )}
 
-            {post ? (
-                <>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
-                    >
-                        <div className="p-6 space-y-4">
+            <div className="max-w-3xl mx-auto px-4">
+                {/* 게시글 카드 영역 */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <Card className="overflow-hidden">
+                        {/* ── 카드 헤더: 썸네일 이미지 ── */}
+                        <CardHeader className="p-0">
+                            <img
+                                src={post.thumbNailImage || "/placeholder.svg"}
+                                alt="Thumbnail"
+                                className="w-full h-64 object-cover"
+                            />
+                        </CardHeader>
+
+                        {/* ── 카드 컨텐츠: 제목, 사용자 정보, 본문 내용 ── */}
+                        <CardContent className="p-6">
                             <motion.h1
-                                className="text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
+                                className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1, duration: 0.3 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}
                             >
                                 {post.title}
                             </motion.h1>
-                            <motion.p
-                                className="text-sm text-gray-500 dark:text-gray-300"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.2, duration: 0.3 }}
-                            >
-                                작성자: {post.userId}
-                            </motion.p>
-                            <motion.div
-                                className="prose dark:prose-invert max-w-none mt-6"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3, duration: 0.3 }}
-                                dangerouslySetInnerHTML={{ __html: marked(post.content) }}
-                            />
-                        </div>
 
-                        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
-                            <div className="flex space-x-4">
-                                <motion.button
-                                    onClick={handleLike}
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center space-x-2 transition-colors duration-300"
-                                >
-                                    <motion.div
-                                        animate={{ scale: hasLiked ? 1.2 : 1 }}
-                                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                            {/* 사용자 정보: 아바타, 이름, 역할, 작성일 */}
+                            <div className="flex items-center space-x-4 mb-6">
+                                <Avatar>
+                                    <AvatarImage src="/placeholder-avatar.jpg" alt={post.userId} />
+                                    <AvatarFallback>
+                                        {/* 여기에 사용자 아이콘(예: <User />)을 넣을 수 있음 */}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <Link
+                                        to={`${ClientUrl.SPECIFICPROFILE}/${post.userId}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-sm text-black dark:text-white hover:underline"
                                     >
-                                        {hasLiked ? (
-                                            <Heart className="w-5 h-5 fill-current text-red-500" />
-                                        ) : (
-                                            <Heart
-                                                className="w-5 h-5 stroke-current text-gray-600 dark:text-gray-300 hover:text-red-500"
-                                                fill="none"
-                                                strokeWidth={2}
-                                            />
-                                        )}
-                                    </motion.div>
-                                    <span
-                                        className={`font-medium ${
-                                            hasLiked
-                                                ? "text-red-500"
-                                                : "text-gray-600 dark:text-gray-300"
-                                        }`}
-                                    >
-                                        {post.likesCount}
-                                    </span>
-                                </motion.button>
-
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-300"
-                                >
-                                    <MessageCircle className="w-5 h-5" />
-                                </motion.button>
-
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="text-gray-600 dark:text-gray-300 hover:text-green-500 transition-colors duration-300"
-                                >
-                                    <Share2 className="w-5 h-5" />
-                                </motion.button>
+                                        {post.userId}
+                                    </Link>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        {new Date(post.createAt).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                        })}
+                                    </p>
+                                </div>
                             </div>
 
-                            <motion.button
-                                onClick={handleReport}
-                                whileHover={{ scale: !hasReported ? 1.1 : 1 }}
-                                whileTap={{ scale: !hasReported ? 0.95 : 1 }}
-                                className={`transition-colors duration-300 ${
-                                    hasReported
-                                        ? "text-red-500 cursor-not-allowed"
-                                        : "text-gray-600 dark:text-gray-300 hover:text-red-500"
-                                }`}
-                                disabled={hasReported}
-                            >
-                                <Flag className="w-5 h-5" />
-                            </motion.button>
-                        </div>
-                    </motion.div>
+                            {/* 게시글 본문: marked 라이브러리로 HTML 변환 */}
+                            <motion.div
+                                className="prose dark:prose-invert max-w-none"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.5 }}
+                                dangerouslySetInnerHTML={{ __html: marked(post.content) }}
+                            />
+                        </CardContent>
 
-                    {/* 댓글 영역: postId를 전달하여 해당 게시물의 댓글만 필터링 */}
-                    <PostComments postId={post.postId} />
-                </>
-            ) : (
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center text-gray-600 dark:text-gray-300 py-10"
+                        <Separator />
+
+                        {/* ── 카드 풋터: 좋아요, 댓글, 신고 버튼 영역 ── */}
+                        <CardFooter className="p-6 flex justify-between items-center">
+                            <div className="flex space-x-4">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleLike}
+                                    className={`flex items-center space-x-2 ${hasLiked ? "text-red-500" : ""}`}
+                                >
+                                    <Heart className={`w-6 h-6 ${hasLiked ? "fill-current" : ""}`} />
+                                    <span>{post.likesCount}</span>
+                                </Button>
+                                <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                                    <MessageCircle className="w-6 h-6" />
+                                    <span>{post.commentsCount}</span>
+                                </Button>
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleReport}
+                                disabled={hasReported}
+                                className={hasReported ? "text-red-500 cursor-not-allowed" : ""}
+                            >
+                                <Flag className="w-6 h-6" />
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </motion.div>
+
+                {/* ── 댓글 영역 ── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="mt-8"
                 >
-                    게시물이 존재하지 않습니다.
-                </motion.p>
-            )}
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                        Comments
+                    </h2>
+                    <PostComments postId={post.postId} />
+                </motion.div>
+            </div>
         </PostContainer>
     );
 };

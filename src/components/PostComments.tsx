@@ -19,7 +19,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ postId }) => {
 
     return (
         <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">댓글</h2>
+            <h2 className="text-xl font-semibold mb-4 dark:text-white">댓글</h2>
             {comments.length > 0 ? (
                 comments.map((comment) => (
                     <motion.div

@@ -15,7 +15,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 2,
         reportsCount: 1,
         postVisibility: "public",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "STUDENT"
     },
     {
         postId: "2",
@@ -30,7 +31,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 4,
         reportsCount: 0,
         postVisibility: "public",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "STUDENT"
     },
     {
         postId: "3",
@@ -45,7 +47,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 3,
         reportsCount: 2,
         postVisibility: "followersOnly",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "STUDENT"
     },
     {
         postId: "4",
@@ -60,7 +63,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 5,
         reportsCount: 0,
         postVisibility: "private",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "PROFESSOR"
     },
     {
         postId: "5",
@@ -75,7 +79,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 7,
         reportsCount: 1,
         postVisibility: "public",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "STUDENT"
     },
     {
         postId: "6",
@@ -90,7 +95,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 3,
         reportsCount: 0,
         postVisibility: "followersOnly",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "STUDENT"
     },
     {
         postId: "7",
@@ -105,7 +111,8 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 2,
         reportsCount: 1,
         postVisibility: "public",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "STUDENT"
     },
     {
         postId: "8",
@@ -120,15 +127,19 @@ export const dummyPosts: PostEntity[] = [
         scrapsCount: 2,
         reportsCount: 0,
         postVisibility: "private",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: "PROFESSOR"
     },
 ];
 
 // 9번부터 30번까지 무작위 값을 부여하여 더미 데이터를 추가 (총 30개까지)
 for (let i = 9; i <= 30; i++) {
+    const userIdArray = ["hajin", "sejin", "seonkyo", "geunwoo"];
+    const roles = ["STUDENT", "STUDENT", "STUDENT", "PROFESSOR"];
+    const idx = i % 4;
     dummyPosts.push({
         postId: `${i}`,
-        userId: ["hajin", "sejin", "seonkyo", "geunwoo"][i % 4],
+        userId: userIdArray[idx],
         title: `테스트 게시글 ${i}`,
         content: `이것은 테스트 게시글 ${i}의 내용입니다.`,
         summary: `테스트 게시글 요약 ${i}`,
@@ -139,6 +150,7 @@ for (let i = 9; i <= 30; i++) {
         scrapsCount: Math.floor(Math.random() * 10),
         reportsCount: Math.floor(Math.random() * 5),
         postVisibility: "public",
-        thumbNailImage: "https://via.placeholder.com/50"
+        thumbNailImage: "https://via.placeholder.com/50",
+        role: roles[idx]
     });
 }
