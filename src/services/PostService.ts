@@ -7,7 +7,7 @@ export const PostService = {
         await apiHandler.post('/post_relation/create', postDTO);
     },
 
-    async getAllPosts(): Promise<PostEntity[]> {
+    async getAllPosts(): Promise< PostEntity[]> {
         const response = await apiHandler.get('/post_log/allposts');
         return response.data;
     },
@@ -17,9 +17,9 @@ export const PostService = {
         return response.data;
     },
 
-    async getPostById(postID: string): Promise<PostEntity> {
+    async getPostById(postID: string): Promise<{post: PostEntity; comments: []}> {
         const response = await apiHandler.get(`/post_log/${postID}`);
-        return response.data.data;
+        return response.data.data; // { post: ..., comments: [...] } 형태
     },
 
     async likePost(postID: string) {

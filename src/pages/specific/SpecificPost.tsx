@@ -9,7 +9,6 @@ import PostReportModal from "../../components/PostReportModal";
 import PostComments from "../../components/PostComments";
 import { useServices } from "../../context/ServicesProvider.tsx";
 
-// UI 컴포넌트들
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/card";
@@ -27,6 +26,7 @@ const SpecificPost: React.FC = () => {
 
     // 상태값들 선언
     const [post, setPost] = useState<PostEntity | null>(null);
+    // const [comments, setComments] = useState<CommentsEntity | null>(null);
     const [hasLiked, setHasLiked] = useState(false);
     const [hasReported, setHasReported] = useState(false);
     const [showReportModal, setShowReportModal] = useState(false);
@@ -34,16 +34,14 @@ const SpecificPost: React.FC = () => {
 
     // 게시글 데이터를 비동기로 불러오기
     useEffect(() => {
-        if (!validPostId) {
-            console.log("❌ 유효하지 않은 postId: ", validPostId);
-            return;
-        }
+        if (!validPostId) return;
 
         const fetchPost = async () => {
             try {
                 const response = await getPostById(validPostId);
                 if (response) {
-                    setPost(response);
+                    setPost(response.post);
+                    // setComments(response.comments);
                 } else {
                     console.error("게시물이 존재하지 않습니다.");
                 }
@@ -160,7 +158,7 @@ const SpecificPost: React.FC = () => {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.5 }}
-                                dangerouslySetInnerHTML={{ __html: marked(post.content) }}
+                                dangerouslySetInnerHTML={{ __html: marked(post?.content ?? "") }}
                             />
                         </CardContent>
 

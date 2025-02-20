@@ -15,7 +15,7 @@ export interface ServicesContextType {
     logout: () => void;
     createPost: (postDTO: PostDTO) => Promise<void>;
     getAllPosts: () => Promise<PostEntity[]>;
-    getPostById: (postId: string) => Promise<PostEntity>;
+    getPostById: (postId: string) => Promise<{post: PostEntity, comments: []}>;
     likePost: (postId: string) => Promise<void>;
     reportPost: (postId: string) => Promise<void>;
     getUserPosts: (userId: string) => Promise<PostEntity[]>;
