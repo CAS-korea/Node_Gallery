@@ -30,8 +30,9 @@ const SpecificPost: React.FC = () => {
             try {
                 const response = await getPostById(validPostId);
 
+                console.log(response);
                 if (response) {
-                    setPost(response.data);
+                    setPost(response);
                 } else {
                     console.error("게시물이 존재하지 않습니다.");
                 }

@@ -4,10 +4,20 @@ import { ClientUrl } from "../constants/ClientUrl.ts";
 import { motion } from "framer-motion";
 import { useServices } from "../context/ServicesProvider";
 import { Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut } from "lucide-react";
+import Cookies from "js-cookie";
+
+interface UserInfo {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    role: string;
+}
 
 const Sidebar: React.FC = () => {
     const { logout } = useServices();
     const location = useLocation();
+    const token = Cookies.get("info");
+    const userInfo: UserInfo | null = token ? JSON.parse(token) : null;
 
     const navItems = [
         { path: ClientUrl.HOME, label: "홈", icon: <Home size={22} /> },
@@ -18,6 +28,7 @@ const Sidebar: React.FC = () => {
         { path: ClientUrl.NOTIFICATION, label: "알림", icon: <Bell size={22} /> },
         { path: ClientUrl.SETTINGS, label: "설정", icon: <Settings size={22} /> },
     ];
+
 
     return (
         <motion.aside
@@ -33,8 +44,8 @@ const Sidebar: React.FC = () => {
                     transition={{ delay: 0.1, duration: 0.2 }}
                     className="mb-10 mt-10"
                 >
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Welcome Noder!</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Connect and Create</p>
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{userInfo?.name}</h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{userInfo?.role}</p>
                 </motion.div>
                 <nav className="flex flex-col gap-y-2">
                     {navItems.map(({ path, label, icon }) => (
