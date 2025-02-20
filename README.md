@@ -1,50 +1,44 @@
-# React + TypeScript + Vite
+## 초대할 어플리케이션
+- 깃허브
+- 슬랙
+- 트렐로
+- 피그잼
+- 카톡
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 0. 인텔리제이 설치
 
-Currently, two official plugins are available:
+## 1. 몽고DB 서버 구현(http://localhost:27017)
+```
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=NodeProject
+```
+## 2. 네오포제이 서버 구현(bolt://localhost:7687)
+```
+spring.neo4j.uri=bolt://localhost:7687
+spring.neo4j.authentication.username=neo4j
+spring.neo4j.authentication.password=KKKB2025
+```
+## 3. 오라마 서버 구현(http://localhost:11434)
+```
+// WebClient를 DI로 주입받아 초기화
+public GenerativeAiUtil(WebClient.Builder webClientBuilder) {
+this.webClient = webClientBuilder.baseUrl("http://localhost:11434").build();
+}
+```
+## 4. 포스트맨 설치(백서버 로직 잘 돌아가는지 확인하는 프로그램)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+# [백엔드]
+* 종속성 체크(JAVA 17)
+* 종속성 클린 빌드
+```
+./gradlew clean build
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+# [프론트엔드]
+* npm 환경 설정
 ```
+npm install
+npm run dev
+```
+* 크롬에서 localhost:5173 실행 (edited)

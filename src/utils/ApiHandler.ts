@@ -8,6 +8,6 @@ const apiHandler = axios.create({
 
 apiHandler.interceptors.response.use(
     (response) => response,
-    (error: AxiosError) => Promise.reject(error));
+    (error: AxiosError) => Promise.reject(error.response?.data));
 
 export default apiHandler;
