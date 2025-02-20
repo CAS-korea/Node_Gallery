@@ -20,6 +20,8 @@ import Index from "../pages/Index.tsx";
 import ResetPassword from "../pages/auth/ResetPassword.tsx";
 import SpecificMessage from "../pages/specific/SpecificMessage.tsx";
 import SpecificPost from "../pages/specific/SpecificPost.tsx";
+import Baik from "../pages/basic/baik.tsx";
+import OthersProfile from "../pages/basic/OthersProfile.tsx";
 
 const Router: React.FC = () => {
     return (
@@ -52,6 +54,8 @@ const Router: React.FC = () => {
                     <Route path={ClientUrl.HOME} element={<Home />} />
                     <Route path={ClientUrl.SEARCH} element={<Search />} />
                     <Route path={ClientUrl.PROFILE} element={<Profile />} />
+                    <Route path={ClientUrl.BAIK} element={<Baik />} />
+                    <Route path={ClientUrl.OTHERSPROFILE} element={<OthersProfile />} />
                     <Route path={ClientUrl.NOTIFICATION} element={<Notification />} />
                     <Route path={ClientUrl.SETTINGS} element={<Settings />} />
                     <Route path={ClientUrl.MESSAGE} element={<Message />} />

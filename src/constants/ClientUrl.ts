@@ -14,9 +14,10 @@ export const ClientUrl = {
 
     NEWPOST: "/post",
     PROFILE: "/user",
+    BAIK: "/baik",
+    OTHERSPROFILE: "/users",
     MESSAGE: "/message",
 
     SPECIFICPOST: "/post",
-    SPECIFICPROFILE: "/user",
-    SPECIFICMESSAGE: "/message",
+    SPECIFICMESSAGE: "/messages",
 } as const;

@@ -29,6 +29,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 5,
         reportsCount: 1,
         postVisibility: "public" as const,  // `as const` 추가
+        thumbNailImage: ""
     },
     {
         postId: "2",
@@ -43,6 +44,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 12,
         reportsCount: 0,
         postVisibility: "public" as const,
+        thumbNailImage: ""
     },
     {
         postId: "3",
@@ -57,6 +59,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 7,
         reportsCount: 2,
         postVisibility: "private" as const,
+        thumbNailImage: ""
     },
     {
         postId: "4",
@@ -71,6 +74,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 20,
         reportsCount: 3,
         postVisibility: "public" as const,
+        thumbNailImage: ""
     },
     {
         postId: "5",
@@ -85,6 +89,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 10,
         reportsCount: 1,
         postVisibility: "followersOnly" as const,
+        thumbNailImage: ""
     },
 ];
 
