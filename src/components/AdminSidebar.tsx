@@ -4,10 +4,20 @@ import {ClientUrl} from "../constants/ClientUrl.ts";
 import {motion} from "framer-motion";
 import {useServices} from "../context/ServicesProvider";
 import {Home, Search, PlusCircle, MessageCircle, User, Bell, Settings, LogOut, Monitor} from "lucide-react";
+import Cookies from "js-cookie";
+
+interface UserInfo {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    role: string;
+}
 
 const Adminsidebar: React.FC = () => {
     const {logout} = useServices();
     const location = useLocation();
+    const token = Cookies.get("info");
+    const userInfo: UserInfo | null = token ? JSON.parse(token) : null;
 
     // 관리자 전용 메뉴 (텍스트 일부 변경)
     const navItems = [
@@ -37,12 +47,8 @@ const Adminsidebar: React.FC = () => {
                     transition={{delay: 0.1, duration: 0.2}}
                     className="mb-10"
                 >
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                        관리자님 어서오세요!
-                    </h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        - Admin Console -
-                    </p>
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{userInfo?.name}</h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{userInfo?.role}</p>
                 </motion.div>
 
                 {/* 네비게이션 메뉴 */}
