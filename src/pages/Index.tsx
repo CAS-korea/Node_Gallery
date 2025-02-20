@@ -160,7 +160,7 @@ const MovingBlurBackground: React.FC = () => {
                         />
                     </motion.div>
                     <div className="relative">
-                        <img src="/Node_Logo_Refined.png" alt="NODE Logo" className="w-72 mx-auto mt-56 ml-32"/>
+                        <img src="/Node_Logo_Refined.png" alt="NODE Logo" className="w-72 mx-auto mt-56"/>
                         <h1 className="text-7xl font-serif text-white text-shadow tracking-wide leading-relaxed pt-12">
                             PROJECT : NODE
                         </h1>

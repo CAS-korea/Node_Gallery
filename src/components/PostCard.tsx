@@ -16,13 +16,15 @@ const pastelColors = [
     "#FCE4EC", "#E3F2FD", "#E8F5E9", "#FFF3E0", "#F3E5F5", "#E0F7FA", "#E8EAF6",
 ]
 
-const getFixedBackgroundColor = (seed: string) => {
-    let hash = 0
+// seed에 기본값을 부여하여 seed가 없을 경우에도 오류가 발생하지 않도록 함
+const getFixedBackgroundColor = (seed: string = ""): string => {
+    if (!seed) return pastelColors[0];
+    let hash = 0;
     for (let i = 0; i < seed.length; i++) {
-        hash = seed.charCodeAt(i) + ((hash << 5) - hash)
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const index = Math.abs(hash) % pastelColors.length
-    return pastelColors[index]
+    const index = Math.abs(hash) % pastelColors.length;
+    return pastelColors[index];
 }
 
 const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
@@ -136,7 +138,7 @@ const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
                 </div>
             </div>
         </motion.div>
-    )
-}
+    );
+};
 
-export default PostCard
+export default PostCard;

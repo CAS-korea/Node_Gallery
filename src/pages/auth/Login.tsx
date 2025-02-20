@@ -56,7 +56,7 @@ const Login: React.FC = () => {
                     </p>
                     <Link to={ClientUrl.REGISTER}>
                         <motion.span
-                            className="inline-block bg-gray-900 text-black px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -135,7 +135,7 @@ const Login: React.FC = () => {
                     <div className="block md:hidden text-center mt-6">
                         <Link
                             to={ClientUrl.REGISTER}
-                            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                            className="inline-block  text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
                         >
                             회원가입 하기
                         </Link>
