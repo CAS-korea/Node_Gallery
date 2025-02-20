@@ -16,25 +16,28 @@ const pastelColors = [
     "#FCE4EC", "#E3F2FD", "#E8F5E9", "#FFF3E0", "#F3E5F5", "#E0F7FA", "#E8EAF6",
 ]
 
-const getFixedBackgroundColor = (seed: string) => {
-    let hash = 0
+// seed에 기본값을 부여하여 seed가 없을 경우에도 오류가 발생하지 않도록 함
+const getFixedBackgroundColor = (seed: string = ""): string => {
+    if (!seed) return pastelColors[0];
+    let hash = 0;
     for (let i = 0; i < seed.length; i++) {
-        hash = seed.charCodeAt(i) + ((hash << 5) - hash)
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const index = Math.abs(hash) % pastelColors.length
-    return pastelColors[index]
+    const index = Math.abs(hash) % pastelColors.length;
+    return pastelColors[index];
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
-    const [isScrapped, setIsScrapped] = useState<boolean>(false)
-    const fixedBgColor = useMemo(() => getFixedBackgroundColor(post.postId), [post.postId])
+    const [isScrapped, setIsScrapped] = useState<boolean>(false);
+    // post.postId가 undefined일 경우 빈 문자열을 전달
+    const fixedBgColor = useMemo(() => getFixedBackgroundColor(post.postId || ""), [post.postId]);
 
     const handleScrap = (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (!interactive) return
-        setIsScrapped((prev) => !prev)
-    }
+        e.preventDefault();
+        e.stopPropagation();
+        if (!interactive) return;
+        setIsScrapped((prev) => !prev);
+    };
 
     return (
         <motion.div
@@ -77,7 +80,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                         <div className="flex items-center space-x-2">
                             <Link
                                 to={`${ClientUrl.OTHERSPROFILE}`}
-                                //to={`${ClientUrl.OTHERSPROFILE}/${post.userId}`} 헤헤 이것두 나중에~
                                 onClick={(e) => e.stopPropagation()}
                                 className="text-sm text-gray-500 dark:text-gray-400 hover:underline"
                             >
@@ -100,8 +102,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                 <div className="flex justify-between items-center">
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2">
-                        {post.userTag.map((tag, index) => (
-                            <span key={index} className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200">
+                        {post.userTag.map((tag) => (
+                            <span key={tag} className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200">
                                 {tag}
                             </span>
                         ))}
@@ -139,7 +141,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, interactive = true }) => {
                 </div>
             </div>
         </motion.div>
-    )
-}
+    );
+};
 
-export default PostCard
+export default PostCard;

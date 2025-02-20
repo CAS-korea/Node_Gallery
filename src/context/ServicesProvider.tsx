@@ -47,7 +47,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
             navigate("/login");
         },
         logout: async () => {
-            await AuthService.logout();
+            AuthService.logout();
             navigate("/");
         },
         duplicate: async (userId) => await AuthService.duplicate(userId),

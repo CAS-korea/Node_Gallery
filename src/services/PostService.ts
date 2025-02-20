@@ -17,16 +17,16 @@ export const PostService = {
         return response.data;
     },
 
-    async getPostById(postID: string): Promise<{post: PostEntity; comments: []}> {
-        const response = await apiHandler.get(`/post_log/${postID}`);
+    async getPostById(postId: string): Promise<{post: PostEntity; comments: []}> {
+        const response = await apiHandler.get(`/post_log/${postId}`);
         return response.data.data; // { post: ..., comments: [...] } 형태
     },
 
-    async likePost(postID: string) {
-        await apiHandler.post(`/post_relation/likes/${postID}`, {});
+    async likePost(postId: string) {
+        await apiHandler.post(`/post_relation/likes/${postId}`, {});
     },
 
-    async reportPost(postID: string) {
-        await apiHandler.post(`/post_relation/report/${postID}`, {});
+    async reportPost(postId: string) {
+        await apiHandler.post(`/post_relation/report/${postId}`, {});
     }
 };

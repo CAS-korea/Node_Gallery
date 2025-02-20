@@ -51,7 +51,6 @@ const SpecificPost: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchPost();
     }, [validPostId, getPostById]);
 

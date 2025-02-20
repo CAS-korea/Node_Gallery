@@ -46,9 +46,9 @@ const AuthLayout: React.FC = () => {
     }, [quotes.length])
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div className="h-screen flex items-center justify-center p-4 overflow-hidden">
             <motion.div
-                className="relative w-full max-w-6xl flex rounded-3xl overflow-hidden bg-white/80 shadow-lg"
+                className="absolute w-full flex rounded-3xl overflow-hidden"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
