@@ -4,6 +4,8 @@
 - 트렐로
 - 피그잼
 - 카톡
+- 디스코드
+- 엑셀
 
 ## 0. 인텔리제이 설치
 
@@ -27,6 +29,7 @@ this.webClient = webClientBuilder.baseUrl("http://localhost:11434").build();
 }
 ```
 ## 4. 포스트맨 설치(백서버 로직 잘 돌아가는지 확인하는 프로그램)
+## 5. Node.js 설치
 
 # [백엔드]
 * 종속성 체크(JAVA 17)

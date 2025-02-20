@@ -8,16 +8,19 @@ import { UserEntity } from "../types/UserEntity.ts";
 import { PostDTO } from "../types/PostDTO.ts";
 import { PostEntity } from "../types/PostEntity.ts";
 import {FileService} from "../services/FileService.ts";
+import {AxiosResponse} from "axios";
+import {postInfo, userInfo} from "../types/PostcardDTO.ts";
 
 export interface ServicesContextType {
     login: (loginDTO: LoginDTO) => Promise<void>;
     register: (userEntity: UserEntity) => Promise<void>;
     logout: () => void;
     createPost: (postDTO: PostDTO) => Promise<void>;
-    getAllPosts: () => Promise<PostEntity[]>;
+    getAllPosts: () => Promise<{postInfo: postInfo, userInfo: userInfo}>;
     getPostById: (postId: string) => Promise<{post: PostEntity, comments: []}>;
-    likePost: (postId: string) => Promise<void>;
-    reportPost: (postId: string) => Promise<void>;
+    likesPost: (postId: string) => Promise<AxiosResponse<any>>;
+    scrapsPost: (postId: string) => Promise<AxiosResponse<any>>;
+    reportsPost: (postId: string) => Promise<AxiosResponse<any>>;
     getUserPosts: (userId: string) => Promise<PostEntity[]>;
     authorizeUser: (userId: string, status: "accept" | "reject") => Promise<void>;
     getNonuserList: () => Promise<UserEntity[]>;
@@ -47,7 +50,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
             navigate("/login");
         },
         logout: async () => {
-            await AuthService.logout();
+            AuthService.logout();
             navigate("/");
         },
         duplicate: async (userId) => await AuthService.duplicate(userId),
@@ -59,8 +62,9 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         createPost: async (postDTO) => await PostService.createPost(postDTO),
         getAllPosts: async () => await PostService.getAllPosts(),
         getPostById: async (postId) => await PostService.getPostById(postId),
-        likePost: async (postId) => await PostService.likePost(postId),
-        reportPost: async (postId) => await PostService.reportPost(postId),
+        likesPost: async (postId) => await PostService.likesPost(postId),
+        scrapsPost: async (postId) => await PostService.scrapsPost(postId),
+        reportsPost: async (postId) => await PostService.reportsPost(postId),
         getUserPosts: async (userId) => await PostService.getUserPosts(userId),
 
         // 🔹 어드민 관련 함수 (await 추가)

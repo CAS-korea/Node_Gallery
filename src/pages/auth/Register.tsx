@@ -27,9 +27,12 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<UserRole>('STUDENT');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [profileImage, setProfileImage] = useState<File | null>(null);
+    const [profileImageUrl, setProfileImageUrl] = useState<string>("");
+
     const [loading, setLoading] = useState(false);
 
-    const { register, duplicate } = useServices();
+    const { register, duplicate, uploadImage } = useServices();
     const [isIdChecked, setIsIdChecked] = useState(false);
 
     // 각 필드별 에러 상태
@@ -159,6 +162,24 @@ const Register: React.FC = () => {
         }
     };
 
+    const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setProfileImage(file);
+            try {
+                const url = await uploadImage(file);
+                setProfileImageUrl(url);
+            } catch (error) {
+                console.error("이미지 업로드 실패: ", error);
+            }
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setProfileImage(null);
+        setProfileImageUrl("");
+    }
+
     // 스텝3에서 최종 제출 시 검증 및 제출 처리
     const handleFinalSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -181,7 +202,7 @@ const Register: React.FC = () => {
             role,
             isAuthorized: false,
             introduce: '',
-            profileImageUrl: '',
+            profileImageUrl,
             bannedUntil: ''
         };
 
@@ -316,8 +337,25 @@ const Register: React.FC = () => {
             case 3:
                 return (
                     <div className="flex flex-col items-center space-y-6">
-                        <p className="text-lg font-medium text-gray-700">학교 인증 (사진 첨부)</p>
-                        {/* 여기에 인증에 필요한 추가 UI를 배치할 수 있음 */}
+                        <p className="text-lg font-medium text-gray-700">프로필 사진 첨부</p>
+                        <label
+                            className="cursor-pointer bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                            프로필 사진 선택
+                            <input type="file" accept="image/*" className="hidden" onChange={handleProfileImageChange}/>
+                        </label>
+                        {profileImage && (
+                            <div className="relative">
+                                <img src={URL.createObjectURL(profileImage)} alt="미리보기"
+                                     className="w-24 h-24 object-cover rounded-full border"/>
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-sm"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
                     </div>
                 );
             default:
@@ -333,8 +371,8 @@ const Register: React.FC = () => {
                     <motion.button
                         type="button"
                         onClick={() => setCurrentStep(currentStep - 1)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
                         className="text-gray-600 hover:text-gray-900"
                     >
                         이전
@@ -344,8 +382,8 @@ const Register: React.FC = () => {
                     <motion.button
                         type="button"
                         onClick={handleNext}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{scale: 1.02}}
+                        whileTap={{scale: 0.98}}
                         className="bg-gray-900 text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-colors"
                     >
                         다음

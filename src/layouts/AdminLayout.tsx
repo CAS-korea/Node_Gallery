@@ -17,20 +17,20 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <div className="flex flex-1">
                     {/* 사이드바 영역 */}
                     <div className="w-64 flex-shrink-0">
-                        <Adminsidebar />
+                        <Adminsidebar/>
                     </div>
 
                     {/* 메인 컨텐츠 영역: Header + Outlet */}
-                    <div className="flex flex-col flex-1 py-8">
-                        <Header />
-                        <main className="flex-1 bg-white dark:bg-gray-800 p-6 transition-colors">
-                            {children || <Outlet />}
+                    <div className="flex flex-col flex-1 pt-14 rounded-3xl">
+                        <Header/>
+                        <main className="flex-1 bg-white dark:bg-gray-800 p-6 flex justify-center">
+                            {children || <Outlet/>}
                         </main>
                     </div>
                 </div>
             </div>
             {/* CheerOverlay 추가 – 나중에 쉽게 제거할 수 있습니다 */}
-            <CheerOverlay />
+            <CheerOverlay/>
         </PostContainer>
     );
 };

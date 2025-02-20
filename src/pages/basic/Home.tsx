@@ -1,26 +1,36 @@
 import React, {useEffect, useState} from 'react';
-import {PostEntity} from '../../types/PostEntity.ts';
 import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container";
 import {useServices} from "../../context/ServicesProvider.tsx";
+import {postInfo, userInfo} from "../../types/PostcardDTO.ts";
 
 const Home: React.FC = () => {
-    const [posts, setPosts] = useState<PostEntity[]>([]);
+    const [posts, setPosts] = useState<{ postInfo: postInfo, userInfo: userInfo }[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     // const [visibleCount, setVisibleCount] = useState(5);
-    const {getAllPosts} = useServices()
+    const {getAllPosts} = useServices();
     // const observerRef = useRef<IntersectionObserver | null>(null);
 
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const allPosts = await getAllPosts();
-            setPosts(allPosts);
-            // setPosts(allPosts.slice(0, visibleCount));
-            setLoading(false);
+            try {
+                const allPosts = await getAllPosts();
+                // setPosts(allPosts.slice(0, visibleCount));
+                if (Array.isArray(allPosts)) {
+                    setPosts(allPosts);  // 정상적인 배열이면 상태 업데이트
+                } else {
+                    console.error("제대로 된 반환값이 아닙니다: ", allPosts);
+                    setPosts([]);  // 예외 처리 (빈 배열 할당)
+                }
+            } catch (error) {
+                console.error("게시물 불러오기 실패: ", error);
+            } finally {
+                setLoading(false);
+            }
         }
         fetchPosts();
-    }, []);
+    }, [getAllPosts]);
 
     // const lastPostRef = useCallback((node: HTMLDivElement) => {
     //     if (loading) return;
@@ -50,8 +60,8 @@ const Home: React.FC = () => {
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">홈</h1>
             <div className="space-y-4">
                 {posts.length > 0 ? (
-                    posts.map((post) => (
-                        <PostCard key={post.postId} post={post}/>
+                    posts.map(({ postInfo, userInfo }) => (
+                        <PostCard key={postInfo.postId} postInfo={postInfo} userInfo={userInfo}/>
                     ))
                 ) : (
                     <p className="text-gray-400 dark:text-gray-500 text-center">게시물이 없습니다.</p>

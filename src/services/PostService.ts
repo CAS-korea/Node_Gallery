@@ -1,15 +1,16 @@
 import {PostDTO} from "../types/PostDTO.ts";
 import apiHandler from "../utils/ApiHandler.ts";
 import {PostEntity} from "../types/PostEntity.ts";
+import {postInfo, userInfo} from "../types/PostcardDTO.ts";
 
 export const PostService = {
     async createPost(postDTO: PostDTO) {
         await apiHandler.post('/post_relation/create', postDTO);
     },
 
-    async getAllPosts(): Promise< PostEntity[]> {
+    async getAllPosts(): Promise<{postInfo: postInfo, userInfo: userInfo}> {
         const response = await apiHandler.get('/post_log/allposts');
-        return response.data;
+        return response.data; // { postInfo: ..., userInfo: ... } 형태
     },
 
     async getUserPosts(userId: string): Promise<PostEntity[]> {
@@ -17,16 +18,20 @@ export const PostService = {
         return response.data;
     },
 
-    async getPostById(postID: string): Promise<{post: PostEntity; comments: []}> {
-        const response = await apiHandler.get(`/post_log/${postID}`);
+    async getPostById(postId: string): Promise<{post: PostEntity; comments: []}> {
+        const response = await apiHandler.get(`/post_log/${postId}`);
         return response.data.data; // { post: ..., comments: [...] } 형태
     },
 
-    async likePost(postID: string) {
-        await apiHandler.post(`/post_relation/likes/${postID}`, {});
+    async likesPost(postId: string) {
+        return await apiHandler.post(`/post_relation/likes/${postId}`, {});
     },
 
-    async reportPost(postID: string) {
-        await apiHandler.post(`/post_relation/report/${postID}`, {});
+    async scrapsPost(postId: string) {
+        return await apiHandler.post(`/post_relation/scraps/${postId}`, {});
+    },
+
+    async reportsPost(postId: string) {
+        return await apiHandler.post(`/post_relation/report/${postId}`, {});
     }
 };
