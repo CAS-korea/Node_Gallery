@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PostContainer from "../../components/Container";
-import {useServices} from "../../context/ServicesProvider.tsx";
-import {UserEntity} from "../../types/UserEntity.ts";
+import { useServices } from "../../context/ServicesProvider.tsx";
+import { UserEntity } from "../../types/UserEntity.ts";
 
 const Admin: React.FC = () => {
-    const {authorizeUser, getNonuserList, getUserList, updateUserInfo, banUser} = useServices();
+    const { authorizeUser, getNonuserList, getUserList, updateUserInfo, banUser } = useServices();
 
     // 폼 종류 구분
     const [editMode, setEditMode] = useState<'update' | 'ban' | null>(null);
@@ -25,7 +25,7 @@ const Admin: React.FC = () => {
         } catch (error) {
             console.error("데이터 가져오기 실패:", error);
         }
-    }, [getUserList, getNonuserList]);  // getUserList와 getNonuserList가 의존성
+    }, [getUserList, getNonuserList]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -34,22 +34,18 @@ const Admin: React.FC = () => {
         }, 500);
     }, [fetchData]);
 
-
     const formatRemainingTime = (bannedUntil: string): string => {
-        const now = new Date().getTime(); // 현재 시간 (밀리초)
-        const banEndDate = new Date(bannedUntil).getTime(); // 정지 해제 시간 (밀리초)
-        const diff = banEndDate - now; // 남은 시간 (밀리초)
-
-        if (diff <= 0) return "0"; // 이미 정지 해제된 경우
-
+        const now = new Date().getTime();
+        const banEndDate = new Date(bannedUntil).getTime();
+        const diff = banEndDate - now;
+        if (diff <= 0) return "0";
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const days = Math.floor(hours / 24);
         const remainingHours = hours % 24;
-
-        if (hours < 1) return "1시간 이내"; // 1시간 이내일 때
-        if (days < 1) return `${hours}시간`; // 1일 미만일 때
-        return `${days}일 ${remainingHours}시간`; // n일 n시간 남음
-    }
+        if (hours < 1) return "1시간 이내";
+        if (days < 1) return `${hours}시간`;
+        return `${days}일 ${remainingHours}시간`;
+    };
 
     // 사용자 승인 처리
     const handleAccept = async (userId: string) => {
@@ -76,24 +72,24 @@ const Admin: React.FC = () => {
     // 사용자 정보 수정 처리
     const handleUpdate = async () => {
         if (!editingUser) return;
-
         try {
             await updateUserInfo(editingUser.userId, editingUser);
-            alert('사용자가 수정되었습니다.');
-            setEditingUser(null); // 수정 모드 종료
+            alert('사용자 정보가 수정되었습니다.');
+            setEditingUser(null);
             await fetchData();
-        } catch (error) {
+        } catch (error: any) {
             console.error("수정 실패: ", error);
+            alert(`수정 실패: ${error.message}`);
         }
     };
+
 
     // 사용자 밴 처리
     const handleBan = async (days: number) => {
         if (!editingUser || days <= 0) {
-            alert('유효한 정지 기간을 입력해 주세요.')
+            alert('유효한 정지 기간을 입력해 주세요.');
             return;
         }
-
         try {
             await banUser(editingUser.userId, days);
             alert(`사용자가 ${days}일 정지되었습니다.`);
@@ -103,14 +99,12 @@ const Admin: React.FC = () => {
         } catch (error) {
             console.error("정지 실패: ", error);
         }
-    }
+    };
 
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
-                {/* Tailwind CSS 스피너 / Loading Bar */}
-                <div
-                    className="w-16 h-16 border-4 border-black dark:border-white opacity-5 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-16 h-16 border-4 border-black dark:border-white opacity-5 border-t-transparent rounded-full animate-spin"></div>
                 <div className="w-30 h-16 px-3 py-5 text-gray-400 dark:text-gray-300">
                     잠시만 기다려주세요!
                 </div>
@@ -155,7 +149,8 @@ const Admin: React.FC = () => {
                                         <td className="flex space-x-2">
                                             <button
                                                 onClick={() => {
-                                                    setEditingUser({...user, password: null});
+                                                    // 기존 수정 시 password는 제외
+                                                    setEditingUser({ ...user, password: null });
                                                     setEditMode('update');
                                                 }}
                                                 className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
@@ -164,7 +159,7 @@ const Admin: React.FC = () => {
                                             </button>
                                             <button
                                                 onClick={() => {
-                                                    setEditingUser({...user, password: null});
+                                                    setEditingUser({ ...user, password: null });
                                                     setEditMode('ban');
                                                 }}
                                                 className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
@@ -190,88 +185,147 @@ const Admin: React.FC = () => {
                         가입 요청 사용자
                     </h2>
                     {nonuserList.length > 0 ? (
-                            <div className="overflow-auto max-h-80">
-                                <table className="w-full text-left border-collapse">
-                                    <thead>
-                                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                                        <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
-                                            유저ID
-                                        </th>
-                                        <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
-                                            작업
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {nonuserList.map(nonuser => {
-                                            const remainingDays = nonuser.bannedUntil ? formatRemainingTime(nonuser.bannedUntil) : '';
-
-                                            return (
-                                                <tr
-                                                    key={nonuser.userId}
-                                                    className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-                                                >
-                                                    <td className="py-2 px-3 text-gray-700 dark:text-gray-200">
-                                                        {nonuser.userId}
-                                                        {!nonuser.isAuthorized && remainingDays && (
-                                                            <span className="ml-2 text-red-500">(-{remainingDays})</span>
-                                                        )}
-                                                        {!nonuser.isAuthorized && !remainingDays && (
-                                                            <span className="ml-2 text-red-500">(NEW!)</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="py-2 px-3">
-                                                        <div className="flex space-x-2">
-                                                            <button
-                                                                onClick={() => handleAccept(nonuser.userId)}
-                                                                className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
-                                                            >
-                                                                승인
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleReject(nonuser.userId)}
-                                                                className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                                                            >
-                                                                거부
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        }
-                                    )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) :
-                        (
-                            <p className="text-gray-400 dark:text-gray-500 text-center py-4">
-                                가입 요청 사용자가 없습니다.
-                            </p>
-                        )
-                    }
+                        <div className="overflow-auto max-h-80">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                <tr className="border-b border-gray-200 dark:border-gray-700">
+                                    <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
+                                        유저ID
+                                    </th>
+                                    <th className="py-2 px-3 text-gray-600 dark:text-gray-300 font-medium">
+                                        작업
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {nonuserList.map((nonuser) => {
+                                    const remainingDays = nonuser.bannedUntil
+                                        ? formatRemainingTime(nonuser.bannedUntil)
+                                        : '';
+                                    return (
+                                        <tr
+                                            key={nonuser.userId}
+                                            className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                                        >
+                                            <td className="py-2 px-3 text-gray-700 dark:text-gray-200">
+                                                {nonuser.userId}
+                                                {!nonuser.isAuthorized && remainingDays && (
+                                                    <span className="ml-2 text-red-500">(-{remainingDays})</span>
+                                                )}
+                                                {!nonuser.isAuthorized && !remainingDays && (
+                                                    <span className="ml-2 text-red-500">(NEW!)</span>
+                                                )}
+                                            </td>
+                                            <td className="py-2 px-3">
+                                                <div className="flex space-x-2">
+                                                    <button
+                                                        onClick={() => handleAccept(nonuser.userId)}
+                                                        className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                                                    >
+                                                        승인
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleReject(nonuser.userId)}
+                                                        className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                                    >
+                                                        거부
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p className="text-gray-400 dark:text-gray-500 text-center py-4">
+                            가입 요청 사용자가 없습니다.
+                        </p>
+                    )}
                 </div>
             </div>
 
-            {/* 사용자 정보 수정 폼 (모달) */}
+            {/* 사용자 정보 수정 모달 */}
             {editingUser && editMode === 'update' && (
-                <div
-                    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center">
-                    <div
-                        className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg space-y-4 w-96">
-                        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-black/70 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-96 space-y-5">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
                             사용자 정보 수정
                         </h2>
-                        <input
-                            type="text"
-                            placeholder="이름"
-                            value={editingUser.name}
-                            onChange={(e) =>
-                                setEditingUser({...editingUser, name: e.target.value})
-                            }
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-transparent text-gray-800 dark:text-gray-100 focus:outline-none"
-                        />
-                        <div className="flex space-x-4 justify-end">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    이름
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editingUser.name}
+                                    onChange={(e) =>
+                                        setEditingUser({ ...editingUser, name: e.target.value })
+                                    }
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
+                                    placeholder="이름"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    전화번호
+                                </label>
+                                <input
+                                    type="tel"
+                                    value={editingUser.phoneNumber || ""}
+                                    onChange={(e) =>
+                                        setEditingUser({ ...editingUser, phoneNumber: e.target.value })
+                                    }
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
+                                    placeholder="전화번호"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    학번
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editingUser.studentNumber || ""}
+                                    onChange={(e) =>
+                                        setEditingUser({ ...editingUser, studentNumber: e.target.value })
+                                    }
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
+                                    placeholder="학번"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    이메일
+                                </label>
+                                <input
+                                    type="email"
+                                    value={editingUser.email || ""}
+                                    onChange={(e) =>
+                                        setEditingUser({ ...editingUser, email: e.target.value })
+                                    }
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
+                                    placeholder="이메일"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    역할
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editingUser.role || ""}
+                                    onChange={(e) =>
+                                        setEditingUser({ ...editingUser, role: e.target.value })
+                                    }
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
+                                    placeholder="역할"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end space-x-4 pt-4">
                             <button
                                 onClick={handleUpdate}
                                 className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
@@ -289,20 +343,26 @@ const Admin: React.FC = () => {
                 </div>
             )}
 
-            {/* 사용자 활동 정지 폼*/}
+            {/* 사용자 활동 정지 모달 */}
             {editingUser && editMode === 'ban' && (
-                <div
-                    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-8 rounded-lg shadow-lg space-y-4 w-96">
-                        <h2 className="text-2xl font-semibold">사용자 활동 정지</h2>
-                        <input
-                            type="number"
-                            placeholder="정지 기간(일)"
-                            value={banDays}
-                            onChange={(e) => setBanDays(Number(e.target.value))}
-                            className="w-full px-4 py-2 border rounded"
-                        />
-                        <div className="flex space-x-4">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-black/70 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-96 space-y-5">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
+                            사용자 활동 정지
+                        </h2>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                정지 기간(일)
+                            </label>
+                            <input
+                                type="number"
+                                value={banDays}
+                                onChange={(e) => setBanDays(Number(e.target.value))}
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
+                                placeholder="정지 기간"
+                            />
+                        </div>
+                        <div className="flex justify-end space-x-4 pt-4">
                             <button
                                 onClick={() => handleBan(banDays)}
                                 className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
