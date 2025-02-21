@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     return (
         <PostContainer>
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">홈</h1>
-            <div className="space-y-4">
+            <div className="space-y-4 mt-4">
                 {posts.length > 0 ? (
                     posts.map(({ postInfo, userInfo }) => (
                         <PostCard key={postInfo.postId} postInfo={postInfo} userInfo={userInfo}/>
