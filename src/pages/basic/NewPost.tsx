@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';
-import { PostDTO, postVisibility } from '../../types/PostDTO';
+import { PostDto, postVisibility } from '../../types/PostDto.ts';
 import { useServices } from '../../context/ServicesProvider';
 import PostContainer from '../../components/Container';
 import { X, Tag } from 'lucide-react';
@@ -152,7 +152,7 @@ const NewPost: React.FC = () => {
         e.preventDefault();
         if (isSubmitting) return;
         setIsSubmitting(true);
-        const postDTO: PostDTO = {
+        const postDTO: PostDto = {
             title,
             content,
             userTag,

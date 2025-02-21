@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { postVisibility } from '../../types/PostDTO';
+import { postVisibility } from '../../types/PostDto.ts';
 
 interface VisibilitySelectorProps {
     value: postVisibility;

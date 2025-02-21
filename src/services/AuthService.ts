@@ -1,10 +1,10 @@
-import {LoginDTO} from "../types/LoginDTO.ts";
+import {LoginDto} from "../types/LoginDto.ts";
 import apiHandler from "../utils/ApiHandler.ts";
 import Cookies from "js-cookie";
 import {UserEntity} from "../types/UserEntity.ts";
 
 export const AuthService = {
-    async login(loginDTO: LoginDTO) {
+    async login(loginDTO: LoginDto) {
         const response = await apiHandler.post('/user_log/login', loginDTO);
 
         Cookies.set('info', JSON.stringify(response.data.userInfo), {

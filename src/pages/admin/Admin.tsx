@@ -77,9 +77,8 @@ const Admin: React.FC = () => {
             alert('사용자 정보가 수정되었습니다.');
             setEditingUser(null);
             await fetchData();
-        } catch (error: any) {
+        } catch (error) {
             console.error("수정 실패: ", error);
-            alert(`수정 실패: ${error.message}`);
         }
     };
 
@@ -308,20 +307,6 @@ const Admin: React.FC = () => {
                                     }
                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
                                     placeholder="이메일"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    역할
-                                </label>
-                                <input
-                                    type="text"
-                                    value={editingUser.role || ""}
-                                    onChange={(e) =>
-                                        setEditingUser({ ...editingUser, role: e.target.value })
-                                    }
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none bg-transparent text-gray-800 dark:text-gray-100"
-                                    placeholder="역할"
                                 />
                             </div>
                         </div>

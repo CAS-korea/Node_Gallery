@@ -5,15 +5,15 @@ import {Link} from "react-router-dom"
 import {motion} from "framer-motion"
 import {Bookmark, Heart, MessageSquare} from 'lucide-react'
 import {ClientUrl} from "../constants/ClientUrl.ts"
-import {postInfo, userInfo} from "../types/PostcardDTO.ts";
+import {cardPostInfo, cardUserInfo} from "../types/PostcardDto.ts";
 
 interface PostCardProps {
-    postInfo: postInfo
-    userInfo: userInfo
+    postInfo: cardPostInfo
+    userInfo: cardUserInfo
 }
 
 const pastelColors = [
-    "#FCE4EC", "#E3F2FD", "#E8F5E9", "#FFF3E0", "#F3E5F5", "#E0F7FA", "#E8EAF6",
+    "#0c00ff", "#ff2d00", "#23ff00",
 ]
 
 // seed에 기본값을 부여하여 seed가 없을 경우에도 오류가 발생하지 않도록 함
@@ -51,7 +51,7 @@ const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
                         />
                     ) : (
                         <div
-                            className="w-full h-full flex items-center justify-center text-black text-xl font-bold"
+                            className="w-full h-full flex items-center justify-center text-white text-xl font-bold"
                             style={{backgroundColor: fixedBgColor}}
                         >
                             {postInfo.title}

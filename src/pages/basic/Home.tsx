@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container";
 import {useServices} from "../../context/ServicesProvider.tsx";
-import {postInfo, userInfo} from "../../types/PostcardDTO.ts";
+import {cardPostInfo, cardUserInfo} from "../../types/PostcardDto.ts";
 
 const Home: React.FC = () => {
-    const [posts, setPosts] = useState<{ postInfo: postInfo, userInfo: userInfo }[]>([]);
+    const [posts, setPosts] = useState<{ postInfo: cardPostInfo, userInfo: cardUserInfo }[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     // const [visibleCount, setVisibleCount] = useState(5);
     const {getAllPosts} = useServices();

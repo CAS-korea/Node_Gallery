@@ -1,6 +1,6 @@
-export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR';
+export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR' | 'CAS_CREATOR';
 
-export interface postInfo {
+export interface cardPostInfo {
     postId: string;
     title : string;
     summary: string;
@@ -15,7 +15,7 @@ export interface postInfo {
     scraped: boolean;
 }
 
-export interface userInfo {
+export interface cardUserInfo {
     name: string;
     profileImageUrl: string;
     userId: string;

@@ -3,21 +3,28 @@ import { useNavigate } from "react-router-dom";
 import { AuthService } from "../services/AuthService.ts";
 import { PostService } from "../services/PostService.ts";
 import { AdminService } from "../services/AdminService.ts";
-import { LoginDTO } from "../types/LoginDTO.ts";
+import { LoginDto } from "../types/LoginDto.ts";
 import { UserEntity } from "../types/UserEntity.ts";
-import { PostDTO } from "../types/PostDTO.ts";
+import { PostDto } from "../types/PostDto.ts";
 import { PostEntity } from "../types/PostEntity.ts";
 import {FileService} from "../services/FileService.ts";
 import {AxiosResponse} from "axios";
-import {postInfo, userInfo} from "../types/PostcardDTO.ts";
+import {cardPostInfo, cardUserInfo} from "../types/PostcardDto.ts";
+import {postActivity, postInfo, userInfo} from "../types/PostDetailDto.ts";
+import {CommentDto} from "../types/CommentDto.ts";
 
 export interface ServicesContextType {
-    login: (loginDTO: LoginDTO) => Promise<void>;
+    login: (loginDTO: LoginDto) => Promise<void>;
     register: (userEntity: UserEntity) => Promise<void>;
     logout: () => void;
-    createPost: (postDTO: PostDTO) => Promise<void>;
-    getAllPosts: () => Promise<{postInfo: postInfo, userInfo: userInfo}>;
-    getPostById: (postId: string) => Promise<{post: PostEntity, comments: []}>;
+    createPost: (postDTO: PostDto) => Promise<void>;
+    getAllPosts: () => Promise<{postInfo: cardPostInfo, userInfo: cardUserInfo}>;
+    getPostById: (postId: string) => Promise<{
+        post: postInfo,
+        postActivity: postActivity,
+        author: userInfo,
+        comment: CommentDto[]
+    }>;
     likesPost: (postId: string) => Promise<AxiosResponse<any>>;
     scrapsPost: (postId: string) => Promise<AxiosResponse<any>>;
     reportsPost: (postId: string) => Promise<AxiosResponse<any>>;

@@ -1,5 +1,5 @@
 // types/UserEntity.ts
-export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR';
+export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR' | 'CAS_CREATOR';
 
 export interface UserEntity {
     userId: string;
