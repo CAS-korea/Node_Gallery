@@ -37,6 +37,8 @@ const NewPost: React.FC = () => {
     const [drafts, setDrafts] = useState<Draft[]>([]);
     const [showDraftModal, setShowDraftModal] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
+    // New state for emoji dropdown
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const contentRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
@@ -123,6 +125,22 @@ const NewPost: React.FC = () => {
             default:
                 toInsert = "";
         }
+        setContent(before + toInsert + after);
+        setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + toInsert.length;
+            textarea.focus();
+        }, 0);
+    };
+
+    // New function to insert an emoji at the cursor position
+    const insertEmoji = (emoji: string) => {
+        if (!contentRef.current) return;
+        const textarea = contentRef.current;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const before = content.substring(0, start);
+        const after = content.substring(end);
+        const toInsert = emoji;
         setContent(before + toInsert + after);
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = start + toInsert.length;
@@ -232,7 +250,7 @@ const NewPost: React.FC = () => {
                         </h1>
 
                         {/* 마크다운 툴바 */}
-                        <div className="flex flex-wrap gap-2 mb-4">
+                        <div className="flex flex-wrap gap-2 mb-4 relative">
                             <button
                                 onClick={() => insertMarkdown("h1")}
                                 className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
@@ -288,6 +306,31 @@ const NewPost: React.FC = () => {
                             >
                                 Image
                             </button>
+                            {/* Emoji Dropdown Button */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                    className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                                >
+                                    Emoji
+                                </button>
+                                {showEmojiPicker && (
+                                    <div className="absolute mt-2 w-40 bg-white dark:bg-gray-700 shadow-lg rounded-md p-2 z-10">
+                                        {["😀", "😂", "😍", "😎", "👍", "🔥", "🎉", "🚀"].map((emoji) => (
+                                            <button
+                                                key={emoji}
+                                                onClick={() => {
+                                                    insertEmoji(emoji);
+                                                    setShowEmojiPicker(false);
+                                                }}
+                                                className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded block text-lg"
+                                            >
+                                                {emoji}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
