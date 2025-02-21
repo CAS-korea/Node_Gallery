@@ -19,7 +19,7 @@ const userInfo = {
         "안녕하세요! 절 찾으셨군요! 혹시 플로버세요? 어서와요~ 노드 이번에 써봤는데 정말 좋더라구요 ㅎㅎ 개발자 분들 고마워요",
 }
 
-const posts: PostEntity[] = [
+const post: PostEntity[] = [
     {
         postId: "1",
         userId: "baekjiheon",
@@ -148,8 +148,8 @@ const Baik: React.FC = () => {
                         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">게시물</h2>
                     </div>
                     <div className="space-y-4">
-                        {posts.map((post) => (
-                            <PostCard key={post.postId} post={post} />
+                        {post.map((post) => (
+                            <PostCard key={post.postId} postInfo={post} userInfo={userInfo} />
                         ))}
                     </div>
                 </div>
@@ -227,4 +227,3 @@ const FollowingModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
 }
 
 export default Baik
-

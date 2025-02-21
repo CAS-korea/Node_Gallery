@@ -43,7 +43,7 @@ const Router: React.FC = () => {
 
             {/* 🔹 관리자 페이지 (관리자만 접근 가능) */}
             <Route element={<ProtectedRoute isAdminRoute />}>
-                <Route element={<AdminLayout />}>
+                <Route element={<BasicLayout />}>
                     <Route path={ClientUrl.ADMIN} element={<Admin />} />
                 </Route>
             </Route>

@@ -5,6 +5,7 @@ import PostContainer from "../../components/Container";
 import {motion} from "framer-motion";
 import {Heart, Flag, MessageCircle} from "lucide-react";
 import {useServices} from "../../context/ServicesProvider.tsx";
+import PostReportModal from "../../components/PostReportModal";
 
 import {Avatar, AvatarFallback, AvatarImage} from "../../components/ui/avatar";
 import {Button} from "../../components/ui/button";
@@ -35,6 +36,7 @@ const SpecificPost: React.FC = () => {
     const [isLiking, setIsLiking] = useState(false);
     const [isScrapping, setIsScrapping] = useState(false);
     const [isReporting, setIsReporting] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // 게시글 데이터를 비동기로 불러오기
     useEffect(() => {

@@ -31,14 +31,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({ children }) => {
         <div className="flex flex-col min-h-screen min-w-[1024px] bg-white dark:bg-gray-900 dark:text-gray-200">
             <div className="flex flex-1">
                 {/* 사이드바 영역 */}
-                <div className="w-64 flex-shrink-0">
+                <div className="w-48 flex-shrink-0 ">
                     {isAdmin ? <AdminSidebar/> : <Sidebar/>}
                 </div>
 
                 {/* 메인 컨텐츠 영역: Header + Outlet */}
-                <div className="flex flex-col flex-1 pt-14 rounded-3xl">
+                <div className="flex flex-col flex-1 pt-12 rounded-3xl">
                     <Header/>
-                    <main className="flex-1 bg-white dark:bg-gray-800 p-6 flex justify-center">
+                    <main className="flex-1 p-2 bg-white dark:bg-transparent flex justify-center">
                         {/* children 있으면 children 렌더, 없으면 Outlet 사용 */}
                         {children || <Outlet/>}
                     </main>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import { PostDto, postVisibility } from '../../types/PostDto.ts';
 import { useServices } from '../../context/ServicesProvider';
-import PostContainer from '../../components/Container';
 import { X, Tag } from 'lucide-react';
 import { FileService } from '../../services/FileService';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -38,6 +37,8 @@ const NewPost: React.FC = () => {
     const [drafts, setDrafts] = useState<Draft[]>([]);
     const [showDraftModal, setShowDraftModal] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
+    // New state for emoji dropdown
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const contentRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
@@ -131,6 +132,22 @@ const NewPost: React.FC = () => {
         }, 0);
     };
 
+    // New function to insert an emoji at the cursor position
+    const insertEmoji = (emoji: string) => {
+        if (!contentRef.current) return;
+        const textarea = contentRef.current;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const before = content.substring(0, start);
+        const after = content.substring(end);
+        const toInsert = emoji;
+        setContent(before + toInsert + after);
+        setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + toInsert.length;
+            textarea.focus();
+        }, 0);
+    };
+
     const handleSaveDraft = () => {
         const newDraft: Draft = {
             id: Date.now(),
@@ -176,177 +193,259 @@ const NewPost: React.FC = () => {
     };
 
     return (
-        <PostContainer>
-            {/* 헤더 영역: 공개범위 설정 및 게시물 올리기/임시저장 버튼 */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-4">
-                    <VisibilitySelector value={postVis} onChange={setPostVis} />
-                    <button
-                        onClick={() => setShowDraftModal(true)}
-                        className="px-4 py-2 bg-yellow-300 hover:bg-gray-400 text-gray-900 rounded-md transition"
-                    >
-                        임시저장 목록
-                    </button>
-                </div>
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        className={`px-6 py-2 rounded-lg transition flex items-center gap-2 ${
-                            isSubmitting
-                                ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white'
-                        }`}
-                    >
-                        {isSubmitting ? (
-                            <motion.div
-                                className="w-6 h-6 border-t-4 border-b-2 border-gray-300 bg-white rounded-full"
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                            />
-                        ) : (
-                            '게시물 올리기'
-                        )}
-                    </button>
-                </div>
-            </div>
-
-            {/* 임시저장 모달 */}
-            <AnimatePresence>
-                {showDraftModal && (
-                    <DraftModal
-                        drafts={drafts}
-                        onDelete={handleDeleteDraft}
-                        onClose={() => setShowDraftModal(false)}
-                        onSaveDraft={handleSaveDraft}
-                    />
-                )}
-            </AnimatePresence>
-
-            <div className="flex flex-col md:flex-row gap-8">
-                {/* 좌측: 작성 영역 */}
-                <div className="md:w-1/2 flex flex-col">
-                    <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">
-                        새 게시물 작성
-                    </h1>
-
-                    {/* 마크다운 툴바 */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        <button onClick={() => insertMarkdown("h1")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">H1</button>
-                        <button onClick={() => insertMarkdown("h2")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">H2</button>
-                        <button onClick={() => insertMarkdown("bold")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">Bold</button>
-                        <button onClick={() => insertMarkdown("italic")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">Italic</button>
-                        <button onClick={() => insertMarkdown("ul")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">List</button>
-                        <button onClick={() => insertMarkdown("code")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">Code</button>
-                        <button onClick={() => insertMarkdown("color")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">Color</button>
-                        <button onClick={() => insertMarkdown("table")} className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">Table</button>
-                        {/* 이미지 버튼을 다른 버튼보다 크게 */}
-                        <button onClick={() => insertMarkdown("image")} className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600">
-                            Image
-                        </button>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
+            <div className="max-w-7xl mx-auto">
+                {/* Header Section */}
+                <header className="mb-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <VisibilitySelector value={postVis} onChange={setPostVis} />
+                            <button
+                                onClick={() => setShowDraftModal(true)}
+                                className="px-4 py-2 bg-yellow-300 hover:bg-gray-400 text-gray-900 rounded-md transition"
+                            >
+                                임시저장 목록
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={handleSubmit}
+                                disabled={isSubmitting}
+                                className={`px-6 py-2 rounded-lg transition flex items-center gap-2 ${
+                                    isSubmitting
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                }`}
+                            >
+                                {isSubmitting ? (
+                                    <motion.div
+                                        className="w-6 h-6 border-t-4 border-b-2 border-gray-300 bg-white rounded-full"
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                    />
+                                ) : (
+                                    "게시물 올리기"
+                                )}
+                            </button>
+                        </div>
                     </div>
+                    <AnimatePresence>
+                        {showDraftModal && (
+                            <DraftModal
+                                drafts={drafts}
+                                onDelete={handleDeleteDraft}
+                                onClose={() => setShowDraftModal(false)}
+                                onSaveDraft={handleSaveDraft}
+                            />
+                        )}
+                    </AnimatePresence>
+                </header>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="제목을 입력하세요"
-                            className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                        />
+                {/* Main Content */}
+                <main className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* 좌측: 작성 영역 */}
+                    <section>
+                        <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                            새 게시물 작성
+                        </h1>
 
-                        <textarea
-                            ref={contentRef}
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            placeholder="내용을 작성하세요"
-                            className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
-                            rows={12}
-                        />
-
-                        {/* 태그 입력 영역 */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                태그 입력 (Enter 키로 추가)
-                            </label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                <AnimatePresence>
-                                    {userTag.map((tag, index) => (
-                                        <motion.span
-                                            key={tag}
-                                            layout
-                                            initial={{ opacity: 0, scale: 0.8 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
-                                            transition={{ delay: index * 0.05 }}
-                                            className="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full text-sm flex items-center"
-                                        >
-                                            <Tag size={16} className="mr-2 text-gray-600 dark:text-white" />
-                                            <span className="text-black dark:text-white">{tag || "제목없음"}</span>
-                                            <motion.button
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.9 }}
-                                                onClick={() => handleRemoveTag(tag)}
-                                                className="ml-2 text-gray-500 dark:text-gray-300 hover:text-gray-700 focus:outline-none"
+                        {/* 마크다운 툴바 */}
+                        <div className="flex flex-wrap gap-2 mb-4 relative">
+                            <button
+                                onClick={() => insertMarkdown("h1")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                H1
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("h2")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                H2
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("bold")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                Bold
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("italic")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                Italic
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("ul")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                List
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("code")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                Code
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("color")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                Color
+                            </button>
+                            <button
+                                onClick={() => insertMarkdown("table")}
+                                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                Table
+                            </button>
+                            {/* 이미지 버튼을 다른 버튼보다 크게 */}
+                            <button
+                                onClick={() => insertMarkdown("image")}
+                                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                            >
+                                Image
+                            </button>
+                            {/* Emoji Dropdown Button */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                    className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                                >
+                                    Emoji
+                                </button>
+                                {showEmojiPicker && (
+                                    <div className="absolute mt-2 w-40 bg-white dark:bg-gray-700 shadow-lg rounded-md p-2 z-10">
+                                        {["😀", "😂", "😍", "😎", "👍", "🔥", "🎉", "🚀"].map((emoji) => (
+                                            <button
+                                                key={emoji}
+                                                onClick={() => {
+                                                    insertEmoji(emoji);
+                                                    setShowEmojiPicker(false);
+                                                }}
+                                                className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded block text-lg"
                                             >
-                                                <X size={14} />
-                                            </motion.button>
-                                        </motion.span>
-                                    ))}
-                                </AnimatePresence>
+                                                {emoji}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <input
                                 type="text"
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                onKeyDown={handleAddTag}
-                                placeholder="태그 입력 후 Enter"
-                                className="w-full mt-2 px-6 py-2 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="제목을 입력하세요"
+                                className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                             />
-                        </div>
-                    </form>
-                </div>
 
-                {/* 우측: 미리보기 영역 */}
-                <div className="md:w-1/2 flex flex-col dark:text-white">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">미리보기</h2>
-                    <div
-                        className="p-6 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-600 overflow-auto prose prose-stone dark:prose-invert max-h-[600px]"
-                        dangerouslySetInnerHTML={{ __html: previewContent }}
-                    />
-                </div>
+                            <textarea
+                                ref={contentRef}
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                                placeholder="내용을 작성하세요"
+                                className="w-full px-6 py-4 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
+                                rows={12}
+                            />
+
+                            {/* 태그 입력 영역 */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    태그 입력 (Enter 키로 추가)
+                                </label>
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    <AnimatePresence>
+                                        {userTag.map((tag, index) => (
+                                            <motion.span
+                                                key={tag}
+                                                layout
+                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{
+                                                    opacity: 0,
+                                                    scale: 0.8,
+                                                    transition: { duration: 0.2 },
+                                                }}
+                                                transition={{ delay: index * 0.05 }}
+                                                className="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full text-sm flex items-center"
+                                            >
+                                                <Tag size={16} className="mr-2 text-gray-600 dark:text-white" />
+                                                <span className="text-black dark:text-white">
+                                                    {tag || "제목없음"}
+                                                </span>
+                                                <motion.button
+                                                    whileHover={{ scale: 1.1 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    onClick={() => handleRemoveTag(tag)}
+                                                    className="ml-2 text-gray-500 dark:text-gray-300 hover:text-gray-700 focus:outline-none"
+                                                >
+                                                    <X size={14} />
+                                                </motion.button>
+                                            </motion.span>
+                                        ))}
+                                    </AnimatePresence>
+                                </div>
+                                <input
+                                    type="text"
+                                    value={tagInput}
+                                    onChange={(e) => setTagInput(e.target.value)}
+                                    onKeyDown={handleAddTag}
+                                    placeholder="태그 입력 후 Enter"
+                                    className="w-full mt-2 px-6 py-2 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                />
+                            </div>
+                        </form>
+                    </section>
+
+                    {/* 우측: 미리보기 영역 */}
+                    <section className="flex flex-col dark:text-white">
+                        <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+                            미리보기
+                        </h2>
+                        <div
+                            className="p-6 bg-white/30 dark:bg-gray-700 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-600 overflow-auto prose prose-stone dark:prose-invert max-h-[600px]"
+                            dangerouslySetInnerHTML={{ __html: previewContent }}
+                        />
+                    </section>
+                </main>
+
+                {/* Footer / 나가기 버튼 */}
+                <footer className="mt-8 text-center">
+                    <Link
+                        to={ClientUrl.HOME}
+                        className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                    >
+                        나가기
+                    </Link>
+                </footer>
+
+                {/* 이미지 삽입 모달 */}
+                <AnimatePresence>
+                    {showImageModal && (
+                        <ImageModal
+                            onClose={() => setShowImageModal(false)}
+                            onInsert={(url) => {
+                                if (!contentRef.current) return;
+                                const textarea = contentRef.current;
+                                const start = textarea.selectionStart;
+                                const end = textarea.selectionEnd;
+                                const before = content.substring(0, start);
+                                const after = content.substring(end);
+                                const toInsert = `\n![](${url})\n`;
+                                setContent(before + toInsert + after);
+                                setTimeout(() => {
+                                    textarea.selectionStart = textarea.selectionEnd = start + toInsert.length;
+                                    textarea.focus();
+                                }, 0);
+                            }}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
-
-            {/* 나가기 버튼 */}
-            <div className="mt-8 text-center">
-                <Link to={ClientUrl.HOME} className="inline-block bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors">
-                    나가기
-                </Link>
-            </div>
-
-            {/* 이미지 삽입 모달 */}
-            <AnimatePresence>
-                {showImageModal && (
-                    <ImageModal
-                        onClose={() => setShowImageModal(false)}
-                        onInsert={(url) => {
-                            if (!contentRef.current) return;
-                            const textarea = contentRef.current;
-                            const start = textarea.selectionStart;
-                            const end = textarea.selectionEnd;
-                            const before = content.substring(0, start);
-                            const after = content.substring(end);
-                            const toInsert = `\n![](${url})\n`;
-                            setContent(before + toInsert + after);
-                            setTimeout(() => {
-                                textarea.selectionStart = textarea.selectionEnd = start + toInsert.length;
-                                textarea.focus();
-                            }, 0);
-                        }}
-                    />
-                )}
-            </AnimatePresence>
-        </PostContainer>
+        </div>
     );
 };
 
