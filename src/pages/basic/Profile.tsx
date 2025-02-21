@@ -7,6 +7,7 @@ import { PostEntity } from "../../types/PostEntity.ts";
 
 const dummyUserInfo = {
     name: "김아프간타",
+    userId: "kim_afganta",
     role: "중앙관리본부 개발 담당 인턴",
     profileImageUrl: "/kimafganta.png?height=150&width=150",
     postsCount: 42,
@@ -109,42 +110,27 @@ const Profile: React.FC = () => {
         <PostContainer>
             <div className="max-w-4xl mx-auto">
                 <p className="text-3xl font-bold mb-5 text-gray-800 dark:text-gray-100">내 프로필</p>
+                {/* Updated Profile Card */}
                 <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
                     <div className="p-8">
-                        <div className="flex items-center space-x-6">
-                            <img
-                                src={dummyUserInfo.profileImageUrl || "/kimafganta.png"}
-                                alt={dummyUserInfo.name}
-                                className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
-                            />
-                            <div className="flex-1">
-                                <h1 className="text-3xl font-bold ml-2 text-gray-800 dark:text-gray-100">{dummyUserInfo.name}</h1>
-                                <p className="text-gray-600 dark:text-gray-300 ml-2">{dummyUserInfo.role}</p>
-                                <div className="flex space-x-4 mt-4 mr-4">
-                                    <div className="flex flex-col items-center justify-center cursor-default px-2 py-1">
-                                        <p className="font-semibold text-gray-800 dark:text-gray-100">
-                                            {dummyUserInfo.postsCount}
-                                        </p>
-                                        <p className="text-gray-600 dark:text-gray-300 text-sm">포스트</p>
-                                    </div>
-                                    <div
-                                        onClick={() => setIsFollowersModalOpen(true)}
-                                        className="flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1 rounded-xl transition"
-                                    >
-                                        <p className="font-semibold text-gray-800 dark:text-gray-100">
-                                            {dummyUserInfo.followersCount}
-                                        </p>
-                                        <p className="text-gray-600 dark:text-gray-300 text-sm">팔로워</p>
-                                    </div>
-                                    <div
-                                        onClick={() => setIsFollowingModalOpen(true)}
-                                        className="flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1 rounded-xl transition"
-                                    >
-                                        <p className="font-semibold text-gray-800 dark:text-gray-100">
-                                            {dummyUserInfo.followingCount}
-                                        </p>
-                                        <p className="text-gray-600 dark:text-gray-300 text-sm">팔로잉</p>
-                                    </div>
+                        {/*
+              Section 1: 프로필 이미지, 사용자 정보, 프로필 수정 버튼
+            */}
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <img
+                                    src={dummyUserInfo.profileImageUrl || "/kimafganta.png"}
+                                    alt={dummyUserInfo.name}
+                                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
+                                />
+                                <div className="ml-4">
+                                    <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
+                                        {dummyUserInfo.name}
+                                    </h1>
+                                    <p className="text-gray-600 dark:text-gray-100">
+                                        @{dummyUserInfo.userId}
+                                    </p>
+                                    <p className="text-gray-600 dark:text-gray-300">{dummyUserInfo.role}</p>
                                 </div>
                             </div>
                             <button
@@ -155,13 +141,56 @@ const Profile: React.FC = () => {
                                 프로필 수정
                             </button>
                         </div>
-                        <div className="mt-6">
-                            <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">자기소개</h2>
+
+                        {/*
+              Section 2: 통계 정보 (포스트, 팔로워, 팔로잉)
+              이 영역은 사용자 활동 통계를 보여줍니다.
+            */}
+                        <div className="flex justify-around mt-6">
+                            <div className="flex flex-col items-center">
+                                <p className="font-semibold text-gray-800 dark:text-gray-100">
+                                    {dummyUserInfo.postsCount}
+                                </p>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm">포스트</p>
+                            </div>
+                            <div
+                                onClick={() => setIsFollowersModalOpen(true)}
+                                className="flex flex-col items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1 rounded-xl transition"
+                            >
+                                <p className="font-semibold text-gray-800 dark:text-gray-100">
+                                    {dummyUserInfo.followersCount}
+                                </p>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm">팔로워</p>
+                            </div>
+                            <div
+                                onClick={() => setIsFollowingModalOpen(true)}
+                                className="flex flex-col items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1 rounded-xl transition"
+                            >
+                                <p className="font-semibold text-gray-800 dark:text-gray-100">
+                                    {dummyUserInfo.followingCount}
+                                </p>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm">팔로잉</p>
+                            </div>
+                        </div>
+
+                        {/* Separator between Section 2 and Section 3 */}
+                        <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
+
+                        {/*
+              Section 3: 자기소개
+              사용자에 대한 간단한 소개글을 보여줍니다.
+            */}
+                        <div>
+                            <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                                자기소개
+                            </h2>
                             <p className="text-gray-700 dark:text-gray-300">{dummyUserInfo.introduce}</p>
                         </div>
                     </div>
                 </div>
+                {/* End of Updated Profile Card */}
 
+                {/* 내 게시물 영역 */}
                 <div className="mt-8">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">내 게시물</h2>
@@ -204,12 +233,12 @@ const Profile: React.FC = () => {
     );
 };
 
-const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({
-                                                                                                                 isOpen,
-                                                                                                                 onClose,
-                                                                                                                 title,
-                                                                                                                 children,
-                                                                                                             }) => {
+const Modal: React.FC<{
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    children: React.ReactNode;
+}> = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
 
     return (
@@ -217,7 +246,10 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
             <div className="relative p-8 bg-white dark:bg-gray-800 w-full max-w-md m-auto flex-col flex rounded-lg">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{title}</h2>
-                    <button onClick={onClose} className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100">
+                    <button
+                        onClick={onClose}
+                        className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"
+                    >
                         <X size={24} />
                     </button>
                 </div>
