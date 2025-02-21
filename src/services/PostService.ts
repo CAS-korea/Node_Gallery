@@ -39,6 +39,6 @@ export const PostService = {
     },
 
     async reportsPost(postId: string) {
-        return await apiHandler.post(`/post_relation/report/${postId}`, {});
+        return await apiHandler.post(`/post_relation/reports/${postId}`, {});
     }
 };

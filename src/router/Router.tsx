@@ -14,7 +14,6 @@ import Notification from "../pages/basic/Notification.tsx";
 import Settings from "../pages/basic/Settings.tsx";
 import { ClientUrl } from "../constants/ClientUrl.ts";
 import Home from "../pages/basic/Home.tsx";
-import AdminLayout from "../layouts/AdminLayout.tsx";
 import Admin from "../pages/admin/Admin.tsx";
 import Index from "../pages/Index.tsx";
 import ResetPassword from "../pages/auth/ResetPassword.tsx";

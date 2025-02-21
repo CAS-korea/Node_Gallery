@@ -3,7 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import {marked} from "marked";
 import PostContainer from "../../components/Container";
 import {motion} from "framer-motion";
-import {Heart, Flag, MessageCircle} from "lucide-react";
+import {Heart, Flag, MessageCircle, Bookmark} from "lucide-react";
 import {useServices} from "../../context/ServicesProvider.tsx";
 import PostReportModal from "../../components/PostReportModal";
 
@@ -45,7 +45,6 @@ const SpecificPost: React.FC = () => {
         const fetchPost = async () => {
             try {
                 const response = await getPostById(postId);
-                console.log(response.comment);
                 setPostInfo(response.post);
                 setAuthor(response.author);
                 setPostActivity(response.postActivity);
@@ -61,14 +60,14 @@ const SpecificPost: React.FC = () => {
 
     // 좋아요 토글 핸들러
     const handleLike = async () => {
-        if (!postInfo || !postId || isLiking) return;
+        if (!postId || isLiking || !postActivity) return;
         setIsLiking(true);
-        await likesPost(postId);
 
         try {
             const response = await likesPost(postId);
             if (response.status === 200) {
-                setPostInfo(prev => prev ? {...prev, likesCount: prev.likesCount + (prev.likesCount > 0 ? -1 : 1)} : null);
+                setPostActivity(prev => prev ? { ...prev, liked: !prev.liked } : null);
+                setPostInfo(prev => prev ? { ...prev, likesCount: prev.likesCount + (postActivity.liked ? -1 : 1) } : null);
             }
         } catch (error) {
             console.error("좋아요 처리 실패:", error);
@@ -79,16 +78,14 @@ const SpecificPost: React.FC = () => {
 
     // 신고 모달 열기 핸들러
     const handleScrap = async () => {
-        if (!postInfo || !postId || isScrapping) return;
+        if (!postId || isScrapping || !postActivity) return;
         setIsScrapping(true);
 
         try {
             const response = await scrapsPost(postId);
             if (response.status === 200) {
-                setPostInfo(prev => prev ? {
-                    ...prev,
-                    scrapsCount: prev.scrapsCount + (prev.scrapsCount > 0 ? -1 : 1)
-                } : null);
+                setPostActivity(prev => prev ? { ...prev, scraped: !prev.scraped } : null);
+                setPostInfo(prev => prev ? { ...prev, scrapsCount: prev.scrapsCount + (postActivity.scraped ? -1 : 1) } : null);
             }
         } catch (error) {
             console.error("스크랩 처리 실패:", error);
@@ -99,14 +96,13 @@ const SpecificPost: React.FC = () => {
 
 
     const handleReport = async () => {
-        if (!postInfo || !postId || isReporting) return;
+        if (!postId || isReporting || !postActivity) return;
         setIsReporting(true);
 
         try {
             const response = await reportsPost(postId);
             if (response.status === 200) {
-                alert("신고되었습니다.");
-                setPostInfo(prev => prev ? {...prev, reportsCount: prev.reportsCount + 1} : null);
+                setPostActivity(prev => prev ? { ...prev, reported: true } : null);
             }
         } catch (error) {
             console.error("신고 처리 실패:", error);
@@ -115,22 +111,19 @@ const SpecificPost: React.FC = () => {
         }
     };
 
-    // // 신고 확인 후 처리하는 핸들러
-    // const confirmReport = (reason: string) => {
-    //     console.log("선택된 신고 사유:", reason);
-    //     if (post) {
-    //         setPost({ ...post, reportsCount: post.reportsCount + 1 });
-    //     }
-    //     setHasReported(true);
-    //     setShowReportModal(false);
-    // };
-
     // 로딩 중 또는 게시글 데이터가 없을 경우의 처리
     if (loading) return <p>로딩 중...</p>;
     if (!postInfo) return <p>게시물을 찾을 수 없습니다.</p>;
 
     return (
         <PostContainer>
+            {showReportModal && (
+                <PostReportModal
+                    onClose={() => setShowReportModal(false)}
+                    onConfirm={handleReport}
+                />
+            )}
+
             <div className="max-w-3xl mx-auto px-4">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                     <Card className="overflow-hidden">
@@ -181,20 +174,21 @@ const SpecificPost: React.FC = () => {
                         {/* 좋아요, 스크랩, 댓글, 신고 버튼 */}
                         <CardFooter className="p-6 flex justify-between items-center">
                             <div className="flex space-x-4">
+                                <Button variant="ghost" size="sm" onClick={handleLike} disabled={isLiking}>
+                                    <Heart className={`w-6 h-6 ${postActivity?.liked ? "fill-current text-red-500" : ""}`} />
+                                    <span>{postInfo.likesCount}</span>
+                                </Button>
+                                <Button variant="ghost" size="sm" onClick={handleScrap} disabled={isScrapping}>
+                                    <Bookmark className={`w-6 h-6 ${postActivity?.scraped ? "fill-current text-yellow-500" : ""}`} />
+                                    <span>{postInfo.scrapsCount}</span>
+                                </Button>
                                 <Button variant="ghost" size="sm">
                                     <MessageCircle className="w-6 h-6" />
                                     <span>{postInfo.commentsCount}</span>
                                 </Button>
-                                <Button variant="ghost" size="sm">
-                                    <Heart className={`w-6 h-6 ${postInfo.likesCount > 0 ? "fill-current text-red-500" : ""}`} />
-                                    <span>{postInfo.likesCount}</span>
-                                </Button>
-                                <Button variant="ghost" size="sm">
-                                    📌 <span>{postInfo.scrapsCount}</span>
-                                </Button>
                             </div>
-                            <Button variant="ghost" size="sm">
-                                <Flag className="w-6 h-6" />
+                            <Button variant="ghost" size="sm" onClick={() => setShowReportModal(true)} disabled={isReporting}>
+                                <Flag className={`w-6 h-6 ${postActivity?.reported ? "fill-current text-red-500" : ""}`} />
                             </Button>
                         </CardFooter>
                     </Card>
