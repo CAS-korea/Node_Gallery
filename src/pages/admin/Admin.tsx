@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PostContainer from "../../components/Container";
 import { useServices } from "../../context/ServicesProvider.tsx";
 import { UserEntity } from "../../types/UserEntity.ts";
+import CheerOverlay from "../../components/secretfile/CheerOverlay";
 
 const Admin: React.FC = () => {
     const { authorizeUser, getNonuserList, getUserList, updateUserInfo, banUser } = useServices();
@@ -382,6 +383,7 @@ const Admin: React.FC = () => {
                     </div>
                 </div>
             )}
+            <CheerOverlay/>
         </PostContainer>
     );
 };

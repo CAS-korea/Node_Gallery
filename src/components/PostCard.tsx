@@ -75,11 +75,11 @@ const PostCard: React.FC<PostCardProps> = ({ postInfo, userInfo }) => {
                         <img
                             src={postInfo.thumbNailImage || "/placeholder.svg"}
                             alt={postInfo.title}
-                            className="rounded-t-xl rounded-b-xl w-full h-full object-cover"
+                            className="w-full h-full object-cover"
                         />
                     ) : (
                         <div
-                            className="rounded-t-xl rounded-b-xl w-full h-full flex items-center justify-center p-6 text-center"
+                            className=" w-full h-full flex items-center justify-center p-6 text-center"
                             style={{ backgroundColor: fixedBgColor }}
                         >
                             <h2 className="text-2xl font-bold text-gray-800 leading-tight">{postInfo.title}</h2>

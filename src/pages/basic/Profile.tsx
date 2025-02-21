@@ -1,9 +1,9 @@
-import type React from "react"
-import { useState } from "react"
-import PostContainer from "../../components/Container"
-import { Edit2, ImageIcon, X } from "lucide-react"
-import PostCard from "../../components/PostCard"
-import {PostEntity} from "../../types/PostEntity.ts";
+import type React from "react";
+import { useState } from "react";
+import PostContainer from "../../components/Container";
+import { Edit2, ImageIcon, X } from "lucide-react";
+import PostCard from "../../components/PostCard";
+import { PostEntity } from "../../types/PostEntity.ts";
 
 const dummyUserInfo = {
     name: "김아프간타",
@@ -12,8 +12,9 @@ const dummyUserInfo = {
     postsCount: 42,
     followersCount: 1337,
     followingCount: 420,
-    introduce: "열정적인 개발자, 창의적인 문제 해결사, 그리고 끊임없는 학습자입니다. 새로운 기술에 대한 호기심과 도전 정신으로 가득 차 있습니다. 함께 성장하고 혁신을 만들어가는 것이 제 목표입니다.",
-}
+    introduce:
+        "열정적인 개발자, 창의적인 문제 해결사, 그리고 끊임없는 학습자입니다. 새로운 기술에 대한 호기심과 도전 정신으로 가득 차 있습니다.",
+};
 
 const dummyPosts: PostEntity[] = [
     {
@@ -28,8 +29,8 @@ const dummyPosts: PostEntity[] = [
         likesCount: 25,
         scrapsCount: 5,
         reportsCount: 1,
-        postVisibility: "public" as const,  // `as const` 추가
-        thumbNailImage: ""
+        postVisibility: "public" as const,
+        thumbNailImage: "",
     },
     {
         postId: "2",
@@ -44,7 +45,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 12,
         reportsCount: 0,
         postVisibility: "public" as const,
-        thumbNailImage: ""
+        thumbNailImage: "",
     },
     {
         postId: "3",
@@ -59,7 +60,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 7,
         reportsCount: 2,
         postVisibility: "private" as const,
-        thumbNailImage: ""
+        thumbNailImage: "",
     },
     {
         postId: "4",
@@ -74,7 +75,7 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 20,
         reportsCount: 3,
         postVisibility: "public" as const,
-        thumbNailImage: ""
+        thumbNailImage: "",
     },
     {
         postId: "5",
@@ -89,15 +90,20 @@ const dummyPosts: PostEntity[] = [
         scrapsCount: 10,
         reportsCount: 1,
         postVisibility: "followersOnly" as const,
-        thumbNailImage: ""
+        thumbNailImage: "",
     },
 ];
 
 const Profile: React.FC = () => {
-    const [postVisibility, setPostVisibility] = useState<"public" | "private">("public")
-    const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false)
-    const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false)
-    const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false)
+    const [postVisibility, setPostVisibility] = useState<"public" | "private">("public");
+    const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
+    const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+    const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+
+    // Filter posts based on the selected visibility
+    const filteredPosts = dummyPosts.filter(
+        (post) => post.postVisibility === postVisibility
+    );
 
     return (
         <PostContainer>
@@ -145,7 +151,7 @@ const Profile: React.FC = () => {
                                 onClick={() => setIsEditProfileModalOpen(true)}
                                 className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors flex items-center"
                             >
-                                <Edit2 size={18} className="mr-2"/>
+                                <Edit2 size={18} className="mr-2" />
                                 프로필 수정
                             </button>
                         </div>
@@ -183,8 +189,9 @@ const Profile: React.FC = () => {
                         </div>
                     </div>
                     <div className="space-y-4">
-                        {dummyPosts.map((post) => (
-                            <PostCard key={post.postId} post={post} />
+                        {filteredPosts.map((post) => (
+                            // Pass both `postInfo` and `userInfo` to the PostCard component
+                            <PostCard key={post.postId} postInfo={post} userInfo={dummyUserInfo} />
                         ))}
                     </div>
                 </div>
@@ -194,8 +201,8 @@ const Profile: React.FC = () => {
             <FollowingModal isOpen={isFollowingModalOpen} onClose={() => setIsFollowingModalOpen(false)} />
             <EditProfileModal isOpen={isEditProfileModalOpen} onClose={() => setIsEditProfileModalOpen(false)} />
         </PostContainer>
-    )
-}
+    );
+};
 
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({
                                                                                                                  isOpen,
@@ -203,7 +210,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
                                                                                                                  title,
                                                                                                                  children,
                                                                                                              }) => {
-    if (!isOpen) return null
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 dark:bg-black/70 flex">
@@ -217,68 +224,57 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
                 {children}
             </div>
         </div>
-    )
-}
+    );
+};
 
 const FollowersModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
     const followers = [
         { id: 1, name: "홍길동", image: "/placeholder.svg?height=50&width=50" },
         { id: 2, name: "김철수", image: "/placeholder.svg?height=50&width=50" },
         { id: 3, name: "이영희", image: "/placeholder.svg?height=50&width=50" },
-    ]
+    ];
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="내 팔로워">
             <ul className="space-y-4">
                 {followers.map((follower) => (
                     <li key={follower.id} className="flex items-center space-x-3">
-                        <img
-                            src={follower.image || "/placeholder.svg"}
-                            alt={follower.name}
-                            className="w-10 h-10 rounded-full"
-                        />
+                        <img src={follower.image || "/placeholder.svg"} alt={follower.name} className="w-10 h-10 rounded-full" />
                         <span className="text-gray-800 dark:text-gray-100">{follower.name}</span>
                     </li>
                 ))}
             </ul>
         </Modal>
-    )
-}
+    );
+};
 
 const FollowingModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
     const following = [
         { id: 1, name: "박지성", image: "/placeholder.svg?height=50&width=50" },
         { id: 2, name: "손흥민", image: "/placeholder.svg?height=50&width=50" },
         { id: 3, name: "김연아", image: "/placeholder.svg?height=50&width=50" },
-    ]
+    ];
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="팔로우 한 노더">
             <ul className="space-y-4">
                 {following.map((follow) => (
                     <li key={follow.id} className="flex items-center space-x-3">
-                        <img
-                            src={follow.image || "/placeholder.svg"}
-                            alt={follow.name}
-                            className="w-10 h-10 rounded-full"
-                        />
+                        <img src={follow.image || "/placeholder.svg"} alt={follow.name} className="w-10 h-10 rounded-full" />
                         <span className="text-gray-800 dark:text-gray-100">{follow.name}</span>
                     </li>
                 ))}
             </ul>
         </Modal>
-    )
-}
+    );
+};
 
 const EditProfileModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="프로필 수정">
             <form className="space-y-4">
                 <div>
-                    <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                         이름
                     </label>
                     <input
@@ -289,10 +285,7 @@ const EditProfileModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                     />
                 </div>
                 <div>
-                    <label
-                        htmlFor="bio"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
+                    <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                         자기소개
                     </label>
                     <textarea
@@ -303,10 +296,7 @@ const EditProfileModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                     ></textarea>
                 </div>
                 <div>
-                    <label
-                        htmlFor="profileImage"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
+                    <label htmlFor="profileImage" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                         프로필 이미지
                     </label>
                     <div className="mt-1 flex items-center">
@@ -329,16 +319,13 @@ const EditProfileModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                     >
                         취소
                     </button>
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
+                    <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                         저장
                     </button>
                 </div>
             </form>
         </Modal>
-    )
-}
+    );
+};
 
-export default Profile
+export default Profile;
