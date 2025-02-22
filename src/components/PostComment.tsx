@@ -1,7 +1,9 @@
 import type React from "react"
 import { motion } from "framer-motion"
 import { Heart, Flag } from "lucide-react"
-import {CommentActivity, CommentContent, CommentUserInfo} from "../types/CommentDto.ts";
+import {CommentActivity, CommentContent, CommentUserInfo} from "../types/CommentDetailDto.ts";
+import {ClientUrl} from "../constants/ClientUrl.ts";
+import {Link} from "react-router-dom";
 
 interface PostCommentProps {
     commentContent: CommentContent;
@@ -29,9 +31,10 @@ const PostComment: React.FC<PostCommentProps> = ({ commentContent, commentActivi
                 <div className="flex items-center justify-between">
                     <div>
                         {/* 작성자 정보 */}
-                        <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">
+                        <Link to={`${ClientUrl.OTHERSPROFILE}/${commentUserInfo.userId}`}
+                              className="text-sm font-medium text-black dark:text-white hover:underline">
                             {commentUserInfo.userId} ({commentUserInfo.name})
-                        </span>
+                        </Link>
                         <span className="ml-2 text-xs text-gray-500">{commentUserInfo.role}</span>
                     </div>
                     {/* 작성 일자 */}

@@ -5,29 +5,30 @@ import { PostService } from "../services/PostService.ts";
 import { AdminService } from "../services/AdminService.ts";
 import { LoginDto } from "../types/LoginDto.ts";
 import { UserEntity } from "../types/UserEntity.ts";
-import { PostDto } from "../types/PostDto.ts";
+import { NewPostDto } from "../types/NewPostDto.ts";
 import { PostEntity } from "../types/PostEntity.ts";
 import {FileService} from "../services/FileService.ts";
-import {AxiosResponse} from "axios";
-import {cardPostInfo, cardUserInfo} from "../types/PostcardDto.ts";
+import {cardActivityInfo, cardPostInfo, cardUserInfo} from "../types/PostcardDto.ts";
 import {postActivity, postInfo, userInfo} from "../types/PostDetailDto.ts";
-import {CommentDto} from "../types/CommentDto.ts";
+import {CommentDetailDto} from "../types/CommentDetailDto.ts";
+import {NewCommentDto} from "../types/NewCommentDto.ts";
+import {CommentService} from "../services/CommentService.ts";
 
 export interface ServicesContextType {
     login: (loginDTO: LoginDto) => Promise<void>;
     register: (userEntity: UserEntity) => Promise<void>;
     logout: () => void;
-    createPost: (postDTO: PostDto) => Promise<void>;
-    getAllPosts: () => Promise<{postInfo: cardPostInfo, userInfo: cardUserInfo}>;
+    createPost: (newPostDto: NewPostDto) => Promise<void>;
+    getAllPosts: () => Promise<{postInfo: cardPostInfo, userInfo: cardUserInfo, postActivity: cardActivityInfo}>;
     getPostById: (postId: string) => Promise<{
         post: postInfo,
         postActivity: postActivity,
         author: userInfo,
-        comment: CommentDto[]
+        comment: CommentDetailDto[]
     }>;
-    likesPost: (postId: string) => Promise<AxiosResponse<any>>;
-    scrapsPost: (postId: string) => Promise<AxiosResponse<any>>;
-    reportsPost: (postId: string) => Promise<AxiosResponse<any>>;
+    likePost: (postId: string) => Promise<void>;
+    scrapPost: (postId: string) => Promise<void>;
+    reportPost: (postId: string) => Promise<void>;
     getUserPosts: (userId: string) => Promise<PostEntity[]>;
     authorizeUser: (userId: string, status: "accept" | "reject") => Promise<void>;
     getNonuserList: () => Promise<UserEntity[]>;
@@ -39,6 +40,9 @@ export interface ServicesContextType {
     findPassword: (email: string) => Promise<void>;
     resetPassword: (token: string, newPassword: string) => Promise<void>;
     uploadImage: (file: File) => Promise<string>;
+    createComment: (postId: string, newCommentDto: NewCommentDto) => Promise<void>;
+    likeComment: (commentId: string) => Promise<void>;
+    reportComment: (commentId: string) => Promise<void>;
 }
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -66,12 +70,12 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         resetPassword: async (token, newPassword) => await AuthService.resetPassword(token, newPassword),
 
         // 🔹 포스트 관련 함수 (await 추가)
-        createPost: async (postDTO) => await PostService.createPost(postDTO),
+        createPost: async (newPostDto) => await PostService.createPost(newPostDto),
         getAllPosts: async () => await PostService.getAllPosts(),
         getPostById: async (postId) => await PostService.getPostById(postId),
-        likesPost: async (postId) => await PostService.likesPost(postId),
-        scrapsPost: async (postId) => await PostService.scrapsPost(postId),
-        reportsPost: async (postId) => await PostService.reportsPost(postId),
+        likePost: async (postId) => await PostService.likePost(postId),
+        scrapPost: async (postId) => await PostService.scrapPost(postId),
+        reportPost: async (postId) => await PostService.reportPost(postId),
         getUserPosts: async (userId) => await PostService.getUserPosts(userId),
 
         // 🔹 어드민 관련 함수 (await 추가)
@@ -80,6 +84,11 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         getUserList: async () => await AdminService.getUserList(),
         updateUserInfo: async (userId, userEntity) => await AdminService.updateUserInfo(userId, userEntity),
         banUser: async (userId, days) => await AdminService.banUser(userId, days),
+
+        // 🔹 댓글 관련 함수 (await 추가)
+        createComment: async (postId, newCommentDto) => await CommentService.createComment(postId, newCommentDto),
+        likeComment: async (commentId) => await CommentService.likeComment(commentId),
+        reportComment: async (commentId) => await CommentService.reportComment(commentId),
 
         // 🔹 파일 관련 함수 (await 추가)
         uploadImage: async (file) => await FileService.uploadImage(file)

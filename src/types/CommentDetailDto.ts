@@ -1,6 +1,6 @@
 export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR' | 'CAS_CREATOR';
 
-export interface CommentDto {
+export interface CommentDetailDto {
     content: CommentContent;
     commentActivity: CommentActivity;
     specificPostCommentAuthor: CommentUserInfo;

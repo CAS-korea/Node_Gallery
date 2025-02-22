@@ -2,35 +2,39 @@ import React, {useEffect, useState} from 'react';
 import PostCard from "../../components/PostCard";
 import PostContainer from "../../components/Container";
 import {useServices} from "../../context/ServicesProvider.tsx";
-import {cardPostInfo, cardUserInfo} from "../../types/PostcardDto.ts";
+import {cardActivityInfo, cardPostInfo, cardUserInfo} from "../../types/PostcardDto.ts";
 
 const Home: React.FC = () => {
-    const [posts, setPosts] = useState<{ postInfo: cardPostInfo, userInfo: cardUserInfo }[]>([]);
+    const [posts, setPosts] = useState<{ postInfo: cardPostInfo, userInfo: cardUserInfo, postActivity: cardActivityInfo }[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     // const [visibleCount, setVisibleCount] = useState(5);
-    const {getAllPosts} = useServices();
+    const {getAllPosts, likePost, scrapPost} = useServices();
     // const observerRef = useRef<IntersectionObserver | null>(null);
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            setLoading(true);
-            try {
-                const allPosts = await getAllPosts();
-                // setPosts(allPosts.slice(0, visibleCount));
-                if (Array.isArray(allPosts)) {
-                    setPosts(allPosts);  // 정상적인 배열이면 상태 업데이트
-                } else {
-                    console.error("제대로 된 반환값이 아닙니다: ", allPosts);
-                    setPosts([]);  // 예외 처리 (빈 배열 할당)
-                }
-            } catch (error) {
-                console.error("게시물 불러오기 실패: ", error);
-            } finally {
-                setLoading(false);
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const allPosts = await getAllPosts();
+            console.log(allPosts)
+            // setPosts(allPosts.slice(0, visibleCount));
+            if (Array.isArray(allPosts)) {
+                setPosts(allPosts);  // 정상적인 배열이면 상태 업데이트
+            } else {
+                console.error("제대로 된 반환값이 아닙니다: ", allPosts);
+                setPosts([]);  // 예외 처리 (빈 배열 할당)
             }
+        } catch (error) {
+            console.error("게시물 불러오기 실패: ", error);
+        } finally {
+            setLoading(false);
         }
+    }
+
+    useEffect(() => {
         fetchPosts();
-    }, [getAllPosts]);
+    }, []);
+
+
 
     // const lastPostRef = useCallback((node: HTMLDivElement) => {
     //     if (loading) return;
@@ -60,8 +64,9 @@ const Home: React.FC = () => {
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">홈</h1>
             <div className="space-y-4 mt-4">
                 {posts.length > 0 ? (
-                    posts.map(({ postInfo, userInfo }) => (
-                        <PostCard key={postInfo.postId} postInfo={postInfo} userInfo={userInfo}/>
+                    posts
+                        .map(({ postInfo, userInfo, postActivity }) => (
+                        <PostCard key={postInfo.postId} postInfo={postInfo} userInfo={userInfo} postActivity={postActivity} onLike={() => likePost(postInfo.postId)} onScrap={() => scrapPost(postInfo.postId)}/>
                     ))
                 ) : (
                     <p className="text-gray-400 dark:text-gray-500 text-center">게시물이 없습니다.</p>

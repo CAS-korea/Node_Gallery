@@ -1,6 +1,6 @@
 export type postVisibility = 'PUBLIC' | 'PRIVATE' | 'FOLLOWERS_ONLY';
 
-export interface PostDto {
+export interface NewPostDto {
     title : string,
     content : string,
     userTag: string[],

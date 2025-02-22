@@ -10,9 +10,6 @@ export interface cardPostInfo {
     commentsCount: number;
     createAt: Date;
     thumbNailImage: string;
-    liked: boolean;
-    reported: boolean;
-    scraped: boolean;
 }
 
 export interface cardUserInfo {
@@ -20,4 +17,10 @@ export interface cardUserInfo {
     profileImageUrl: string;
     userId: string;
     role: UserRole;
+}
+
+export interface cardActivityInfo {
+    liked: boolean;
+    reported: boolean;
+    scraped: boolean;
 }

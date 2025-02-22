@@ -6,10 +6,14 @@ import {motion, AnimatePresence} from "framer-motion"
 import {Bookmark, Heart, MessageSquare} from 'lucide-react'
 import {ClientUrl} from "../constants/ClientUrl.ts"
 import {cardPostInfo, cardUserInfo} from "../types/PostcardDto.ts";
+import {postActivity} from "../types/PostDetailDto.ts";
 
 interface PostCardProps {
-    postInfo: cardPostInfo
-    userInfo: cardUserInfo
+    postInfo: cardPostInfo;
+    userInfo: cardUserInfo;
+    postActivity: postActivity;
+    onLike: (postId: string) => void;
+    onScrap: (postId: string) => void;
 }
 
 const pastelColors = [
@@ -27,17 +31,47 @@ const getFixedBackgroundColor = (seed: string = ""): string => {
     return pastelColors[index];
 }
 
-const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
+const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo, postActivity, onLike, onScrap}) => {
     const fixedBgColor = useMemo(() => getFixedBackgroundColor(postInfo.postId), [postInfo.postId]);
-    const [isBookmarked, setIsBookmarked] = useState(postInfo.scraped)
 
-    if (postInfo.reported) return null; // 🚨 신고된 글 필터링 (보이지 않게 함)
+    const [isLiked, setIsLiked] = useState(postActivity.liked);
+    const [isScrapped, setIsScrapped] = useState(postActivity.scraped);
+    const [isLiking, setIsLiking] = useState(false);
+    const [isScrapping, setIsScrapping] = useState(false);
+    const [likesCount, setLikesCount] = useState(postInfo.likesCount);
+    const [scrapsCount, setScrapsCount] = useState(postInfo.scrapsCount);
 
-    const handleBookmarkClick = (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        setIsBookmarked((prev) => !prev)
-    }
+    if (postActivity.reported) return null;
+
+    const handleLike = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsLiking(true);
+        try {
+            onLike(postInfo.postId);
+            setIsLiked((prev) => !prev);
+            setLikesCount((prev) => prev + (isLiked ? -1 : 1));
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLiking(false);
+        }
+    };
+
+    const handleScrap = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsScrapping(true);
+        try {
+            onScrap(postInfo.postId);
+            setIsScrapped((prev) => !prev);
+            setScrapsCount((prev) => prev + (isLiked ? -1 : 1));
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsScrapped(false);
+        }
+    };
 
     return (
         <motion.div
@@ -84,7 +118,7 @@ const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
                             className=" w-full h-full flex items-center justify-center p-6 text-center"
                             style={{ backgroundColor: fixedBgColor }}
                         >
-                            <h2 className="text-2xl font-bold text-gray-800 leading-tight">{postInfo.title}</h2>
+                            <h2 className="text-2xl font-bold text-white leading-tight">{postInfo.title}</h2>
                         </div>
                     )}
 
@@ -92,8 +126,8 @@ const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
                     <div className="absolute bottom-[220px] left-[505px]">
                         <AnimatePresence mode="wait">
                             <motion.div
-                                key={isBookmarked ? "bookmarked" : "unbookmarked"}
-                                onClick={handleBookmarkClick}
+                                key={isScrapped ? "bookmarked" : "unbookmarked"}
+                                onClick={handleScrap}
                                 className="cursor-pointer"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
@@ -104,7 +138,7 @@ const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
                             >
                                 <Bookmark
                                     className={`transition-colors ${
-                                        isBookmarked
+                                        isScrapped
                                             ? "fill-current text-blue-500 dark:text-blue-400"
                                             : "stroke-current text-gray-600 dark:text-gray-300"
                                     } w-10 h-10`}
@@ -142,20 +176,15 @@ const PostCard: React.FC<PostCardProps> = ({postInfo, userInfo}) => {
                 <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                     <div className="flex items-center justify-end space-x-6">
                         {/* Likes */}
-                        <div className="flex items-center space-x-2">
-                            <Heart
-                                className={`w-5 h-5 transition-colors ${
-                                    postInfo.liked
-                                        ? "fill-current text-red-500"
-                                        : "stroke-current text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                                }`}
-                            />
-                            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{postInfo.likesCount}</span>
-                        </div>
+                        {/* 좋아요 버튼 */}
+                        <button onClick={handleLike} className="flex items-center space-x-2">
+                            <Heart className={`w-5 h-5 ${isLiked ? "fill-current text-red-500" : "stroke-current text-gray-500 dark:text-gray-400"}`} />
+                            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{likesCount}</span>
+                        </button>
 
-                        {/* Comments */}
-                        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <MessageSquare className="w-5 h-5" />
+                        {/* 댓글 */}
+                        <div className="flex items-center space-x-2">
+                            <MessageSquare className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                             <span className="text-sm font-medium">{postInfo.commentsCount}</span>
                         </div>
                     </div>

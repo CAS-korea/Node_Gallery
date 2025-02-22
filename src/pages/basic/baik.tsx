@@ -4,8 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import PostContainer from "../../components/Container"
 import { Heart, Users } from "lucide-react"
-import PostCard from "../../components/PostCard"
-import type { PostEntity } from "../../types/PostEntity"
+// import PostCard from "../../components/PostCard"
+// import type { PostEntity } from "../../types/PostEntity"
 
 const userInfo = {
     name: "백지헌",
@@ -19,53 +19,53 @@ const userInfo = {
         "안녕하세요! 절 찾으셨군요! 혹시 플로버세요? 어서와요~ 노드 이번에 써봤는데 정말 좋더라구요 ㅎㅎ 개발자 분들 고마워요",
 }
 
-const post: PostEntity[] = [
-    {
-        postId: "1",
-        userId: "baekjiheon",
-        title: "오늘의 콘서트 후기",
-        content: "플로버 여러분 정말 감사합니다...",
-        summary: "2024 Fromis_9 콘서트 'PUZZLE PIECE' 후기",
-        userTag: ["#Fromis_9", "#Concert", "#플로버"],
-        createAt: new Date("2025-02-13T10:00:00"),
-        commentsCount: 3521,
-        likesCount: 25631,
-        scrapsCount: 1892,
-        reportsCount: 0,
-        postVisibility: "public" as const,
-        thumbNailImage: "/placeholder.svg?height=200&width=300",
-    },
-    {
-        postId: "2",
-        userId: "baekjiheon",
-        title: "새로운 앨범 준비중!",
-        content: "곧 만나요 플로버~",
-        summary: "Fromis_9 새 앨범 준비 과정",
-        userTag: ["#NewAlbum", "#Comeback", "#Fromis_9"],
-        createAt: new Date("2025-02-12T12:30:00"),
-        commentsCount: 2891,
-        likesCount: 19872,
-        scrapsCount: 1245,
-        reportsCount: 0,
-        postVisibility: "public" as const,
-        thumbNailImage: "/placeholder.svg?height=200&width=300",
-    },
-    {
-        postId: "3",
-        userId: "baekjiheon",
-        title: "코딩 공부 시작했어요",
-        content: "Node.js 정말 재미있네요!",
-        summary: "개발 공부 일지",
-        userTag: ["#Coding", "#NodeJS", "#Developer"],
-        createAt: new Date("2025-02-11T15:45:00"),
-        commentsCount: 1523,
-        likesCount: 12453,
-        scrapsCount: 891,
-        reportsCount: 0,
-        postVisibility: "public" as const,
-        thumbNailImage: "",
-    },
-]
+// const post: PostEntity[] = [
+//     {
+//         postId: "1",
+//         userId: "baekjiheon",
+//         title: "오늘의 콘서트 후기",
+//         content: "플로버 여러분 정말 감사합니다...",
+//         summary: "2024 Fromis_9 콘서트 'PUZZLE PIECE' 후기",
+//         userTag: ["#Fromis_9", "#Concert", "#플로버"],
+//         createAt: new Date("2025-02-13T10:00:00"),
+//         commentsCount: 3521,
+//         likesCount: 25631,
+//         scrapsCount: 1892,
+//         reportsCount: 0,
+//         postVisibility: "public" as const,
+//         thumbNailImage: "/placeholder.svg?height=200&width=300",
+//     },
+//     {
+//         postId: "2",
+//         userId: "baekjiheon",
+//         title: "새로운 앨범 준비중!",
+//         content: "곧 만나요 플로버~",
+//         summary: "Fromis_9 새 앨범 준비 과정",
+//         userTag: ["#NewAlbum", "#Comeback", "#Fromis_9"],
+//         createAt: new Date("2025-02-12T12:30:00"),
+//         commentsCount: 2891,
+//         likesCount: 19872,
+//         scrapsCount: 1245,
+//         reportsCount: 0,
+//         postVisibility: "public" as const,
+//         thumbNailImage: "/placeholder.svg?height=200&width=300",
+//     },
+//     {
+//         postId: "3",
+//         userId: "baekjiheon",
+//         title: "코딩 공부 시작했어요",
+//         content: "Node.js 정말 재미있네요!",
+//         summary: "개발 공부 일지",
+//         userTag: ["#Coding", "#NodeJS", "#Developer"],
+//         createAt: new Date("2025-02-11T15:45:00"),
+//         commentsCount: 1523,
+//         likesCount: 12453,
+//         scrapsCount: 891,
+//         reportsCount: 0,
+//         postVisibility: "public" as const,
+//         thumbNailImage: "",
+//     },
+// ]
 
 const Baik: React.FC = () => {
     const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false)
@@ -148,9 +148,9 @@ const Baik: React.FC = () => {
                         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">게시물</h2>
                     </div>
                     <div className="space-y-4">
-                        {post.map((post) => (
-                            <PostCard key={post.postId} postInfo={post} userInfo={userInfo} />
-                        ))}
+                        {/*{post.map((post) => (*/}
+                        {/*    <PostCard key={post.postId} postInfo={post} userInfo={userInfo} />*/}
+                        {/*))}*/}
                     </div>
                 </div>
             </div>
