@@ -13,6 +13,8 @@ import {postActivity, postInfo, userInfo} from "../types/PostDetailDto.ts";
 import {CommentDetailDto} from "../types/CommentDetailDto.ts";
 import {NewCommentDto} from "../types/NewCommentDto.ts";
 import {CommentService} from "../services/CommentService.ts";
+import {UserInfoDto} from "../types/UserInfoDto.ts";
+import {UserService} from "../services/UserService.ts";
 
 export interface ServicesContextType {
     login: (loginDTO: LoginDto) => Promise<void>;
@@ -43,6 +45,7 @@ export interface ServicesContextType {
     createComment: (postId: string, newCommentDto: NewCommentDto) => Promise<void>;
     likeComment: (commentId: string) => Promise<void>;
     reportComment: (commentId: string) => Promise<void>;
+    getUserInfo: (userId: string) => Promise<UserInfoDto>;
 }
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -89,6 +92,9 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
         createComment: async (postId, newCommentDto) => await CommentService.createComment(postId, newCommentDto),
         likeComment: async (commentId) => await CommentService.likeComment(commentId),
         reportComment: async (commentId) => await CommentService.reportComment(commentId),
+
+        // 🔹 유저 관련 함수 (await 추가)
+        getUserInfo: async (userId) => await UserService.getUserInfo(userId),
 
         // 🔹 파일 관련 함수 (await 추가)
         uploadImage: async (file) => await FileService.uploadImage(file)

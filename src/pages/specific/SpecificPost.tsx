@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {marked} from "marked";
-import PostContainer from "../../components/Container";
 import {motion} from "framer-motion";
 import {Heart, Flag, MessageCircle, Bookmark, Send} from "lucide-react";
 import {useServices} from "../../context/ServicesProvider.tsx";
@@ -146,7 +145,7 @@ const SpecificPost: React.FC = () => {
     if (!postInfo) return <p>게시물을 찾을 수 없습니다.</p>;
 
     return (
-        <PostContainer>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
             {showReportModal && (
                 <PostReportModal
                     onClose={() => setShowReportModal(false)}
@@ -266,7 +265,7 @@ const SpecificPost: React.FC = () => {
                     )}
                 </motion.div>
             </div>
-        </PostContainer>
+        </div>
     );
 };
 
