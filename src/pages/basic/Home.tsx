@@ -7,6 +7,9 @@ import {cardActivityInfo, cardPostInfo, cardUserInfo} from "../../types/Postcard
 const Home: React.FC = () => {
     const [posts, setPosts] = useState<{ postInfo: cardPostInfo, userInfo: cardUserInfo, postActivity: cardActivityInfo }[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isLiking, setIsLiking] = useState(false);
+    const [isScrapping, setIsScrapping] = useState(false);
+
     // const [visibleCount, setVisibleCount] = useState(5);
     const {getAllPosts, likePost, scrapPost} = useServices();
     // const observerRef = useRef<IntersectionObserver | null>(null);
@@ -15,7 +18,6 @@ const Home: React.FC = () => {
         setLoading(true);
         try {
             const allPosts = await getAllPosts();
-            console.log(allPosts)
             // setPosts(allPosts.slice(0, visibleCount));
             if (Array.isArray(allPosts)) {
                 setPosts(allPosts);  // 정상적인 배열이면 상태 업데이트
@@ -34,8 +36,6 @@ const Home: React.FC = () => {
         fetchPosts();
     }, []);
 
-
-
     // const lastPostRef = useCallback((node: HTMLDivElement) => {
     //     if (loading) return;
     //     if (observerRef.current) observerRef.current.disconnect();
@@ -46,6 +46,30 @@ const Home: React.FC = () => {
     //     });
     //     if (node) observerRef.current.observe(node);
     // }, [loading, visibleCount]);
+
+    const handleLikePost = async (postId: string) => {
+        setIsLiking(true);
+        try {
+            await likePost(postId);
+            fetchPosts();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLiking(false);
+        }
+    };
+
+    const handleScrapPost = async (postId: string) => {
+        setIsScrapping(true);
+        try {
+            await scrapPost(postId);
+            fetchPosts();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsScrapping(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -66,7 +90,7 @@ const Home: React.FC = () => {
                 {posts.length > 0 ? (
                     posts
                         .map(({ postInfo, userInfo, postActivity }) => (
-                        <PostCard key={postInfo.postId} postInfo={postInfo} userInfo={userInfo} postActivity={postActivity} onLike={() => likePost(postInfo.postId)} onScrap={() => scrapPost(postInfo.postId)}/>
+                        <PostCard key={postInfo.postId} postInfo={postInfo} userInfo={userInfo} postActivity={postActivity} onLike={() => handleLikePost(postInfo.postId)} isLiking={isLiking} onScrap={() => handleScrapPost(postInfo.postId)} isScrapping={isScrapping}/>
                     ))
                 ) : (
                     <p className="text-gray-400 dark:text-gray-500 text-center">게시물이 없습니다.</p>

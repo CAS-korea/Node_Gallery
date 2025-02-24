@@ -7,6 +7,7 @@ export interface CommentDetailDto {
 }
 
 export interface CommentContent {
+    commentId: string;
     comment: string;
 }
 

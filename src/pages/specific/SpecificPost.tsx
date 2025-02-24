@@ -68,26 +68,20 @@ const SpecificPost: React.FC = () => {
         };
         try {
             await createComment(postId, newCommentDto);
-            setNewComment("");
+            fetchPost();
         } catch (error) {
             console.error(error);
         } finally {
             setIsSubmitting(false);
-            fetchPost();
         }
     };
 
     const handleLikePost = async () => {
         if (!postId || isLiking || !postActivity) return;
         setIsLiking(true);
-
         try {
             await likePost(postId);
-            setPostActivity(prev => prev ? {...prev, liked: !prev.liked} : null);
-            setPostInfo(prev => prev ? {
-                ...prev,
-                likesCount: prev.likesCount + (postActivity.liked ? -1 : 1)
-            } : null);
+            fetchPost();
         } catch (error) {
             console.error("좋아요 처리 실패:", error);
         } finally {
@@ -98,14 +92,9 @@ const SpecificPost: React.FC = () => {
     const handleScrapPost = async () => {
         if (!postId || isScrapping || !postActivity) return;
         setIsScrapping(true);
-
         try {
             await scrapPost(postId);
-            setPostActivity(prev => prev ? {...prev, scraped: !prev.scraped} : null);
-            setPostInfo(prev => prev ? {
-                ...prev,
-                scrapsCount: prev.scrapsCount + (postActivity.scraped ? -1 : 1)
-            } : null);
+            fetchPost();
         } catch (error) {
             console.error("스크랩 처리 실패:", error);
         } finally {
@@ -113,16 +102,40 @@ const SpecificPost: React.FC = () => {
         }
     };
 
-
     const handleReportPost = async () => {
         if (!postId || isReporting || !postActivity) return;
         setIsReporting(true);
-
         try {
             await reportPost(postId);
-            setPostActivity(prev => prev ? {...prev, reported: true} : null);
+            fetchPost();
         } catch (error) {
             console.error("신고 처리 실패:", error);
+        } finally {
+            setIsReporting(false);
+        }
+    };
+
+    const handleLikeComment = async (commentId: string) => {
+        if (!commentId || isLiking || !comments) return; // 임시
+        setIsLiking(true);
+        try {
+            await likeComment(commentId);
+            fetchPost();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLiking(false);
+        }
+    };
+
+    const handleReportComment = async (commentId: string) => {
+        if (!commentId || isReporting || !comments) return;
+        setIsReporting(true);
+        try {
+            await reportComment(commentId);
+            fetchPost();
+        } catch (error) {
+            console.error(error);
         } finally {
             setIsReporting(false);
         }
@@ -217,8 +230,8 @@ const SpecificPost: React.FC = () => {
                 </motion.div>
 
                 {/* ✅ 댓글 입력 UI 추가 */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.5 }} className="mt-8">
+                <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.3, duration: 0.5}} className="mt-8">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Comments</h2>
 
                     {/* ✅ 댓글 입력 창 */}
@@ -232,7 +245,7 @@ const SpecificPost: React.FC = () => {
                             onChange={(e) => setNewComment(e.target.value)}
                         />
                         <Button variant="ghost" size="sm" onClick={handleCommentSubmit} disabled={isSubmitting}>
-                            <Send className="w-6 h-6" />
+                            <Send className="w-6 h-6"/>
                         </Button>
                     </div>
 
@@ -244,6 +257,8 @@ const SpecificPost: React.FC = () => {
                                 commentContent={comment.content}
                                 commentActivity={comment.commentActivity}
                                 commentUserInfo={comment.specificPostCommentAuthor}
+                                onLikeComment={() => handleLikeComment(comment.content.commentId)}
+                                onReportComment={() => handleReportComment(comment.content.commentId)}
                             />
                         ))
                     ) : (
