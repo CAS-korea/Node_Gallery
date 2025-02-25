@@ -1,27 +1,27 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
-import {marked} from "marked";
-import {motion} from "framer-motion";
-import {Heart, Flag, MessageCircle, Bookmark, Send} from "lucide-react";
-import {useServices} from "../../context/ServicesProvider.tsx";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { marked } from "marked";
+import { motion } from "framer-motion";
+import { Heart, Flag, MessageCircle, Bookmark, Send } from "lucide-react";
+import { useServices } from "../../context/ServicesProvider.tsx";
 import PostReportModal from "../../components/PostReportModal";
 
-import {Button} from "../../components/ui/button";
-import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/card";
-import {Separator} from "../../components/ui/separator";
-import {ClientUrl} from "../../constants/ClientUrl.ts";
-import {postActivity, postInfo, userInfo} from "../../types/PostDetailDto.ts";
-import {CommentDetailDto} from "../../types/CommentDetailDto.ts";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/card";
+import { Separator } from "../../components/ui/separator";
+import { ClientUrl } from "../../constants/ClientUrl.ts";
+import { postActivity, postInfo, userInfo } from "../../types/PostDetailDto.ts";
+import { CommentDetailDto } from "../../types/CommentDetailDto.ts";
 import PostComment from "../../components/PostComment.tsx";
-import {NewCommentDto} from "../../types/NewCommentDto.ts";
-import {Textarea} from "@headlessui/react";
+import { NewCommentDto } from "../../types/NewCommentDto.ts";
+import { Textarea } from "@headlessui/react";
 
 // ─────────────────────────────────────────────
 // SpecificPost 컴포넌트: 게시글 상세보기 페이지
 // ─────────────────────────────────────────────
 const SpecificPost: React.FC = () => {
-    const {postId} = useParams<{ postId: string }>();
-    const {getPostById, likePost, scrapPost, reportPost, createComment, likeComment, reportComment} = useServices();
+    const { postId } = useParams<{ postId: string }>();
+    const { getPostById, likePost, scrapPost, reportPost, createComment, likeComment, reportComment } = useServices();
 
     const [postInfo, setPostInfo] = useState<postInfo | null>(null);
     const [author, setAuthor] = useState<userInfo | null>(null);
@@ -36,6 +36,8 @@ const SpecificPost: React.FC = () => {
 
     const [newComment, setNewComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [commentLength, setCommentLength] = useState(0); // 글자 수 상태 추가
+    const maxLength = 500; // 최대 글자 수
 
     const fetchPost = async () => {
         if (!postId) return;
@@ -72,6 +74,8 @@ const SpecificPost: React.FC = () => {
             console.error(error);
         } finally {
             setIsSubmitting(false);
+            setNewComment(""); // 댓글 제출 후 입력 창 초기화
+            setCommentLength(0); // 글자 수 초기화
         }
     };
 
@@ -126,7 +130,6 @@ const SpecificPost: React.FC = () => {
             setIsLiking(false);
         }
     };
-
     const handleReportComment = async (commentId: string) => {
         if (!commentId || isReporting || !comments) return;
         setIsReporting(true);
@@ -137,6 +140,13 @@ const SpecificPost: React.FC = () => {
             console.error(error);
         } finally {
             setIsReporting(false);
+        }
+    };// 댓글 입력 시 글자 수 업데이트
+    const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        if (value.length <= maxLength) {
+            setNewComment(value);
+            setCommentLength(value.length);
         }
     };
 
@@ -156,10 +166,16 @@ const SpecificPost: React.FC = () => {
             <div className="max-w-3xl mx-auto px-4">
                 <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{duration: 0.5}}>
                     <Card className="overflow-hidden">
-                        <CardHeader className="p-0">
-                            <img src={postInfo.thumbNailImage || "/placeholder.svg"} alt="Thumbnail"
-                                 className="w-full h-64 object-cover"/>
-                        </CardHeader>
+                        {/* 썸네일 이미지가 있을 경우에만 보여주기 */}
+                        {postInfo.thumbNailImage && (
+                            <CardHeader className="p-0">
+                                <img
+                                    src={postInfo.thumbNailImage || "/placeholder.svg"}
+                                    alt="Thumbnail"
+                                    className="w-full h-64 object-cover"
+                                />
+                            </CardHeader>
+                        )}
 
                         <CardContent className="p-6">
                             {/* 제목 & 날짜를 한 줄에 배치 */}
@@ -168,10 +184,10 @@ const SpecificPost: React.FC = () => {
                                     {postInfo.title}
                                 </motion.h1>
                                 <span className="text-sm text-gray-500">
-                                    {new Date(postInfo.createAt).toLocaleDateString("en-US", {
+                                    {new Date(postInfo.createAt).toLocaleDateString("ko-KR", { // "ko-KR" 로 변경
                                         year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
                                     })}
                                 </span>
                             </div>
@@ -192,16 +208,10 @@ const SpecificPost: React.FC = () => {
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">{author?.role}</p>
                                 </div>
-                            </Link>
-
-                            {/* 게시글 내용 */}
+                            </Link>... {/* 게시글 내용 */}
                             <motion.div className="prose dark:prose-invert max-w-none"
                                         dangerouslySetInnerHTML={{__html: marked(postInfo?.content ?? "")}}/>
-                        </CardContent>
-
-                        <Separator/>
-
-                        {/* 좋아요, 스크랩, 댓글, 신고 버튼 */}
+                        </CardContent>... <Separator/>... {/* 좋아요, 스크랩, 댓글, 신고 버튼 */}
                         <CardFooter className="p-6 flex justify-between items-center">
                             <div className="flex space-x-4">
                                 <Button variant="ghost" size="sm" onClick={handleLikePost} disabled={isLiking}>
@@ -228,27 +238,31 @@ const SpecificPost: React.FC = () => {
                     </Card>
                 </motion.div>
 
-                {/* ✅ 댓글 입력 UI 추가 */}
+                {/* 댓글 UI */}
                 <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}}
                             transition={{delay: 0.3, duration: 0.5}} className="mt-8">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Comments</h2>
 
-                    {/* ✅ 댓글 입력 창 */}
-                    <div className="flex items-start space-x-4 mb-6">
-                        <img src="https://example.com/default-profile.png" alt="Profile"
-                             className="w-10 h-10 rounded-full object-cover"/>
-                        <Textarea
-                            className="flex-grow"
-                            placeholder="댓글을 입력하세요..."
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                        />
-                        <Button variant="ghost" size="sm" onClick={handleCommentSubmit} disabled={isSubmitting}>
-                            <Send className="w-6 h-6"/>
-                        </Button>
+                    {/* 댓글 입력 창 - 프로필 이미지 제거 */}
+                    <div className="flex flex-col">
+                        <div className="flex items-start space-x-4 mb-2">
+                            <Textarea
+                                className={`flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500`}
+                                placeholder="댓글을 입력하세요..."
+                                value={newComment}
+                                onChange={handleCommentChange}
+                                maxLength={maxLength}
+                            />
+                            <Button variant="ghost" size="sm" onClick={handleCommentSubmit} disabled={isSubmitting || newComment.trim() === ""}>
+                                <Send className="w-6 h-6"/>
+                            </Button>
+                        </div>
+                        <div className="text-gray-500 text-sm self-end">
+                            {commentLength}/{maxLength}
+                        </div>
                     </div>
 
-                    {/* ✅ 댓글 목록 */}
+                    {/* 댓글 목록 */}
                     {comments.length > 0 ? (
                         comments.map((comment, index) => (
                             <PostComment
