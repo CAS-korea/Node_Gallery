@@ -9,7 +9,7 @@ export interface cardPostInfo {
     scrapsCount: number;
     commentsCount: number;
     createAt: Date;
-    thumbNailImage: string;
+    thumbNailImage?: string;
 }
 
 export interface cardUserInfo {
