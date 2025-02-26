@@ -54,7 +54,7 @@ const PostCard: React.FC<PostCardProps> = ({
             className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden w-full max-w-4xl mx-auto"
         >
             <Link to={`${ClientUrl.SPECIFICPOST}/${postInfo.postId}`} className="block">
-                {/* Header - Author Info */}
+            {/* Header - Author Info */}
                 <div className="px-6 pt-6 pb-4">
                     <div className="flex items-center justify-between mb-4">
                         <Link
