@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 // CustomCursor 컴포넌트 Props 인터페이스
 interface CustomCursorProps {
@@ -16,17 +16,35 @@ interface CustomCursorProps {
 const CustomCursor: React.FC<CustomCursorProps> = ({
                                                        dotSize = 10,
                                                        ringSize = 60,
-                                                       color = "#000000",           // 기본 파란색
-                                                       ringColor = "#000000", // 반투명 파란색
+                                                       // 기본 색상은 다크모드에 따라 변경
+                                                       color: propColor,
+                                                       ringColor: propRingColor,
                                                        enableTrail = true,
                                                        trailLength = 8,
                                                    }) => {
+    // 다크모드 상태 감지
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-color-scheme: dark)");
+        setIsDarkMode(mq.matches);
+        const handleChange = (e: MediaQueryListEvent) => {
+            setIsDarkMode(e.matches);
+        };
+        mq.addEventListener("change", handleChange);
+        return () => mq.removeEventListener("change", handleChange);
+    }, []);
+
+    const defaultColor = isDarkMode ? "#ffffff" : "#000000";
+    const defaultRingColor = isDarkMode ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
+    const color = propColor || defaultColor;
+    const ringColor = propRingColor || defaultRingColor;
+
     // 마우스 위치 모션 값
     const mouseX = useMotionValue(-100);
     const mouseY = useMotionValue(-100);
 
     // 스프링을 이용한 부드러운 커서 움직임
-    const springConfig = { damping: 25, stiffness: 700 };
+    const springConfig = { damping: 45, stiffness: 1000 };
     const cursorX = useSpring(mouseX, springConfig);
     const cursorY = useSpring(mouseY, springConfig);
 
@@ -41,7 +59,7 @@ const CustomCursor: React.FC<CustomCursorProps> = ({
     const lastUpdateTime = useRef(0);
     const requestRef = useRef<number | null>(null);
 
-    // 트레일 업데이트 함수 (최적화를 위해 30ms 간격으로 업데이트)
+    // 트레일 업데이트 함수 (최적화를 위해 30ms 간격 업데이트)
     const updateTrail = useCallback(() => {
         if (!enableTrail) return;
         const now = performance.now();
@@ -86,11 +104,11 @@ const CustomCursor: React.FC<CustomCursorProps> = ({
         };
     }, [mouseX, mouseY, updateTrail, enableTrail]);
 
-    // 트레일 점들을 렌더링 (각 점은 위치, 크기, 투명도가 다름)
+    // 트레일 점들 렌더링 (각 점은 위치, 크기, 투명도가 다름)
     const trailDots = enableTrail
         ? trailPositions.map((pos, index) => {
             const progress = (index + 1) / trailPositions.length;
-            const size = dotSize * (0.5 + progress * 0.5);
+            const size = dotSize * (0.5 + progress * 1.5);
             const opacity = progress * 0.5;
             return (
                 <motion.div
