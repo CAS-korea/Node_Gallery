@@ -250,7 +250,7 @@ const SpecificPost: React.FC = () => {
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent z-10 "></div>
                 <Link
                     to="/"
-                    className="absolute top-6 left-6 z-20 bg-white/5 backdrop-blur-md text-white rounded-full p-2 hover:bg-white/20 transition-colors"
+                    className="absolute top-6 left-6 z-20 bg-black backdrop-blur-md dark:bg-white text-white dark:text-black rounded-full p-2 hover:bg-white/20 transition-colors"
                 >
                     <ChevronLeft className="w-5 h-5" />
                 </Link>

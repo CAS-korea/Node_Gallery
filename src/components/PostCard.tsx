@@ -173,7 +173,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             {/* 댓글 */}
                             <div className="flex items-center space-x-1">
                                 <MessageSquare className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
-                                <span className="text-sm font-medium">{postInfo.commentsCount}</span>
+                                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{postInfo.commentsCount}</span>
                             </div>
                         </div>
                     </div>
