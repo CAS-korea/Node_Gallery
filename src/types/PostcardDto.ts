@@ -1,14 +1,14 @@
-export type UserRole = 'STUDENT' | 'GRADUATE' | 'PROFESSOR' | 'CAS_CREATOR';
+import {UserRole} from "./UserEntity.ts";
 
 export interface cardPostInfo {
     postId: string;
-    title : string;
+    title: string;
     summary: string;
     userTag: string[];
     likesCount: number;
     scrapsCount: number;
     commentsCount: number;
-    createAt: Date;
+    createAt: string; // Date 대신 string으로 변경
     thumbNailImage?: string;
 }
 
