@@ -1,3 +1,4 @@
+// src/components/SpecificPost.tsx
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -14,16 +15,16 @@ import {
     Calendar,
     Clock,
 } from "lucide-react";
-import { useServices } from "../../context/ServicesProvider.tsx";
+import { useServices } from "../../context/ServicesProvider";
 import PostReportModal from "../../components/PostReportModal";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
-import { ClientUrl } from "../../constants/ClientUrl.ts";
-import type { postActivity, postInfo, userInfo } from "../../types/PostDetailDto.ts";
-import type { CommentDetailDto } from "../../types/CommentDetailDto.ts";
-import PostComment from "../../components/PostComment.tsx";
-import type { NewCommentDto } from "../../types/NewCommentDto.ts";
+import { ClientUrl } from "../../constants/ClientUrl";
+import type { postActivity, postInfo, userInfo } from "../../types/PostDetailDto";
+import type { CommentDetailDto } from "../../types/CommentDetailDto";
+import { NewCommentDto } from "../../types/NewCommentDto";
+import PostComment from "../../components/PostComment";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
 
@@ -179,7 +180,6 @@ const SpecificPost: React.FC = () => {
         return Math.ceil(wordCount / wordsPerMinute);
     };
 
-    // 마크다운을 HTML로 변환하고, 첫 문단에 드롭 캡 적용
     const processContent = (content: string) => {
         if (!content) return "";
         const htmlContent = marked(content);
@@ -237,26 +237,29 @@ const SpecificPost: React.FC = () => {
                 )}
             </AnimatePresence>
 
-            {/* Hero 섹션: 썸네일 이미지 및 뒤로가기 버튼 */}
-            <div className="relative w-full h-[50vh] overflow-hidden">
-                <div className="absolute inset-0 bg-white/5 z-10 dark:bg-black"></div>
-                <motion.img
-                    src={postInfo.thumbNailImage || ""}
-                    className="w-full h-full object-cover"
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                />
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent z-10 "></div>
-                <Link
-                    to="/"
-                    className="fixed top-6 left-6 z-20 bg-black backdrop-blur-md dark:bg-white text-white dark:text-black rounded-full p-2 hover:bg-white/20 transition-colors"
-                >
-                    <ChevronLeft className="w-5 h-5" />
-                </Link>
-            </div>
+            {/* 썸네일 이미지가 있을 때만 Hero 섹션 표시 */}
+            {postInfo.thumbNailImage && (
+                <div className="relative w-full h-[50vh] overflow-hidden">
+                    <div className="absolute inset-0 bg-white/5 z-10 dark:bg-black"></div>
+                    <motion.img
+                        src={postInfo.thumbNailImage}
+                        className="w-full h-full object-cover"
+                        initial={{ scale: 1.1 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent z-10 dark:from-gray-950"></div>
+                    <Link
+                        to="/"
+                        className="fixed top-6 left-6 z-20 bg-black backdrop-blur-md dark:bg-white text-white dark:text-black rounded-full p-2 hover:bg-white/20 transition-colors"
+                    >
+                        <ChevronLeft className="w-5 h-5" />
+                    </Link>
+                </div>
+            )}
 
-            <div className="max-w-3xl mx-auto px-4 -mt-20 relative z-20">
+            {/* 메인 콘텐츠 */}
+            <div className={`max-w-3xl mx-auto px-4 ${postInfo.thumbNailImage ? "-mt-20" : "pt-8"} relative z-20`}>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                     <Card className="overflow-hidden shadow-xl border-0 dark:bg-gray-900">
                         <CardContent className="p-8">
@@ -405,18 +408,17 @@ const SpecificPost: React.FC = () => {
                         <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800 ml-4"></div>
                     </div>
 
-                    {/* 댓글 입력 (프로필 이미지 제거, 워드카운트 추가) */}
                     <Card className="mb-8 overflow-hidden border-0 shadow-lg dark:bg-gray-900">
                         <CardContent className="p-6">
                             <div className="flex flex-col">
                                 <div className="flex items-start space-x-4 mb-2">
-                  <textarea
-                      className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none min-h-[100px]"
-                      placeholder="댓글을 입력하세요..."
-                      value={newComment}
-                      onChange={handleCommentChange}
-                      maxLength={maxLength}
-                  />
+                                    <textarea
+                                        className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none min-h-[100px]"
+                                        placeholder="댓글을 입력하세요..."
+                                        value={newComment}
+                                        onChange={handleCommentChange}
+                                        maxLength={maxLength}
+                                    />
                                     <Button
                                         onClick={handleCommentSubmit}
                                         disabled={isSubmitting || !newComment.trim()}
@@ -473,6 +475,16 @@ const SpecificPost: React.FC = () => {
                     )}
                 </motion.div>
             </div>
+
+            {/* 썸네일 이미지가 없을 때 뒤로가기 버튼 별도 표시 */}
+            {!postInfo.thumbNailImage && (
+                <Link
+                    to="/"
+                    className="fixed top-6 left-6 z-20 bg-black backdrop-blur-md dark:bg-white text-white dark:text-black rounded-full p-2 hover:bg-white/20 transition-colors"
+                >
+                    <ChevronLeft className="w-5 h-5" />
+                </Link>
+            )}
         </div>
     );
 };
