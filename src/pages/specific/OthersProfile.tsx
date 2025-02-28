@@ -9,7 +9,8 @@ import PostCard from "../../components/PostCard";
 import { useServices } from "../../context/ServicesProvider";
 import { UserService } from "../../services/UserService";
 import type { UserProfileDto, PostCardDto } from "../../types/UserProfileDto";
-import FollowModal, { FollowUser } from "../../components/profile/FollowModal";
+import FollowModal from "../../components/profile/FollowModal";
+import {FollowUser} from "../../types/FollowUser.ts";
 
 const fadeInUp = {
     initial: { opacity: 0, y: 20 },
