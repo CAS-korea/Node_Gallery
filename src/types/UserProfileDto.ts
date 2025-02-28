@@ -1,9 +1,9 @@
 import {UserRole} from "./UserEntity.ts";
 
 export enum PostVisibility {
-    PUBLIC = "public",
-    PRIVATE = "private",
-    FOLLOWERS_ONLY = "followersOnly",
+    PUBLIC = "PUBLIC",
+    PRIVATE = "PRIVATE",
+    FOLLOWERS_ONLY = "FOLLOWERS_ONLY",
 }
 
 export interface FollowActivityDto {
