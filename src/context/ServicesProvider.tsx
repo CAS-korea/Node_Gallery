@@ -15,6 +15,7 @@ import {NewCommentDto} from "../types/NewCommentDto.ts";
 import {CommentService} from "../services/CommentService.ts";
 import {UserInfoDto} from "../types/UserInfoDto.ts";
 import {UserService} from "../services/UserService.ts";
+import { UserProfileDto } from "../types/UserProfileDto.ts"; // 새로 추가
 
 export interface ServicesContextType {
     login: (loginDTO: LoginDto) => Promise<void>;
@@ -46,6 +47,7 @@ export interface ServicesContextType {
     likeComment: (commentId: string) => Promise<void>;
     reportComment: (commentId: string) => Promise<void>;
     getUserInfo: (userId: string) => Promise<UserInfoDto>;
+    getUserProfile: (userId: string) => Promise<UserProfileDto>; // 새로 추가
 }
 
 export const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -95,6 +97,7 @@ export const ServicesProvider: React.FC<{ children: ReactNode }> = ({ children }
 
         // 🔹 유저 관련 함수 (await 추가)
         getUserInfo: async (userId) => await UserService.getUserInfo(userId),
+        getUserProfile: async (userId) => await UserService.getUserProfile(userId), // 새로 추가
 
         // 🔹 파일 관련 함수 (await 추가)
         uploadImage: async (file) => await FileService.uploadImage(file)
