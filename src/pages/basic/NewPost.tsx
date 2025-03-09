@@ -288,7 +288,7 @@ const NewPost: React.FC = () => {
                                             variant="outline"
                                             size="icon"
                                             onClick={() => setShowDraftModal(true)}
-                                            className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-300 dark:bg-purple-900/30 dark:hover:bg-purple-800/50 dark:text-purple-400 dark:border-purple-700"
+                                            className="bg-yellow-500 hover:bg-white hover:border-white text-gray-700 border-white dark:bg-indigo-900/30 dark:hover:bg-indigo-800/50 dark:text-indigo-400 dark:border-indigo-700"
                                         >
                                             <Save className="h-5 w-5" />
                                         </Button>
@@ -458,7 +458,7 @@ const NewPost: React.FC = () => {
                         <Button
                             onClick={handleSaveDraft}
                             variant="outline"
-                            className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-300 dark:bg-purple-900/30 dark:hover:bg-purple-800/50 dark:text-purple-400 dark:border-purple-700"
+                            className="bg-yellow-500 hover:bg-white hover:border-white text-gray-700 border-white dark:bg-indigo-900/30 dark:hover:bg-indigo-800/50 dark:text-indigo-400 dark:border-indigo-700"
                         >
                             <Save className="w-4 h-4 mr-2" />
                             임시저장
@@ -472,7 +472,9 @@ const NewPost: React.FC = () => {
                 </AnimatePresence>
 
                 {/* 이모지 선택기 */}
-                {showEmojiPicker && <EmojiLibrary onSelectEmoji={insertEmoji} onClose={() => setShowEmojiPicker(false)} />}
+                <div>
+                    {showEmojiPicker && <EmojiLibrary onSelectEmoji={insertEmoji} onClose={() => setShowEmojiPicker(false)} />}
+                </div>
             </div>
         </div>
     )

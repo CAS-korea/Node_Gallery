@@ -118,7 +118,7 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({
                         <TooltipTrigger asChild>
                             <PopoverTrigger asChild>
                                 <Button variant="ghost" size="icon" className="h-8 w-8">
-                                    <Palette className="h-4 w-4" style={{ color }} />
+                                    <Palette className="h-4 w-4" />
                                 </Button>
                             </PopoverTrigger>
                         </TooltipTrigger>
@@ -127,7 +127,7 @@ const MarkdownToolbar: React.FC<MarkdownToolbarProps> = ({
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-                <PopoverContent className="w-auto p-3">
+                <PopoverContent className="w-auto p-3 ">
                     <div className="space-y-3">
                         <h4 className="font-medium text-sm">텍스트 색상 선택</h4>
                         <HexColorPicker color={color} onChange={handleColorChange} />

@@ -148,7 +148,8 @@ const EmojiLibrary: React.FC<EmojiLibraryProps> = ({ onSelectEmoji, onClose }) =
     }
 
     return (
-        <div className="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-72">
+        <div
+            className="absolute top-1/2 left-1/4 transform -translate-y-1/2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-72">
             <div className="p-2 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                 <h3 className="text-sm font-medium">이모지 선택</h3>
                 <button
