@@ -120,8 +120,8 @@ const ModernIndex = () => {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.8, duration: 1 }}
                         >
-                            미래를 향한 혁신적인 인공지능 프로젝트 <br />
-                            <span className="text-sm">Innovative AI project for the future</span>
+                            AI학과를 위한 커넥션 프로젝트 <br />
+                            <span className="text-sm">Connection Project for AI Department</span>
                         </motion.p>
                     </motion.div>
                     <motion.div
@@ -147,7 +147,7 @@ const ModernIndex = () => {
                             <h2 className="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 mb-6">
                                 "해봐야 안다"
                             </h2>
-                            <p className="text-2xl font-medium text-white/90">whip whip</p>
+                            <p className="text-2xl font-medium text-white/90">- VISION OF CAS -</p>
                         </div>
                         <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16" variants={staggerContainer} initial="hidden" animate="visible">
                             <motion.div className="bg-white/5 backdrop-blur-sm p-6 rounded-xl hover:bg-white/10 transition-colors duration-300" variants={fadeInUp}>
@@ -201,7 +201,7 @@ const ModernIndex = () => {
                             <InteractiveCard
                                 title="AI 연구 플랫폼"
                                 description="최신 인공지능 기술을 연구하고 개발하는 플랫폼을 제공합니다"
-                                image="/kimafganta.png?height=300&width=300"
+                                image="index/index_roadmap.png?height=300&width=300"
                                 color="bg-gradient-to-br from-purple-600/90 to-blue-600/90"
                             />
                             <InteractiveCard
@@ -219,7 +219,7 @@ const ModernIndex = () => {
                             <InteractiveCard
                                 title="프로젝트 쇼케이스"
                                 description="완성된 프로젝트를 공유하고 피드백을 받을 수 있는 기회를 제공합니다"
-                                image="/kimafganta.png?height=300&width=300"
+                                image="index/index_roadmap.png?height=300&width=300"
                                 color="bg-gradient-to-br from-emerald-600/90 to-purple-600/90"
                             />
                         </div>
@@ -255,9 +255,9 @@ const ModernIndex = () => {
                         </div>
                         <RotatingGallery images={galleryImages} />
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-                            <ZoomImage src="/kimafganta.png?height=300&width=300" alt="AI Research" />
-                            <ZoomImage src="/kimafganta.png?height=300&width=300" alt="Team Collaboration" />
-                            <ZoomImage src="/kimafganta.png?height=300&width=300" alt="Workshop" />
+                            <ZoomImage src="index/index_hackathon.png?height=500&width=300" alt="AI Research" />
+                            <ZoomImage src="index/index_roadmap.png?height=300&width=300" alt="Team Collaboration" />
+                            <ZoomImage src="index/index_ppt.JPG?height=300&width=300" alt="Workshop" />
                         </div>
                     </motion.div>
                 </section>
@@ -291,7 +291,7 @@ const ModernIndex = () => {
                                 <img src="/CASlogo.png" alt="CAS Logo" className="w-full h-auto object-contain mb-8" />
                                 <motion.div className="relative overflow-hidden rounded-xl" whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
                                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 mix-blend-overlay" />
-                                    <img src="/kimafganta.png?height=400&width=600" alt="CAS Team" className="w-full h-auto rounded-xl" />
+                                        <img src="index/index_nangman.JPG?height=400&width=600" alt="CAS" className="w-full h-auto rounded-xl" />
                                 </motion.div>
                             </motion.div>
                             <motion.div
@@ -311,8 +311,8 @@ const ModernIndex = () => {
                                 <p className="text-white/80 mb-6 leading-relaxed">
                                     직접 부딫히고 경험하며 함께 성장하는 문화를 만들어가고자 합니다.
                                 </p>
-                                <div className="p-4 border border-white/10 rounded-lg bg-white/5 mb-6">
-                                    <p className="text-white font-medium text-lg text-center">"해봐야 안다."</p>
+                                <div className="p-4  mb-6">
+                                    <p className="text-white font-medium text-2xl text-center">"해봐야 안다."</p>
                                 </div>
                                 <p className="text-white/80 mb-6 leading-relaxed">
                                     해보지 않으면 모르는 것이 많습니다. CAS와 함께 무엇이든 부딫혀 보며, 새로운 생각의 패러다임을 펼쳐보세요.

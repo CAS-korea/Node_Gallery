@@ -2,10 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PostContainer from "../../components/Container.tsx";
+import PostContainer from "../../components/postcard/Container.tsx";
 import { Send, Paperclip, Smile, MoreVertical, ArrowLeft } from "lucide-react";
 import { ClientUrl } from "../../constants/ClientUrl.ts";
-import ChatReportModal from "../../components/ChatReportModal.tsx"; // 신고 모달
+import ChatReportModal from "../../components/postcard/ChatReportModal.tsx"; // 신고 모달
 
 interface ChatMessage {
     id: number;

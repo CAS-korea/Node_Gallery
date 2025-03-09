@@ -15,7 +15,7 @@ import {
     ChevronRight,
     ChevronDown,
 } from "lucide-react"
-import PostContainer from "../../components/Container"
+import PostContainer from "../../components/postcard/Container.tsx"
 import { useTheme } from "../../layouts/ThemeContext" // 전역 다크모드 컨텍스트
 
 const Settings: React.FC = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PostContainer from "../../components/Container";
+import PostContainer from "../../components/postcard/Container.tsx";
 import { FileText, MessageSquare, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 

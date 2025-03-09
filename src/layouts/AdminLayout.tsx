@@ -148,13 +148,12 @@ const AdminLayout: React.FC = ({ children }) => {
                     {/* 상단 네비게이션 바 */}
                     <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
                         <div className="flex items-center justify-between px-6 py-4">
-                            <Header />
                             <div className="flex items-center space-x-4">
                                 {/* 알림 버튼 */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setShowNotifications(!showNotifications)}
-                                        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
+                                        className="absolute mr-[800px] p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
                                     >
                                         <Bell className="w-5 h-5 text-gray-500" />
                                         {unreadCount > 0 && (

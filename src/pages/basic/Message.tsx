@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import PostContainer from "../../components/Container";
+import PostContainer from "../../components/postcard/Container.tsx";
 import { ClientUrl } from "../../constants/ClientUrl";
 
 interface DM {

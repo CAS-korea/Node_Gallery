@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Users, MessageSquare } from "lucide-react";
-import PostContainer from "../../components/Container";
-import PostCard from "../../components/PostCard";
+import PostContainer from "../../components/postcard/Container.tsx";
+import PostCard from "../../components/postcard/PostCard.tsx";
 import { useServices } from "../../context/ServicesProvider";
 import { UserService } from "../../services/UserService";
 import type { UserProfileDto, PostCardDto } from "../../types/UserProfileDto";
@@ -119,7 +119,7 @@ const OthersProfile: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+            <div className="flex flex-col items-center justify-center min-h-screen">
                 <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                 <p className="mt-4 text-gray-600 dark:text-gray-300">잠시만 기다려주세요!</p>
             </div>
@@ -136,7 +136,7 @@ const OthersProfile: React.FC = () => {
 
     return (
         <PostContainer>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto">
                 {/* 프로필 제목 */}
                 <motion.h1 {...fadeInUp} className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">
                     프로필
@@ -233,24 +233,30 @@ const OthersProfile: React.FC = () => {
                 {/* 게시물 섹션 */}
                 <div className="mt-8 space-y-6">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">게시물</h2>
-                    {posts.map((post, index) => (
-                        <motion.div
-                            key={post.postInfo.postId}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            <PostCard
-                                postInfo={post.postInfo}
-                                userInfo={post.userInfo}
-                                postActivity={post.postActivity}
-                                onLike={() => handleLikePost(post.postInfo.postId)}
-                                onScrap={() => handleScrapPost(post.postInfo.postId)}
-                                isLiking={isLiking}
-                                isScrapping={isScrapping}
-                            />
-                        </motion.div>
-                    ))}
+                    {posts.length > 0 ? (
+                        posts.map((post, index) => (
+                            <motion.div
+                                key={post.postInfo.postId}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                <PostCard
+                                    postInfo={post.postInfo}
+                                    userInfo={post.userInfo}
+                                    postActivity={post.postActivity}
+                                    onLike={() => handleLikePost(post.postInfo.postId)}
+                                    onScrap={() => handleScrapPost(post.postInfo.postId)}
+                                    isLiking={isLiking}
+                                    isScrapping={isScrapping}
+                                />
+                            </motion.div>
+                        ))
+                    ) : (
+                        <p className="text-gray-400 dark:text-gray-500 text-center">
+                            이 유저는 게시물이 없습니다.
+                        </p>
+                    )}
                 </div>
             </div>
 

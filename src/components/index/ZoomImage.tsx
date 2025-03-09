@@ -12,7 +12,7 @@ const ZoomImage = ({ src, alt }) => {
 
     return (
         <div
-            className="relative overflow-hidden rounded-xl w-full max-w-sm h-64 mx-auto"
+            className="relative overflow-hidden rounded-xl w-full max-w-sm h-48 mx-auto"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -27,7 +27,6 @@ const ZoomImage = ({ src, alt }) => {
                 transition={{ duration: 0.4 }}
             />
 
-            {/* 파동 효과 */}
             <AnimatePresence>
                 {isHovered && (
                     <motion.div

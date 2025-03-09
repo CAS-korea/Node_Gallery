@@ -138,7 +138,7 @@ const Admin: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+            <div className="flex flex-col items-center justify-center min-h-screen ">
                 <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
                 <div className="mt-4 text-gray-600 dark:text-gray-300 font-medium">잠시만 기다려주세요!</div>
             </div>

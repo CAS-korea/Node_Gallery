@@ -4,8 +4,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Edit2, Heart, ImageIcon, Users, X } from "lucide-react";
-import PostContainer from "../../components/Container";
-import PostCard from "../../components/PostCard";
+import PostContainer from "../../components/postcard/Container.tsx";
+import PostCard from "../../components/postcard/PostCard.tsx";
 import FollowModal from "../../components/profile/FollowModal";
 import { useServices } from "../../context/ServicesProvider";
 import { UserService } from "../../services/UserService";
@@ -161,7 +161,7 @@ const Profile: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+            <div className="flex flex-col items-center justify-center min-h-screen">
                 <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                 <p className="mt-4 text-gray-600 dark:text-gray-300">잠시만 기다려주세요!</p>
             </div>
@@ -170,7 +170,7 @@ const Profile: React.FC = () => {
 
     if (!userProfile) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+            <div className="flex items-center justify-center min-h-screen">
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">로그인 후 이용 가능합니다</p>
             </div>
         );
@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
 
     return (
         <PostContainer>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto">
                 <motion.h1 {...fadeInUp} className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">
                     내 프로필
                 </motion.h1>
@@ -268,26 +268,30 @@ const Profile: React.FC = () => {
                             </button>
                         </div>
                     </div>
-                    <div className="space-y-4">
-                        {filteredPosts.map((post, index) => (
-                            <motion.div
-                                key={post.postInfo.postId}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                            >
-                                <PostCard
-                                    postInfo={post.postInfo}
-                                    userInfo={post.userInfo}
-                                    postActivity={post.postActivity}
-                                    onLike={() => handleLikePost(post.postInfo.postId)}
-                                    onScrap={() => handleScrapPost(post.postInfo.postId)}
-                                    isLiking={isLiking}
-                                    isScrapping={isScrapping}
-                                />
-                            </motion.div>
-                        ))}
-                    </div>
+                        {filteredPosts.length > 0 ? (
+                            filteredPosts.map((post, index) => (
+                                <motion.div
+                                    key={post.postInfo.postId}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <PostCard
+                                        postInfo={post.postInfo}
+                                        userInfo={post.userInfo}
+                                        postActivity={post.postActivity}
+                                        onLike={() => handleLikePost(post.postInfo.postId)}
+                                        onScrap={() => handleScrapPost(post.postInfo.postId)}
+                                        isLiking={isLiking}
+                                        isScrapping={isScrapping}
+                                    />
+                                </motion.div>
+                            ))
+                        ) : (
+                            <p className="text-gray-400 dark:text-gray-500 text-center">
+                                게시물이 없습니다.
+                            </p>
+                        )}
                 </div>
             </div>
 
@@ -364,7 +368,7 @@ const Profile: React.FC = () => {
                                             )}
                                         </span>
                                         <label
-                                            className={`cursor-pointer bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 ${
+                                            className={`cursor-pointer  text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 ${
                                                 imageUploading ? "opacity-50 cursor-not-allowed" : ""
                                             }`}
                                         >

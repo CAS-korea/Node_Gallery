@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SearchIcon, Bot, Tag, X } from "lucide-react";
-import PostContainer from "../../components/Container";
-import PostCard from "../../components/PostCard.tsx";
+import PostContainer from "../../components/postcard/Container.tsx";
+import PostCard from "../../components/postcard/PostCard.tsx";
 import { PostService } from "../../services/PostService.ts";
 import { cardActivityInfo, cardPostInfo, cardUserInfo } from "../../types/PostcardDto.ts";
 

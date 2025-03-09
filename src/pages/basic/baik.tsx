@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import PostContainer from "../../components/Container"
+import PostContainer from "../../components/postcard/Container.tsx"
 import { Heart, Users } from "lucide-react"
 // import PostCard from "../../components/PostCard"
 // import type { PostEntity } from "../../types/PostEntity"

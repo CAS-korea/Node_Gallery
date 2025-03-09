@@ -1,33 +1,43 @@
-"use client";
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
-import { FollowUser } from "../../types/FollowUser"; // FollowUser 타입 가져오기
-import { Link } from "react-router-dom"; // react-router-dom에서 Link 가져오기
-import { ClientUrl } from "../../constants/ClientUrl"; // URL 상수 가져오기
+import { FollowUser } from "../../types/FollowUser";
+import { Link } from "react-router-dom";
+import { ClientUrl } from "../../constants/ClientUrl";
+import Cookies from "js-cookie";
 
-// 모달 애니메이션 설정: 등장 및 사라짐 효과
 const modalVariants = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.95 },
 };
 
-// 모달 props 타입 정의
 interface FollowModalProps {
-    isOpen: boolean;           // 모달 열림/닫힘 상태
-    onClose: () => void;       // 모달 닫기 함수
-    title: string;             // 모달 제목 (예: "팔로워", "팔로잉")
-    users: FollowUser[];       // 사용자 목록
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    users: FollowUser[];
 }
 
 const FollowModal: React.FC<FollowModalProps> = ({ isOpen, onClose, title, users }) => {
-    if (!isOpen) return null; // 모달이 열리지 않았으면 null 반환
+    const [currentUserId, setCurrentUserId] = useState<string>("");
 
-    // 사용자 클릭 시 이동하면서 모달 닫기
+    useEffect(() => {
+        const cookieInfo = Cookies.get("info");
+        if (cookieInfo) {
+            try {
+                const parsedInfo = JSON.parse(cookieInfo);
+                setCurrentUserId(parsedInfo.userId);
+            } catch (error) {
+                console.error("쿠키 파싱 에러", error);
+            }
+        }
+    }, []);
+
+    if (!isOpen) return null;
+
     const handleUserClick = () => {
-        onClose(); // 모달 닫기
+        onClose();
     };
 
     return (
@@ -46,37 +56,46 @@ const FollowModal: React.FC<FollowModalProps> = ({ isOpen, onClose, title, users
                         <X size={20} />
                     </button>
                 </div>
-                {/* 사용자 목록 */}
-                <ul className="space-y-4">
-                    {users.map((user) => (
-                        <motion.li
-                            key={user.userId} // userId를 키로 사용
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
-                            className="flex items-center space-x-3"
-                        >
-                            {/* 클릭 시 OthersProfile로 이동하고 모달 닫기 */}
-                            <Link
-                                to={`${ClientUrl.OTHERSPROFILE}/${user.userId}`}
-                                onClick={handleUserClick} // 클릭 시 모달 닫기 호출
-                                className="flex items-center space-x-3 w-full hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition"
-                            >
-                                {/* 프로필 이미지 */}
-                                <img
-                                    src={user.profileImageUrl || "/placeholder.svg"}
-                                    alt={user.name}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                                {/* 사용자 정보 */}
-                                <div>
-                                    <span className="text-gray-800 dark:text-gray-100">{user.name}</span>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.role}</p>
-                                </div>
-                            </Link>
-                        </motion.li>
-                    ))}
-                </ul>
+                {/* 사용자 목록 또는 비어있을 경우 메시지 */}
+                {users.length > 0 ? (
+                    <ul className="space-y-4">
+                        {users.map((user) => {
+                            const profileLink =
+                                user.userId === currentUserId
+                                    ? ClientUrl.PROFILE
+                                    : `${ClientUrl.OTHERSPROFILE}/${user.userId}`;
+                            return (
+                                <motion.li
+                                    key={user.userId}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    className="flex items-center space-x-3"
+                                >
+                                    <Link
+                                        to={profileLink}
+                                        onClick={handleUserClick}
+                                        className="flex items-center space-x-3 w-full hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition"
+                                    >
+                                        <img
+                                            src={user.profileImageUrl || "/placeholder.svg"}
+                                            alt={user.name}
+                                            className="w-10 h-10 rounded-full object-cover"
+                                        />
+                                        <div>
+                                            <span className="text-gray-800 dark:text-gray-100">{user.name}</span>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{user.role}</p>
+                                        </div>
+                                    </Link>
+                                </motion.li>
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <p className="text-center text-gray-500 dark:text-gray-400">
+                        해당 유저는 {title}...없네요.
+                    </p>
+                )}
             </div>
         </motion.div>
     );
