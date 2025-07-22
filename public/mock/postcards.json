@@ -14,7 +14,7 @@
     },
     "userInfo": {
       "name": "세진",
-      "profileImageUrl": "public/node_black.png",
+      "profileImageUrl": "node_black.png",
       "userId": "100",
       "role": "Front‑end Designer"
     },
@@ -35,7 +35,7 @@
     },
     "userInfo": {
       "name": "kimafganta",
-      "profileImageUrl": "public/kimafganta.png",
+      "profileImageUrl": "kimafganta.png",
       "userId": "101",
       "role": "Professor"
     },

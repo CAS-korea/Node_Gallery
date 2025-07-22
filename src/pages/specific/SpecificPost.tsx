@@ -117,7 +117,7 @@ const SpecificPost: React.FC = () => {
         const dummy: DummyComment = {
             id: Date.now().toString(),
             comment: newComment,
-            user: { name: "세진", avatar: "public/node_black.png" },
+            user: { name: "세진", avatar: "node_black.png" },
             activity: { liked: false, reported: false },
         };
         setComments((c) => [...c, dummy]);
