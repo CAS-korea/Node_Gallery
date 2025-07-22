@@ -1,0 +1,45 @@
+[
+  {
+    "postInfo": {
+      "postId": "1",
+      "title": "Welcome to CAS Demo!",
+      "summary": "Front‑end GitHub Pages 배포를 위한 테스트 글입니다.",
+      "content": "배포용 테스트 글입니당",
+      "userTag": ["#CAS", "#Demo"],
+      "likesCount": 171834,
+      "scrapsCount": 351,
+      "commentsCount": 0,
+      "createAt": "2025-07-22T06:00:00Z",
+      "thumbNailImage": "public/city.jpg"
+    },
+    "userInfo": {
+      "name": "세진",
+      "profileImageUrl": "public/node_black.png",
+      "userId": "100",
+      "role": "Front‑end Designer"
+    },
+    "postActivity": { "liked": false, "reported": false, "scraped": false },
+    "comments": []
+  },
+  {
+    "postInfo": {
+      "postId": "2",
+      "title": "Node × Web",
+      "summary": "학술 교류와 개발의 콜라보!",
+      "content": "한 번 둘러보시길. 전 만족합니다.",
+      "userTag": ["#This_Is_Art", "#Connection"],
+      "likesCount": 5,
+      "scrapsCount": 1,
+      "commentsCount": 0,
+      "createAt": "2025-07-22T07:30:00Z"
+    },
+    "userInfo": {
+      "name": "kimafganta",
+      "profileImageUrl": "public/kimafganta.png",
+      "userId": "101",
+      "role": "Professor"
+    },
+    "postActivity": { "liked": false, "reported": false, "scraped": false },
+    "comments": []
+  }
+]
