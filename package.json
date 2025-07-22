@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build": "vite build",
+    "predeploy": "pnpm build",           // 자동 실행
+    "deploy": "gh-pages -d dist -b gh-pages -t true"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

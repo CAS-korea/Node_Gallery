@@ -1,19 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bookmark, Heart, MessageSquare } from "lucide-react";
-import Cookies from "js-cookie";
-import { ClientUrl } from "../../constants/ClientUrl.ts";
-import { cardPostInfo, cardUserInfo } from "../../types/PostcardDto.ts";
-import { postActivity } from "../../types/PostDetailDto.ts";
-import { useServices } from "../../context/ServicesProvider.tsx";
+import { ClientUrl } from "../../constants/ClientUrl";
+import { cardPostInfo, cardUserInfo } from "../../types/PostcardDto";
+import { cardActivityInfo } from "../../types/PostcardDto"; // postActivity → cardActivityInfo 로 통일
 
 interface PostCardProps {
     postInfo: cardPostInfo;
     userInfo: cardUserInfo;
-    postActivity: postActivity;
+    postActivity: cardActivityInfo;
     onLike: () => void;
     onScrap: () => void;
     isLiking: boolean;
@@ -29,23 +27,10 @@ const PostCard: React.FC<PostCardProps> = ({
                                                isLiking,
                                                isScrapping,
                                            }) => {
-    const { getUserInfo } = useServices();
-    const [currentUserId, setCurrentUserId] = useState<string>("");
-
-    useEffect(() => {
-        const cookieInfo = Cookies.get("info");
-        if (cookieInfo) {
-            try {
-                const parsedInfo = JSON.parse(cookieInfo);
-                setCurrentUserId(parsedInfo.userId);
-            } catch (error) {
-                console.error("쿠키 파싱 에러", error);
-            }
-        }
-    }, [getUserInfo]);
+    // 🚫 쿠키·서비스 호출 모두 제거
 
     const profileLink =
-        userInfo.userId === currentUserId
+        userInfo.userId === "100" // 데모에서는 항상 세진 ID가 내 프로필
             ? ClientUrl.PROFILE
             : `${ClientUrl.OTHERSPROFILE}/${userInfo.userId}`;
 
