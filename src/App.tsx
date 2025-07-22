@@ -1,11 +1,11 @@
-import './pages/index.css'
-import {BrowserRouter} from "react-router-dom";
-import {ServicesProvider} from "./context/ServicesProvider.tsx";
-import Router from "../src/router/Router.tsx"; // Router 컴포넌트를 별도 파일에서 import
-import CustomCursor from './components/CustomCursor.tsx';
-import {useEffect} from "react";
-import { ThemeProvider } from './layouts/ThemeContext'; // 전역 테마 컨텍스트
-
+// src/App.tsx
+import "./pages/index.css";
+import { HashRouter } from "react-router-dom";   // ⬅ main 에서 뺄 수도 있음
+import { ServicesProvider } from "./context/ServicesProvider.tsx";
+import Router from "./router/Router";            // 경로 tidy
+import CustomCursor from "./components/CustomCursor";
+import { useEffect } from "react";
+import { ThemeProvider } from "./layouts/ThemeContext";
 
 function App() {
     useEffect(() => {
@@ -14,14 +14,13 @@ function App() {
 
     return (
         <ThemeProvider>
-            <div className="App">
-                <CustomCursor />
-                <BrowserRouter>
-                    <ServicesProvider>
-                        <Router />
-                    </ServicesProvider>
-                </BrowserRouter>
-            </div>
+            {/* Router는 단 한 번! */}
+            <HashRouter>
+                <ServicesProvider>
+                    <CustomCursor />
+                    <Router />
+                </ServicesProvider>
+            </HashRouter>
         </ThemeProvider>
     );
 }

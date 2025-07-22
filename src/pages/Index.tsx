@@ -49,11 +49,11 @@ const ModernIndex = () => {
 
     // 갤러리 이미지 데이터
     const galleryImages = [
-        { src: "/kimafganta.png?height=400&width=400", alt: "AI Research", caption: "인공지능 연구 프로젝트" },
-        { src: "/kimafganta.png?height=400&width=400", alt: "Team Collaboration", caption: "팀 협업 세션" },
-        { src: "/kimafganta.png?height=400&width=400", alt: "Workshop", caption: "AI 워크샵" },
-        { src: "/kimafganta.png?height=400&width=400", alt: "Seminar", caption: "세미나 발표" },
-        { src: "/kimafganta.png?height=400&width=400", alt: "Project Demo", caption: "프로젝트 데모" },
+        { src: "./kimafganta.png?height=400&width=400", alt: "AI Research", caption: "인공지능 연구 프로젝트" },
+        { src: "./kimafganta.png?height=400&width=400", alt: "Team Collaboration", caption: "팀 협업 세션" },
+        { src: "./kimafganta.png?height=400&width=400", alt: "Workshop", caption: "AI 워크샵" },
+        { src: "./kimafganta.png?height=400&width=400", alt: "Seminar", caption: "세미나 발표" },
+        { src: "./kimafganta.png?height=400&width=400", alt: "Project Demo", caption: "프로젝트 데모" },
     ];
 
     return (
@@ -83,7 +83,7 @@ const ModernIndex = () => {
                                 animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                             >
-                                <img src="/Node_Logo_Refined.png" alt="NODE Logo" className="w-full h-full object-contain" />
+                                <img src="./Node_Logo_Refined.png" alt="NODE Logo" className="w-full h-full object-contain" />
                             </motion.div>
 
                             {/* 링 애니메이션: 부드럽게 회전하며 확장 */}
@@ -207,7 +207,7 @@ const ModernIndex = () => {
                             <InteractiveCard
                                 title="협업 시스템"
                                 description="학과 내 선배와 후배 간의 효과적인 협업을 위한 시스템을 구축합니다"
-                                image="/kimafganta.png?height=300&width=300"
+                                image="./kimafganta.png?height=300&width=300"
                                 color="bg-gradient-to-br from-blue-600/90 to-teal-600/90"
                             />
                             <InteractiveCard

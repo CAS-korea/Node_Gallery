@@ -47,37 +47,18 @@ const Register: React.FC = () => {
         confirmPassword: "",
     });
 
-    // '다음' 버튼 클릭 시 단계별 검증 로직
-    const checkUserIdDuplicate = async () => {
-        if (!isIdValid(userId)) {
-            setErrors((prev) => ({
-                ...prev,
-                userId: "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요.",
-            }));
-            return;
-        }
-        setLoading(true);
-        try {
-            if (await duplicate(userId)) {
+    const checkUserIdDuplicate = () => {
+          if (!isIdValid(userId)) {
                 setErrors((prev) => ({
-                    ...prev,
-                    userId: "이미 사용 중인 ID입니다. 다른 ID를 입력해주세요.",
-                }));
-                setIsIdChecked(false);
-            } else {
-                setErrors((prev) => ({ ...prev, userId: "" }));
-                setIsIdChecked(true);
-            }
-        } catch (error) {
-            console.error("ID 중복 확인 실패", error);
-            setErrors((prev) => ({
-                ...prev,
-                userId: "ID 확인 중 오류가 발생했습니다.",
-            }));
-            setIsIdChecked(false);
-        }
-        setLoading(false);
-    };
+                      ...prev,
+                      userId: "영어와 숫자로만 이루어진 5자 이상의 ID를 입력해주세요.",
+                    }));
+                return;
+              }
+          // 👉 더미 통과
+              setErrors((prev) => ({ ...prev, userId: "프리패스입니다!" }));
+          setIsIdChecked(true);
+        };
 
     const handleNext = async (e: React.FormEvent) => {
         e.preventDefault();
