@@ -13,15 +13,15 @@ function App() {
     }, []);
 
     return (
+    <HashRouter>
         <ThemeProvider>
             {/* Router는 단 한 번! */}
-            <HashRouter>
                 <ServicesProvider>
                     <CustomCursor />
                     <Router />
                 </ServicesProvider>
-            </HashRouter>
         </ThemeProvider>
+    </HashRouter>
     );
 }
 
