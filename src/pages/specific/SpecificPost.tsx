@@ -163,7 +163,7 @@ const SpecificPost: React.FC = () => {
             {postInfo.thumbNailImage && (
                 <div className="relative w-full h-[50vh] overflow-hidden">
                     <motion.img
-                        src={"./public/city.jpg"}
+                        src={"city.jpg"}
                         className="w-full h-full object-cover"
                         initial={{ scale: 1.1 }}
                         animate={{ scale: 1 }}

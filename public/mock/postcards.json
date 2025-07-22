@@ -3,14 +3,14 @@
     "postInfo": {
       "postId": "1",
       "title": "Welcome to CAS Demo!",
-      "summary": "Front‑end GitHub Pages 배포를 위한 테스트 글입니다.",
+      "summary": "Front‑end GitHub Pages 배포를 위한 테스트 글입니다.",
       "content": "배포용 테스트 글입니당",
       "userTag": ["#CAS", "#Demo"],
       "likesCount": 171834,
       "scrapsCount": 351,
       "commentsCount": 0,
       "createAt": "2025-07-22T06:00:00Z",
-      "thumbNailImage": "public/city.jpg"
+      "thumbNailImage": "city.jpg"
     },
     "userInfo": {
       "name": "세진",
