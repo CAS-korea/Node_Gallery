@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useScroll } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-
 // 공통 컴포넌트 임포트
 import Header from "../components/index/Header";
 import Footer from "../components/index/Footer";
