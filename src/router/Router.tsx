@@ -17,7 +17,7 @@ import Message from "../pages/basic/Message";
 import Profile from "../pages/basic/Profile";
 import Notification from "../pages/basic/Notification";
 import Settings from "../pages/basic/Settings";
-import Baik from "../pages/basic/Baik";
+import Baik from "../pages/basic/baik";
 
 import Admin from "../pages/admin/Admin";
 
